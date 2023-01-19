@@ -2,7 +2,7 @@ skip_if_not(dss_require())
 
 test_that("timeseries read works", {
   on.exit(f$close(), add = TRUE)
-  f = dss_open("test.dss")
+  f = dss_open(system.file("extdata/test.dss", package = "dssrip2"))
   path = "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01JAN2012/1DAY/USGS/"
   # default behavior
   ts1 = dss_read(f, path)
@@ -23,7 +23,7 @@ test_that("timeseries read works", {
 
 test_that("paired data read works", {
   on.exit(f$close(), add = TRUE)
-  f = dss_open("test.dss")
+  f = dss_open(system.file("extdata/test.dss", package = "dssrip2"))
   path = "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/"
   pd = dss_read(f, path)
   expect_s3_class(pd, "data.frame")
