@@ -1,0 +1,20 @@
+Package: dssrip2
+Title: DSS R Interface Project (2)
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Michael", "Koohafkan", , "michael.c.koohafkan@usace.army.mil", role = c("aut", "cre")),
+    person("Evan", "Heisman", , "evan.a.heisman@usace.army.mil", role = c("aut")),
+    person("Cameron", "Bracken", , "", role = c("aut")))
+Description: A wrapper for the HEC-DSS Java API
+    (https://www.hec.usace.army.mil/confluence/dssjavaprogrammer)
+    allowing an interface between R and many common hydrologic models.
+    This is a rewrite of the original "dssrip" package.
+License: MIT + file LICENSE
+Imports:
+    rJava
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.2
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
