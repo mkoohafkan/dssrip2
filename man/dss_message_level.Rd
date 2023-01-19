@@ -4,7 +4,7 @@
 \alias{dss_message_level}
 \title{DSS Message Level}
 \usage{
-dss_message_level(level)
+dss_message_level(message_level)
 }
 \arguments{
 \item{message_level}{An integer specifying the DSS message level.

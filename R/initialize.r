@@ -11,17 +11,18 @@ hecJavaConstantsDB = new.env()
 #'
 #' @importFrom rJava .jcall
 #' @export
-dss_message_level = function(level) {
+dss_message_level = function(message_level) {
   # set message level
   tryCatch(.jcall("hec/heclib/util/Heclib", returnSig = "V",
-    method = "zset", "MLEVEL", " ", as.integer(level)),
+    method = "zset", "MLEVEL", " ", as.integer(message_level)),
     error = function(e) stop("Message level could not be set. ",
       "Check that DSS connection is working.", call. = FALSE))
 }
 
 #' @rdname dss_connect
 #' @export
-dss_require = function(dss_home = getOption("dss.home"), message_level = getOption("dss.messagelevel")) {
+dss_require = function(dss_home = getOption("dss.home"),
+  message_level = getOption("dss.messagelevel")) {
   result = try(dss_connect(dss_home))
   if (inherits(result, "try-error")) {
     invisible(FALSE)
@@ -45,7 +46,8 @@ dss_require = function(dss_home = getOption("dss.home"), message_level = getOpti
 #'
 #' @importFrom rJava .jnew J
 #' @export
-dss_connect = function(dss_home = getOption("dss.home"), message_level = getOption("dss.messagelevel")) {
+dss_connect = function(dss_home = getOption("dss.home"),
+  message_level = getOption("dss.messagelevel")) {
   if (.Platform$OS.type == "windows") {
     dss_connect_win(dss_home, message_level)
   } else {
