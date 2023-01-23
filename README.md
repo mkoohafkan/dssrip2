@@ -23,7 +23,7 @@ dss_connect("path/to/HEC-DSSVue")
 ```
 
 `dss_connect()` will retrieve the path using `getOption("dss.home")` 
-if no path is provided.
+if no path is provided. 
 
 To suppress messages from DSS, use
 
@@ -34,14 +34,42 @@ dss_connect(message_level = 1L)
 dss_message_level(1L)
 ```
 
+If no message level is provided, `dss_message_level()` will retrieve
+the level using `getOption("dss.messagelevel")`.
+
+You can set either or both of these options in your `.Rprofile`:
+
+```r
+# paste this into .Rprofile
+# (replace with the install path on your machine)
+options(
+  dss.home = "C:/Program Files/HEC/HEC-DSSVue",
+  dss.messagelevel = 1L
+)
+```
+
+
 ## Monolith
 
-Support for Monolith is planned. 
-
+`dssrip2` supports HEC Monolith.
 ```r
 dss_install_monolith()
 dss_connect(monolith = TRUE)
 ```
+
+To use Monolith automatically, set the following
+options in your R profile:
+
+```r
+options(dss.monolith = TRUE)
+```
+
+By default, `dssrip2` will install Monolith to your `%LOCALAPPDATA%`
+folder (but this can be overridden). If the option `dss.monolith` is
+set to `TRUE`, `dssrip2` will interpret the `dss.home` option as the
+Monolith file path, which allows you to specify a custom file path
+to Monolith.
+
 
 # Usage
 
