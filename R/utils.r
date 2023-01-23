@@ -2,13 +2,13 @@
 #'
 #' Extract timestamps from a DSS object.
 #'
-#' @param obj A DSS Java object.
+#' @param times A vector of DSS times.
 #' @param metadata The metadata associated with `obj`, i.e.,
 #'   output of [java_metadata()].
 #' @return A POSIXct vector.
 #'
 #' @keywords internal
-dss_times = function(obj, metadata, offset) {
+dss_times = function(times, metadata, offset) {
   granularity = as.numeric(metadata[["timeGranularitySeconds"]])
   if(offset && grepl("^PER-", metadata[["type"]])) {
     time_offset = -as.numeric(metadata[["interval"]])
@@ -16,7 +16,7 @@ dss_times = function(obj, metadata, offset) {
     time_offset = 0
   }
    timezone = dss_timezone(metadata[["timeZoneRawOffset"]])
-   as.POSIXct(obj$times * granularity + time_offset, tz = timezone,
+   as.POSIXct(times * granularity + time_offset, tz = timezone,
      origin = DSS_ORIGIN)
 }
 
@@ -31,14 +31,36 @@ dss_times = function(obj, metadata, offset) {
 #'
 #' @keywords internal
 dss_timezone = function(tzoffset) {
-  if (!nzchar(tzoffset)) {
-    "UTC"
+  if (!isTRUE(nzchar(tzoffset))) {
+    tzoffset = 0L
   } else if ((tzoffset %% 3600000L) > 0L) {
-    warning("timezone offset is fractional hours. Defaulting to UTC")
-    "UTC"
-  } else {
-    offset_hours = tzoffset %/% 3600000L
-    tzsign = ifelse(offset_hours > 0, "-", "+")
-    paste0("etc/GMT", tzsign, abs(offset_hours))
+    warning("timezone offset is fractional hours. ",
+      "Defaulting to 'etc/GMT+0' (UTC).")
+    tzoffset = 0L
   }
+  offset_hours = tzoffset %/% 3600000L
+  tzsign = ifelse(offset_hours > 0L, "-", "+")
+  paste0("etc/GMT", tzsign, abs(offset_hours))
+}
+
+
+#' Fill NA Values
+#'
+#' Fill NA values with the previous (or following) value.
+#'
+#' @param v A vector.
+#' @param forward If `TRUE`, fill starting from first to last element,
+#'   If `FALSE`, fill in from last to first element.
+#' @return The vector `v`, with NA values filled.
+#'
+#' @export
+na_fill = function(v, forward = TRUE) {
+  if (!forward) {
+    dir_fun = rev
+  } else {
+    dir_fun = identity
+  }
+  v = dir_fun(v)
+  i = c(TRUE, !is.na(v[-1]))
+  dir_fun(v[i][cumsum(i)])[seq_along(v)]
 }

@@ -4,10 +4,10 @@
 \alias{dss_times}
 \title{DSS Time Vector}
 \usage{
-dss_times(obj, metadata, offset)
+dss_times(times, metadata, offset)
 }
 \arguments{
-\item{obj}{A DSS Java object.}
+\item{times}{A vector of DSS times.}
 
 \item{metadata}{The metadata associated with \code{obj}, i.e.,
 output of \code{\link[=java_metadata]{java_metadata()}}.}

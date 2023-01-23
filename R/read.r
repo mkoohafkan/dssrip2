@@ -74,7 +74,7 @@ dss_read_timeseries = function(tsObj, offset = FALSE) {
   assert_timeseries(tsObj)
   metadata = java_metadata(tsObj)
   valuenames = tolower(metadata[["parameter"]])
-  out = data.frame(dss_times(tsObj, metadata, offset),
+  out = data.frame(dss_times(tsObj$times, metadata, offset),
     ifelse(abs(tsObj$values - rep(DSS_MISSING_VALUE,
       length(tsObj$values))), NA, tsObj$values)
   )
