@@ -4,7 +4,7 @@
 \alias{get_jars}
 \title{Get DSS Jars}
 \usage{
-get_jars(dss_home)
+get_jars(dss_home, monolith)
 }
 \arguments{
 \item{dss_home}{The path to the DSS install.}

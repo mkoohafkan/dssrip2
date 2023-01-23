@@ -9,17 +9,19 @@
 \usage{
 dss_require(
   dss_home = getOption("dss.home"),
-  message_level = getOption("dss.messagelevel")
+  message_level = getOption("dss.messagelevel"),
+  monolith = TRUE
 )
 
 dss_connect(
   dss_home = getOption("dss.home"),
-  message_level = getOption("dss.messagelevel")
+  message_level = getOption("dss.messagelevel"),
+  monolith = getOption("dss.monolith")
 )
 
-dss_connect_win(dss_home, message_level)
+dss_connect_win(dss_home, message_level, monolith)
 
-dss_connect_unix(dss_home, message_level)
+dss_connect_unix(dss_home, message_level, monolith)
 }
 \arguments{
 \item{dss_home}{The path to the HEC-DSS install folder.}

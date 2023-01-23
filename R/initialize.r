@@ -60,6 +60,8 @@ dss_connect = function(dss_home = getOption("dss.home"),
     java_fields(.jnew("hec/io/TimeSeriesContainer")), hecJavaObjectsDB)
   assign("hec.io.PairedDataContainer",
     java_fields(.jnew("hec/io/PairedDataContainer")), hecJavaObjectsDB)
+  assign("hec.io.GridContainer",
+    java_fields(.jnew("hec/io/GridContainer")), hecJavaObjectsDB)
   assign("DSS_CONSTANTS", J("hec/script/Constants"),
     envir = hecJavaConstantsDB)
   # default is message level 2
@@ -103,7 +105,8 @@ dss_connect_unix = function(dss_home, message_level, monolith) {
 get_jars = function(dss_home, monolith) {
   if (monolith) {
     required_jars = c("hec-monolith(?!-compat).*.jar", "hecnf.*.jar",
-      "hec-monolith-compat.*.jar", "hec-nucleus-metadata.*.jar")
+      "hec-monolith-compat.*.jar", "hec-nucleus-metadata.*.jar",
+      "flogger(?!-system-backend).*.jar", "flogger-system-backend.*.jar")
   } else {
     required_jars = c("hec.jar", "rma.jar", "lookup.jar",
       "hec-dssvue.+.jar", "help/dssvueHelp.jar")
