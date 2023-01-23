@@ -1,3 +1,14 @@
+#' Read DSS Attributes
+#'
+#' Read attributes from a DSS file.
+#'
+#' @inheritParams dss_squeeze
+#' @param path The DSS path to query attributes for.
+#' @return A List of attributes.
+#'
+#' @seealso [dss_read()]
+#' @importFrom rJava .jclass
+#' @export
 dss_attributes = function(file, path) {
   assert_path_format(path)
   assert_dss_file(file)
@@ -23,6 +34,7 @@ dss_attributes = function(file, path) {
 #' @details The returned data frame includes additional attributes
 #'   `"dss.type"` and `"dss.units"` describing the DSS data format.
 #'
+#' @seealso [dss_attributes()]
 #' @importFrom rJava .jclass
 #' @export
 dss_read = function(file, path, full = TRUE, offset = FALSE) {
@@ -41,6 +53,8 @@ dss_read = function(file, path, full = TRUE, offset = FALSE) {
     dss_read_timeseries(dssObj, offset)
   } else if (jclass == "hec.io.PairedDataContainer") {
     dss_read_paired(dssObj)
+  } else if (jclass == "hec.io.GridContainer") {
+    dss_read_grid(dssObj)
   } else {
     stop("Object of type ", jclass, " is not currently supported.")
   }
@@ -94,6 +108,39 @@ dss_read_paired = function(pdObj) {
   }
   out = cbind(pdObj$xOrdinates,
     as.data.frame(t(pdObj$yOrdinates)))
+  names(out) = c(xname, ynames)
+  attr(out, "dss.type") = unlist(metadata[c("xtype", "ytype")],
+    use.names = FALSE)
+  attr(out, "dss.units") = unlist(metadata[c("xunits", "yunits")],
+    use.names = FALSE)
+  out
+}
+
+
+#' DSS Grid Data
+#'
+#' Read grid data from a DSS file.
+#'
+#' @param gridObj A `hec.io.GridContainer` Java object reference.
+#' @return A data frame.
+#'
+#' @keywords internal
+dss_read_grid = function(gridObj) {
+  stop("Grid is not supported yet")
+  assert_grid(gridObj)
+  metadata = java_metadata(gridObj)
+  # ordinate label
+  xname = metadata[["xparameter"]]
+  # y ordinate labels
+  labels = ifelse(metadata[["labelsUsed"]], metadata[["labels"]],
+    seq.int(metadata[["numberCurves"]]))
+  if (metadata[["labelsUsed"]] || (length(labels) > 1L)) {
+    ynames = paste(gridObj$yparameter, labels, sep = ".")
+  } else {
+    ynames = paste(gridObj$yparameter)
+  }
+  out = cbind(gridObj$xOrdinates,
+    as.data.frame(t(gridObj$yOrdinates)))
   names(out) = c(xname, ynames)
   attr(out, "dss.type") = unlist(metadata[c("xtype", "ytype")],
     use.names = FALSE)

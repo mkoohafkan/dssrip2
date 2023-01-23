@@ -7,6 +7,7 @@
 \alias{assert_parts_format}
 \alias{assert_timeseries}
 \alias{assert_paired}
+\alias{assert_grid}
 \title{DSS Assertions}
 \usage{
 assert_dss_file(file)
@@ -18,6 +19,8 @@ assert_parts_format(parts)
 assert_timeseries(obj)
 
 assert_paired(obj)
+
+assert_grid(obj)
 }
 \description{
 Helper functions for DSS type and format checking.
@@ -33,6 +36,8 @@ Helper functions for DSS type and format checking.
 \item \code{assert_timeseries()}: Assert the supplied rJava object is a DSS timeseries.
 
 \item \code{assert_paired()}: Assert the supplied rJava object is a DSS paired data container.
+
+\item \code{assert_grid()}: Assert the supplied rJava object is a DSS grid data container.
 
 }}
 \keyword{internal}

@@ -25,3 +25,10 @@ the DSS "parameter" value specified in the object metadata.
 \description{
 Read data from a DSS file.
 }
+\details{
+The returned data frame includes additional attributes
+\code{"dss.type"} and \code{"dss.units"} describing the DSS data format.
+}
+\seealso{
+\code{\link[=dss_attributes]{dss_attributes()}}
+}

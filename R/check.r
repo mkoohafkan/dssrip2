@@ -68,5 +68,17 @@ assert_paired = function(obj) {
   if (jclass != "hec.io.PairedDataContainer") {
     stop("Unexpected data type: ", jclass)
   }
+}
 
+#' @describeIn dss-assertions
+#'
+#' Assert the supplied rJava object is a DSS grid data container.
+#'
+#' @importFrom rJava .jclass
+#' @keywords internal
+assert_grid = function(obj) {
+  jclass = .jclass(obj)
+  if (jclass != "hec.io.GridContainer") {
+    stop("Unexpected data type: ", jclass)
+  }
 }
