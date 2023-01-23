@@ -74,7 +74,10 @@ dss_connect = function(dss_home = getOption("dss.home"),
 #' @importFrom rJava javaImport .jaddLibrary .jaddClassPath
 #'   .jcall
 dss_connect_win = function(dss_home, message_level, monolith) {
-
+  if (is.null(dss_home) && monolith) {
+    dss_home = normalizePath(file.path(Sys.getenv("LOCALAPPDATA"),
+      "dssrip2", "monolith"), mustWork = FALSE)
+  }
   hec_lib_path = normalizePath(file.path(dss_home,
     "lib/javaHeclib.dll"), mustWork = TRUE)
 
