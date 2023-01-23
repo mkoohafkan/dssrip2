@@ -1,3 +1,11 @@
+dss_attributes = function(file, path) {
+  assert_path_format(path)
+  assert_dss_file(file)
+  dssObj = file$get(path, TRUE)
+  java_metadata(dssObj)
+}
+
+
 #' Read DSS Data
 #'
 #' Read data from a DSS file.
@@ -11,6 +19,9 @@
 #' @return A data frame. For a time series object, the first column
 #'   will be "datetime". Further columns will be named according to
 #'   the DSS "parameter" value specified in the object metadata.
+#'
+#' @details The returned data frame includes additional attributes
+#'   `"dss.type"` and `"dss.units"` describing the DSS data format.
 #'
 #' @importFrom rJava .jclass
 #' @export
@@ -34,6 +45,7 @@ dss_read = function(file, path, full = TRUE, offset = FALSE) {
     stop("Object of type ", jclass, " is not currently supported.")
   }
 }
+
 
 #' DSS Time Series
 #'
