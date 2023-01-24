@@ -9,13 +9,14 @@
 #' @return A vector of paths.
 #'
 #' @export
-dss_paths = function(file, pattern = "*", condensed = TRUE, rebuild = FALSE) {
+dss_paths = function(file, pattern = "*", condensed = TRUE,
+  rebuild = FALSE) {
   if (condensed) {
-    all_paths = .javaVectorToStrings(file$getCondensedCatalog())
+    paths = .javaVectorToStrings(file$getCondensedCatalog())
   } else {
-    all_paths = .javaVectorToStrings(file$getCatalogedPathnames(rebuild))
+    paths = .javaVectorToStrings(file$getCatalogedPathnames(rebuild))
   }
-  all_paths[grep(pattern, all_paths)]
+  paths[grep(pattern, paths)]
 }
 
 

@@ -28,8 +28,6 @@ test_that("DSS timezone works", {
 
 test_that("DSS timestamp extraction works", {
 
-  
-
   expect_equal(dss_timezone(""), "etc/GMT+0")
   expect_equal(dss_timezone(NULL), "etc/GMT+0")
   expect_equal(dss_timezone(0), "etc/GMT+0")

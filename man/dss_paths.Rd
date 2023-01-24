@@ -4,7 +4,12 @@
 \alias{dss_paths}
 \title{Get DSS Paths}
 \usage{
-dss_paths(file, pattern = "*", condensed = TRUE, rebuild = FALSE)
+dss_paths(
+  file,
+  pattern = "/.*/.*/.*/.*/.*/.*/",
+  condensed = TRUE,
+  rebuild = FALSE
+)
 }
 \arguments{
 \item{file}{A DSS file handle, e.g., output of \code{\link[=dss_open]{dss_open()}}.}
