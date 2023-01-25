@@ -14,9 +14,10 @@ Depends:
     R (>= 3.6)
 Imports:
     rJava (>= 1.0),
-    yaml,
-    httr,
-    digest,
+    terra (>= 1.5),
+    yaml (>= 2.3),
+    httr (>= 1.4),
+    digest (>= 0.6),
     utils
 SystemRequirements: 
     HEC-DSSVue (>= 3.2.3, https://www.hec.usace.army.mil/software/hec-dssvue)

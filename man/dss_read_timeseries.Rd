@@ -16,6 +16,6 @@ averages, offset timestamps to center on periods.}
 A data frame.
 }
 \description{
-Read a time series from a DSS file.
+Read DSS time series.
 }
 \keyword{internal}

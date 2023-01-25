@@ -5,6 +5,8 @@
 \alias{assert_dss_file}
 \alias{assert_path_format}
 \alias{assert_parts_format}
+\alias{assert_read_support}
+\alias{assert_write_support}
 \alias{assert_timeseries}
 \alias{assert_paired}
 \alias{assert_grid}
@@ -15,6 +17,10 @@ assert_dss_file(file)
 assert_path_format(path)
 
 assert_parts_format(parts)
+
+assert_read_support(obj)
+
+assert_write_support(obj)
 
 assert_timeseries(obj)
 
@@ -32,6 +38,10 @@ Helper functions for DSS type and format checking.
 \item \code{assert_path_format()}: Assert the supplied path is in the correct format.
 
 \item \code{assert_parts_format()}: Assert set of supplied parts is named and complete.
+
+\item \code{assert_read_support()}: Assert the supplied rJava object is a DSS timeseries.
+
+\item \code{assert_write_support()}: Assert the supplied rJava object is a DSS timeseries.
 
 \item \code{assert_timeseries()}: Assert the supplied rJava object is a DSS timeseries.
 

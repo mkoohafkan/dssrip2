@@ -4,13 +4,14 @@
 \alias{dss_times}
 \title{DSS Time Vector}
 \usage{
-dss_times(times, metadata, offset)
+dss_times(times, info, offset)
 }
 \arguments{
 \item{times}{A vector of DSS times.}
 
-\item{metadata}{The metadata associated with \code{obj}, i.e.,
-output of \code{\link[=java_metadata]{java_metadata()}}.}
+\item{info}{A list of attributes relevant to processing timestamps.
+Must include "timeGranularitySeconds", "timeIntervalSeconds",
+"timeZoneRawOffset", and "type".}
 }
 \value{
 A POSIXct vector.
