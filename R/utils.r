@@ -3,20 +3,21 @@
 #' Extract timestamps from a DSS object.
 #'
 #' @param times A vector of DSS times.
-#' @param metadata The metadata associated with `obj`, i.e.,
-#'   output of [java_metadata()].
+#' @param info A list of attributes relevant to processing timestamps.
+#'   Must include "timeGranularitySeconds", "timeIntervalSeconds",
+#'   "timeZoneRawOffset", and "type".
 #' @return A POSIXct vector.
 #'
 #' @keywords internal
-dss_times = function(times, metadata, offset) {
-  granularity = as.numeric(metadata[["timeGranularitySeconds"]])
-  if(offset && grepl("^PER-", metadata[["type"]])) {
-    time_offset = -as.numeric(metadata[["interval"]])
+dss_times = function(times, info, offset) {
+  granularity = as.numeric(info[["timeGranularitySeconds"]])
+  if(offset && grepl("^PER-", info[["type"]])) {
+    time_offset = -as.numeric(info[["timeIntervalSeconds"]])
   } else {
     time_offset = 0
   }
-   timezone = dss_timezone(metadata[["timeZoneRawOffset"]])
-   as.POSIXct(times * granularity + time_offset, tz = timezone,
+   timezone = dss_timezone(info[["timeZoneRawOffset"]])
+   as.POSIXct((times + time_offset) * granularity, tz = timezone,
      origin = DSS_ORIGIN)
 }
 

@@ -1,22 +1,3 @@
-#' Read DSS Attributes
-#'
-#' Read attributes from a DSS file.
-#'
-#' @inheritParams dss_squeeze
-#' @param path The DSS path to query attributes for.
-#' @return A List of attributes.
-#'
-#' @seealso [dss_read()]
-#' @importFrom rJava .jclass
-#' @export
-dss_attributes = function(file, path) {
-  assert_path_format(path)
-  assert_dss_file(file)
-  dssObj = file$get(path, TRUE)
-  java_metadata(dssObj)
-}
-
-
 #' Read DSS Data
 #'
 #' Read data from a DSS file.
@@ -48,6 +29,7 @@ dss_read = function(file, path, full = TRUE, offset = FALSE) {
       "condensed paths are supported.")
   }
   dssObj = file$get(path, full)
+  assert_read_support(dssObj)
   jclass = .jclass(dssObj)
   if (jclass == "hec.io.TimeSeriesContainer") {
     dss_read_timeseries(dssObj, offset)
@@ -56,14 +38,14 @@ dss_read = function(file, path, full = TRUE, offset = FALSE) {
   } else if (jclass == "hec.io.GridContainer") {
     dss_read_grid(dssObj)
   } else {
-    stop("Object of type ", jclass, " is not currently supported.")
+    stop("Something went wrong, file a bug report.")
   }
 }
 
 
 #' DSS Time Series
 #'
-#' Read a time series from a DSS file.
+#' Read DSS time series.
 #'
 #' @param tsObj A `hec.io.TimeSeriesContainer` Java object reference.
 #' @inheritParams dss_read
@@ -72,46 +54,67 @@ dss_read = function(file, path, full = TRUE, offset = FALSE) {
 #' @keywords internal
 dss_read_timeseries = function(tsObj, offset = FALSE) {
   assert_timeseries(tsObj)
-  metadata = java_metadata(tsObj)
-  valuenames = tolower(metadata[["parameter"]])
-  out = data.frame(dss_times(tsObj$times, metadata, offset),
-    ifelse(abs(tsObj$values - rep(DSS_MISSING_VALUE,
-      length(tsObj$values))), NA, tsObj$values)
+  ts_info =   list(
+    "timeGranularitySeconds" = tsObj$getTimeGranularitySeconds(),
+    "type" = tsObj$getType(),
+    "timeIntervalSeconds" = tsObj$getTimeIntervalSeconds(),
+    # no method for timezone offset
+    "timeZoneRawOffset" = tsObj$timeZoneRawOffset,
+    "parameter" = tsObj$getParameterName(),
+    "units" = tsObj$getUnits()
   )
-  names(out) = c("datetime", valuenames)
-  attr(out, "dss.type") = metadata[["type"]]
-  attr(out, "dss.units") = metadata[["units"]]
+  times = tsObj$getMinutes()
+  values = tsObj$getValues()
+  out = data.frame(dss_times(times, ts_info, offset),
+    ifelse(abs(values - rep(DSS_MISSING_VALUE,
+      length(values))), NA, values)
+  )
+  names(out) = c("datetime", tolower(ts_info[["parameter"]]))
+  attr(out, "dss.type") = ts_info[["type"]]
+  attr(out, "dss.units") = ts_info[["units"]]
   out
 }
 
 
 #' DSS Paired Data
 #'
-#' Read paired data from a DSS file.
+#' Read DSS paired data.
 #'
 #' @param pdObj A `hec.io.PairedDataContainer` Java object reference.
 #' @return A data frame.
 #'
+#' @importFrom rJava .jevalArray
 #' @keywords internal
 dss_read_paired = function(pdObj) {
   assert_paired(pdObj)
-  metadata = java_metadata(pdObj)
-  # ordinate label
-  xname = metadata[["xparameter"]]
+  pd_info =   list(
+    "xparameter" = pdObj$xparameter,
+    "labels" = pdObj$getLabels(),
+    "labelsUsed" = pdObj$labelsUsed,
+    "numberCurves" = pdObj$getNumberCurves(),
+    "xtype" = pdObj$getXType(),
+    "ytype" = pdObj$getYType(),
+    "xunits" = pdObj$getXUnits(),
+    "yunits" = pdObj$getYUnits()
+  )
   # y ordinate labels
-  labels = ifelse(metadata[["labelsUsed"]], metadata[["labels"]],
-    seq.int(metadata[["numberCurves"]]))
-  if (metadata[["labelsUsed"]] || (length(labels) > 1L)) {
-    ynames = paste(pdObj$yparameter, labels, sep = ".")
+  labels = ifelse(pd_info[["labelsUsed"]], pd_info[["labels"]],
+    seq.int(pd_info[["numberCurves"]]))
+  if (pd_info[["labelsUsed"]] || (length(labels) > 1L)) {
+    ynames = paste(pd_info[["yparameter"]], labels, sep = ".")
   } else {
-    ynames = paste(pdObj$yparameter)
+    ynames = paste(pd_info[["yparameter"]])
   }
-  out = cbind(pdObj$xOrdinates,
-    as.data.frame(t(pdObj$yOrdinates)))
-  names(out) = c(xname, ynames)
-  attr(out, "dss.type") = unlist(metadata[c("xtype", "ytype")],
+  # sic, typo is in Java
+  out = cbind(
+    pdObj$getXOridnates(),
+    as.data.frame(t(.jevalArray(pdObj$getYOridnates(),
+      simplify = TRUE)))
+  )
+  names(out) = c(pd_info[["xparameter"]], ynames)
+  attr(out, "dss.type") = unlist(pd_info[c("xtype", "ytype")],
     use.names = FALSE)
-  attr(out, "dss.units") = unlist(metadata[c("xunits", "yunits")],
+  attr(out, "dss.units") = unlist(pd_info[c("xunits", "yunits")],
     use.names = FALSE)
   out
 }
@@ -119,32 +122,67 @@ dss_read_paired = function(pdObj) {
 
 #' DSS Grid Data
 #'
-#' Read grid data from a DSS file.
+#' Read DSS grid.
 #'
 #' @param gridObj A `hec.io.GridContainer` Java object reference.
 #' @return A data frame.
 #'
+#' @importFrom terra rast
 #' @keywords internal
 dss_read_grid = function(gridObj) {
-  stop("Grid is not supported yet")
   assert_grid(gridObj)
-  metadata = java_metadata(gridObj)
-  # ordinate label
-  xname = metadata[["xparameter"]]
-  # y ordinate labels
-  labels = ifelse(metadata[["labelsUsed"]], metadata[["labels"]],
-    seq.int(metadata[["numberCurves"]]))
-  if (metadata[["labelsUsed"]] || (length(labels) > 1L)) {
-    ynames = paste(gridObj$yparameter, labels, sep = ".")
+
+  infObj = gridObj$getGridInfo()
+  grid_dims = list(
+    llY = infObj$getLowerLeftCellY(),
+    numY = infObj$getNumberOfCellsY(),
+    llX = infObj$getLowerLeftCellX(),
+    numX = infObj$getNumberOfCellsX(),
+    cellSize = infObj$getCellSize()
+  )
+  grid_dims[["lrX"]] = grid_dims[["llX"]] + grid_dims[["numX"]]
+  grid_dims[["ulY"]] = grid_dims[["llY"]] + grid_dims[["numY"]]
+
+  grid_info = list(
+    SpatialReferenceSystem = infObj$getSpatialReferenceSystem(),
+    dataType = infObj$getDataTypeName(),
+    dataUnits = infObj$getDataUnits(),
+    noDataValue = infObj$getGridNodataValue(),
+    startTime = strptime(infObj$getStartTime(), "%d %B %Y, %H:%M",
+      tz = "UTC"),
+    endTime = strptime(infObj$getEndTime(), "%d %B %Y, %H:%M",
+      tz = "UTC")
+  )
+
+  zname = dss_parts_split(gridObj$fullName)[["C"]]
+
+  d = matrix(gridObj$getGridData()$getData(), byrow = FALSE,
+    nrow = grid_dims[["numX"]], ncol = grid_dims[["numY"]])
+  d = d[, rev(seq_len(ncol(d)))]
+
+  if (grepl("PER-", grid_info[["dataType"]])) {
+    grid_time = grid_info[["endTime"]]
   } else {
-    ynames = paste(gridObj$yparameter)
+    grid_time = grid_info[["startTime"]]
   }
-  out = cbind(gridObj$xOrdinates,
-    as.data.frame(t(gridObj$yOrdinates)))
-  names(out) = c(xname, ynames)
-  attr(out, "dss.type") = unlist(metadata[c("xtype", "ytype")],
-    use.names = FALSE)
-  attr(out, "dss.units") = unlist(metadata[c("xunits", "yunits")],
-    use.names = FALSE)
+
+  out = rast(
+    vals = as.vector(d),
+    resolution = grid_dims[["cellSize"]],
+    xmin = grid_dims[["llX"]] * grid_dims[["cellSize"]],
+    ymin = grid_dims[["llY"]] * grid_dims[["cellSize"]],
+    xmax = grid_dims[["lrX"]] * grid_dims[["cellSize"]],
+    ymax = grid_dims[["ulY"]] * grid_dims[["cellSize"]],
+    crs = grid_info$SpatialReferenceSystem,
+    time = grid_time,
+    names = zname
+  )
+  out[abs(out - grid_info[["noDataValue"]]) < 1e-5] = NA
+
+  attr(out, "dss.type") = grid_info[["dataType"]]
+  attr(out, "dss.units") = grid_info[["dataUnits"]]
+  attr(out, "dss.times") = c(grid_info[["startTime"]],
+    grid_info[["endTime"]])
+
   out
 }
