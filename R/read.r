@@ -22,11 +22,10 @@ dss_read = function(file, path, full = TRUE, offset = FALSE) {
   assert_path_format(path)
   assert_dss_file(file)
   if (full) {
-    path = unique(dss_parts_replace(path, list(D = "")))
-  }
-  if (length(path) > 1L) {
-    stop("Multiple paths detected. Only single or ",
-      "condensed paths are supported.")
+    if (length(unique(dss_parts_replace(path, list(D = "")))) > 1L) {
+      stop("Multiple paths detected. Only single or ",
+        "condensed paths are supported.")
+    }
   }
   dssObj = file$get(path, full)
   assert_read_support(dssObj)

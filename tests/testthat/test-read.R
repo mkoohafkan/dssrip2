@@ -19,7 +19,9 @@ test_that("timeseries read works", {
   expect_identical(names(ts1), names(ts2))
   expect_identical(attr(ts2, "dss.units"), attr(ts1, "dss.units"))
   expect_identical(attr(ts2, "dss.type"), attr(ts1, "dss.type"))
+
 })
+
 
 test_that("paired data read works", {
   on.exit(f$close(), add = TRUE)
@@ -27,4 +29,16 @@ test_that("paired data read works", {
   path = "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/"
   pd = dss_read(f, path)
   expect_s3_class(pd, "data.frame")
+
+})
+
+
+test_that("grid data read works", {
+  on.exit(f$close(), add = TRUE)
+  f = dss_open(system.file("extdata/example.dss", package = "dssrip2"))
+  path = "/SHG/LCOLORADO/PRECIP/02JAN2020:1500/02JAN2020:1600/Ex15/"
+
+  gd = dss_read(f, path)
+  expect_s4_class(gd, "SpatRaster")
+
 })
