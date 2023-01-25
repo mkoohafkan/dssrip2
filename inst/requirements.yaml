@@ -1,5 +1,6 @@
 - { artifactId: hec-monolith, version : 3.0.1 }
 - { artifactId: hec-monolith-compat, version : 3.0.1 }
+- { artifactId: hec-nucleus-data, version : 1.1.0 }
 - { artifactId: hec-nucleus-metadata, version : 1.1.0 }
 - { artifactId: hecnf, version : 6.0.00.100 }
 - { artifactId: javaHeclib, version : 7-IH-win-x86_64 }

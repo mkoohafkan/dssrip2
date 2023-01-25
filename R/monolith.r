@@ -174,6 +174,8 @@ dss_install_monolith = function(install_path, overwrite = TRUE, requirements_fil
       requirements_list[["hec-monolith"]]),
     compat_assets = do.call(asset_query_nexus,
       requirements_list[["hec-monolith-compat"]]),
+    data_assets = do.call(asset_query_nexus,
+      requirements_list[["hec-nucleus-data"]]),
     meta_assets = do.call(asset_query_nexus,
       requirements_list[["hec-nucleus-metadata"]]),
     hecnf_assets = do.call(asset_query_nexus,

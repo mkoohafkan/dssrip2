@@ -1,4 +1,5 @@
-hecJavaObjectsDB = new.env()
+hecJavaObjectFieldsDB = new.env()
+hecJavaObjectMethodsDB = new.env()
 hecJavaConstantsDB = new.env()
 
 
@@ -56,12 +57,27 @@ dss_connect = function(dss_home = getOption("dss.home"),
   } else {
     dss_connect_unix(dss_home, message_level, isTRUE(monolith))
   }
+  # hec.io.TimeSeriesContainer
   assign("hec.io.TimeSeriesContainer",
-    java_fields(.jnew("hec/io/TimeSeriesContainer")), hecJavaObjectsDB)
+    build_fields_table(.jnew("hec/io/TimeSeriesContainer")), hecJavaObjectFieldsDB)
+  assign("hec.io.TimeSeriesContainer",
+    build_methods_table(.jnew("hec/io/TimeSeriesContainer")), hecJavaObjectMethodsDB)
+  # hec.io.PairedDataContainer
   assign("hec.io.PairedDataContainer",
-    java_fields(.jnew("hec/io/PairedDataContainer")), hecJavaObjectsDB)
+    build_fields_table(.jnew("hec/io/PairedDataContainer")), hecJavaObjectFieldsDB)
+  assign("hec.io.PairedDataContainer",
+    build_methods_table(.jnew("hec/io/PairedDataContainer")), hecJavaObjectMethodsDB)
+  # hec.io.GridContainer
   assign("hec.io.GridContainer",
-    java_fields(.jnew("hec/io/GridContainer")), hecJavaObjectsDB)
+    build_fields_table(.jnew("hec/io/GridContainer")), hecJavaObjectFieldsDB)
+  assign("hec.io.GridContainer",
+    build_methods_table(.jnew("hec/io/GridContainer")), hecJavaObjectMethodsDB)
+  # hec.heclib.grid.GridData
+#  assign("hec.io.GridContainer",
+#    build_fields_table(.jnew("hec/heclib/grid/GridData")), hecJavaObjectFieldsDB)
+#  assign("hec.io.GridContainer",
+#    build_methods_table(.jnew("hec/heclib/grid/GridData")), hecJavaObjectMethodsDB)
+  # constants
   assign("DSS_CONSTANTS", J("hec/script/Constants"),
     envir = hecJavaConstantsDB)
   # default is message level 2
@@ -107,9 +123,10 @@ dss_connect_unix = function(dss_home, message_level, monolith) {
 #' @keywords internal
 get_jars = function(dss_home, monolith) {
   if (monolith) {
-    required_jars = c("hec-monolith(?!-compat).*.jar", "hecnf.*.jar",
-      "hec-monolith-compat.*.jar", "hec-nucleus-metadata.*.jar",
-      "flogger(?!-system-backend).*.jar", "flogger-system-backend.*.jar")
+    required_jars = c("hecnf.*.jar", "hec-monolith(?!-compat).*.jar",
+      "hec-monolith-compat.*.jar", "hec-nucleus-data.*.jar",
+      "hec-nucleus-metadata.*.jar", "flogger(?!-system-backend).*.jar",
+      "flogger-system-backend.*.jar")
   } else {
     required_jars = c("hec.jar", "rma.jar", "lookup.jar",
       "hec-dssvue.+.jar", "help/dssvueHelp.jar")
@@ -136,19 +153,18 @@ get_jars = function(dss_home, monolith) {
 }
 
 
-#' Fields Data Frame
+#' Fields and Methods Data Frame
 #'
-#' Get a drataframe of Java object fields.
+#' Get a data frame of Java object fields or methods.
 #'
 #' @param jObject A Java object.
 #' @return A dataframe with fields "FULLNAME", "SHORTNAME", "CLASS",
-#'   and "SIGNATURE".
+#'   "SIGNATURE", and (for methods) "ARGUMENTS".
 #'
 #' @importFrom utils head tail
 #' @importFrom rJava .jfields
 #' @keywords internal
-java_fields = function(jObject) {
-
+build_fields_table = function(jObject) {
   fields = .jfields(jObject)
   parts = strsplit(trimws(gsub("(public)|(private)|(static)|(final)",
     "", fields)), " ", fixed = TRUE)
@@ -168,45 +184,31 @@ java_fields = function(jObject) {
 }
 
 
-#' Get Metadata Field
+#' @rdname build_fields_table
 #'
-#' Helper function to get metadata field value.
-#'
-#' @inheritParams java_fields
-#' @param shortname The Java object shortname.
-#' @param signature The Java object signature.
-#' @return A list of metadata.
-#'
-#' @importFrom rJava .jfield .jnull
+#' @importFrom utils head tail
+#' @importFrom rJava .jmethods
 #' @keywords internal
-metafield = function(jObject, shortname, signature) {
-  val = tryCatch(.jfield(jObject, name = shortname,
-    sig = as.character(signature)), error = function(...) NA,
-    silent = TRUE)
-  if (identical(.jnull(), val)) {
-    NA
-  } else {
-    val
-  }
-}
+build_methods_table = function(jObject) {
+  methods = .jmethods(jObject)
+  methods = gsub("(throws .*)", "", methods)
+  methods = gsub("(public)|(private)|(static)|(final)|(native)",
+    "", methods)
+  parts = strsplit(trimws(methods), " ", fixed = TRUE)
+  methoddef = sapply(parts, tail, 1L)
+  methodname = gsub("\\(.*\\)", "", methoddef)
+  shortname = sapply(strsplit(methodname, "\\."), tail, 1L)
+  methodargs = sapply(strsplit(methoddef, "[\\(\\)]"), `[[`, 2L)
+#  methodargs = strsplit(methodargs, ",")
+  jclass = sapply(parts, head, 1L)
+  signature = gsub("(\\[\\])", "", jclass)
 
+  sigmatches = match(signature, names(sigConversions))
+  sigcodes = unlist(ifelse(is.na(sigmatches),
+    paste0("L", gsub("\\.", "/", signature), ";"),
+    paste0(ifelse(grepl("\\[\\]", jclass), "[", ""),
+      sigConversions[sigmatches])))
 
-#' Get Java Metadata
-#'
-#' Get a list of fields in the java object and their values.
-#'
-#' @inheritParams java_fields
-#' @return A named list of metadata.
-#'
-#' @importFrom rJava .jclass
-#' @export
-java_metadata = function(jObject) {
-  EXCLUDE_FROM_METADATA = c("values", "times", "modified", "quality",
-    "xOrdinates", "yOrdinates", "xData", "yData")
-  dcClass = .jclass(jObject)
-  metaDF = get(dcClass, envir = hecJavaObjectsDB)
-  vals = setNames(apply(metaDF, 1, function(x)
-      metafield(jObject, x[["SHORTNAME"]], x[["SIGNATURE"]])),
-    metaDF[["SHORTNAME"]])
-  vals[setdiff(names(vals), EXCLUDE_FROM_METADATA)]
+  data.frame(FULLNAME = methods, SHORTNAME = shortname,
+    CLASS = jclass, SIGNATURE = sigcodes, ARGUMENTS = methodargs)
 }
