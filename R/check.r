@@ -19,6 +19,7 @@ assert_dss_file = function(file) {
   }
 }
 
+
 #' @describeIn dss-assertions
 #'
 #' Assert the supplied path is in the correct format.
@@ -32,6 +33,7 @@ assert_path_format = function(path) {
   }
 }
 
+
 #' @describeIn dss-assertions
 #'
 #' Assert set of supplied parts is named and complete.
@@ -43,6 +45,45 @@ assert_parts_format = function(parts) {
     stop("Missing path parts: ", paste(missing, collapse = ", "))
   }
 }
+
+
+#' @describeIn dss-assertions
+#'
+#' Assert the supplied rJava object is a DSS timeseries.
+#'
+#' @importFrom rJava .jclass
+#' @keywords internal
+assert_read_support = function(obj) {
+  supported_classes = c(
+    "hec.io.TimeSeriesContainer",
+    "hec.io.PairedDataContainer",
+    "hec.io.GridContainer"
+  )
+  jclass = .jclass(obj)
+  if (!(jclass %in% supported_classes)) {
+    stop("No read support for objects of type ", jclass)
+  }
+}
+
+
+#' @describeIn dss-assertions
+#'
+#' Assert the supplied rJava object is a DSS timeseries.
+#'
+#' @importFrom rJava .jclass
+#' @keywords internal
+assert_write_support = function(obj) {
+  supported_classes = c(
+#    "hec.io.TimeSeriesContainer",
+#    "hec.io.PairedDataContainer",
+#    "hec.io.GridContainer"
+  )
+  jclass = .jclass(obj)
+  if (!(jclass %in% supported_classes)) {
+    stop("No write support for objects of type ", jclass)
+  }
+}
+
 
 #' @describeIn dss-assertions
 #'
@@ -57,6 +98,7 @@ assert_timeseries = function(obj) {
   }
 }
 
+
 #' @describeIn dss-assertions
 #'
 #' Assert the supplied rJava object is a DSS paired data container.
@@ -69,6 +111,7 @@ assert_paired = function(obj) {
     stop("Unexpected data type: ", jclass)
   }
 }
+
 
 #' @describeIn dss-assertions
 #'
