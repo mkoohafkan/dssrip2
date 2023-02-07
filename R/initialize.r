@@ -1,7 +1,7 @@
 hecJavaObjectFieldsDB = new.env()
 hecJavaObjectMethodsDB = new.env()
 hecJavaConstantsDB = new.env()
-
+hecJavaConnectionDB = new.env()
 
 #' DSS Message Level
 #'
@@ -82,6 +82,7 @@ dss_connect = function(dss_home = getOption("dss.home"),
     envir = hecJavaConstantsDB)
   # default is message level 2
   dss_message_level(c(message_level, 2L)[1])
+  assign("DSS_CONNECTED", TRUE, hecJavaConnectionDB)
   invisible()
 }
 
@@ -123,11 +124,13 @@ dss_connect_unix = function(dss_home, message_level, monolith) {
 #' @keywords internal
 get_jars = function(dss_home, monolith) {
   if (monolith) {
+    label = "HEC-Monolith"
     required_jars = c("hecnf.*.jar", "hec-monolith(?!-compat).*.jar",
       "hec-monolith-compat.*.jar", "hec-nucleus-data.*.jar",
       "hec-nucleus-metadata.*.jar", "flogger(?!-system-backend).*.jar",
       "flogger-system-backend.*.jar")
   } else {
+    label = "HEC-DSSVue"
     required_jars = c("hec.jar", "rma.jar", "lookup.jar",
       "hec-dssvue.+.jar", "help/dssvueHelp.jar")
   }
@@ -140,12 +143,12 @@ get_jars = function(dss_home, monolith) {
     all_jars[x])
   num_found = sapply(selected_jars, length)
   if (any(num_found > 1L)) {
-    warning("Multiple matching jars found:\n",
+    warning("Multiple matches found for ", label, " jars:\n",
       paste("\t", sapply(selected_jars[num_found > 1L], paste,
         collapse = ", "), collapse = "\n"), "\n")
     selected_jars = lapply(selected_jars, head, 1L)
   } else if (any(num_found < 1L)) {
-    stop("No matching jars found:\n",
+    stop("No matches found for ", label, " jars:\n",
       paste("\t", required_jars[num_found < 1L], collapse = "\n"))
   }
   normalizePath(file.path(dss_home, "jar", selected_jars),
@@ -199,7 +202,6 @@ build_methods_table = function(jObject) {
   methodname = gsub("\\(.*\\)", "", methoddef)
   shortname = sapply(strsplit(methodname, "\\."), tail, 1L)
   methodargs = sapply(strsplit(methoddef, "[\\(\\)]"), `[[`, 2L)
-#  methodargs = strsplit(methodargs, ",")
   jclass = sapply(parts, head, 1L)
   signature = gsub("(\\[\\])", "", jclass)
 

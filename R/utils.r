@@ -9,7 +9,7 @@
 #' @return A POSIXct vector.
 #'
 #' @keywords internal
-dss_times = function(times, info, offset) {
+dss_times_to_posix = function(times, info, offset) {
   granularity = as.numeric(info[["timeGranularitySeconds"]])
   if(offset && grepl("^PER-", info[["type"]])) {
     time_offset = -as.numeric(info[["timeIntervalSeconds"]])

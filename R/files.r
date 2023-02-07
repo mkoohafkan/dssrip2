@@ -21,6 +21,7 @@ dss_file = function(filename) {
 #'
 #' @export
 dss_open = function(filename) {
+  assert_dss_connected()
   filepath = normalizePath(filename, mustWork = TRUE)
   dss_file(filepath)
 }
@@ -29,6 +30,7 @@ dss_open = function(filename) {
 #' @rdname dss_open
 #' @export
 dss_create = function(filename) {
+  assert_dss_connected()
   filepath = normalizePath(filename, mustWork = FALSE)
   if (file.exists(filepath)) {
     stop("File ", filepath, " already exists.")
@@ -45,6 +47,8 @@ dss_create = function(filename) {
 #'
 #' @export
 dss_squeeze = function(file) {
+  assert_dss_connected()
+  assert_dss_file(file)
   file$getDataManager()$squeeze()
   invisible(TRUE)
 }

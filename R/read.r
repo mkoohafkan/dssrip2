@@ -19,8 +19,9 @@
 #' @importFrom rJava .jclass
 #' @export
 dss_read = function(file, path, full = TRUE, offset = FALSE) {
-  assert_path_format(path)
+  assert_dss_connected()
   assert_dss_file(file)
+  assert_path_format(path)
   if (full) {
     if (length(unique(dss_parts_replace(path, list(D = "")))) > 1L) {
       stop("Multiple paths detected. Only single or ",
@@ -64,7 +65,7 @@ dss_read_timeseries = function(tsObj, offset = FALSE) {
   )
   times = tsObj$getMinutes()
   values = tsObj$getValues()
-  out = data.frame(dss_times(times, ts_info, offset),
+  out = data.frame(dss_times_to_posix(times, ts_info, offset),
     ifelse(abs(values - rep(DSS_MISSING_VALUE,
       length(values))), NA, values)
   )

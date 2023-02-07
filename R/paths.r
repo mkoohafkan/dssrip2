@@ -11,6 +11,8 @@
 #' @export
 dss_paths = function(file, pattern = "*", condensed = TRUE,
   rebuild = FALSE) {
+  assert_dss_connected()
+  assert_dss_file(file)
   if (condensed) {
     paths = .javaVectorToStrings(file$getCondensedCatalog())
   } else {

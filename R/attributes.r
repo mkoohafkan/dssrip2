@@ -11,6 +11,7 @@
 #' @keywords internal
 dss_attributes = function(file, path) {
   stop("not implemented")
+  assert_dss_connected()
   assert_dss_file(file)
   assert_path_format(path)
   dssObj = file$get(path, TRUE)

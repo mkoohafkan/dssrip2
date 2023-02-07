@@ -6,6 +6,20 @@
 #' @keywords internal
 NULL
 
+
+#' @describeIn dss-assertions
+#'
+#' Assert that DSS dependencies have been loaded.
+#'
+#' @keywords internal
+assert_dss_connected = function() {
+  if (!isTRUE((hecJavaConnectionDB$DSS_CONNECTED))) {
+    stop("DSS connection not active. Did you connect to DSS using ",
+      "dss_connect()", "?")
+  }
+}
+
+
 #' @describeIn dss-assertions
 #'
 #' Assert the supplied object is a DSS file handle.

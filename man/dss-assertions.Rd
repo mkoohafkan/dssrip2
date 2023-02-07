@@ -2,6 +2,7 @@
 % Please edit documentation in R/check.r
 \name{dss-assertions}
 \alias{dss-assertions}
+\alias{assert_dss_connected}
 \alias{assert_dss_file}
 \alias{assert_path_format}
 \alias{assert_parts_format}
@@ -12,6 +13,8 @@
 \alias{assert_grid}
 \title{DSS Assertions}
 \usage{
+assert_dss_connected()
+
 assert_dss_file(file)
 
 assert_path_format(path)
@@ -33,6 +36,8 @@ Helper functions for DSS type and format checking.
 }
 \section{Functions}{
 \itemize{
+\item \code{assert_dss_connected()}: Assert that DSS dependencies have been loaded.
+
 \item \code{assert_dss_file()}: Assert the supplied object is a DSS file handle.
 
 \item \code{assert_path_format()}: Assert the supplied path is in the correct format.
