@@ -6,8 +6,6 @@
 #' @param path The DSS path to extract.
 #' @param full If `TRUE`, read the entire dataset. If `FALSE`, only
 #'   read the section as specified in the D Part of the path.
-#' @param offset (TimeSeries only) If `TRUE`, and values are period
-#'   averages, offset timestamps to center on periods.
 #' @return A data frame. For a time series object, the first column
 #'   will be "datetime". Further columns will be named according to
 #'   the DSS "parameter" value specified in the object metadata.
@@ -18,9 +16,10 @@
 #' @seealso [dss_attributes()]
 #' @importFrom rJava .jclass
 #' @export
-dss_read = function(file, path, full = TRUE, offset = FALSE) {
+dss_read = function(file, path, full = TRUE) {
   assert_dss_connected()
   assert_dss_file(file)
+  on.exit(file$done, add = TRUE)
   assert_path_format(path)
   if (full) {
     if (length(unique(dss_parts_replace(path, list(D = "")))) > 1L) {
@@ -32,7 +31,7 @@ dss_read = function(file, path, full = TRUE, offset = FALSE) {
   assert_read_support(dssObj)
   jclass = .jclass(dssObj)
   if (jclass == "hec.io.TimeSeriesContainer") {
-    dss_read_timeseries(dssObj, offset)
+    dss_read_timeseries(dssObj)
   } else if (jclass == "hec.io.PairedDataContainer") {
     dss_read_paired(dssObj)
   } else if (jclass == "hec.io.GridContainer") {
@@ -48,11 +47,10 @@ dss_read = function(file, path, full = TRUE, offset = FALSE) {
 #' Read DSS time series.
 #'
 #' @param tsObj A `hec.io.TimeSeriesContainer` Java object reference.
-#' @inheritParams dss_read
 #' @return A data frame.
 #'
 #' @keywords internal
-dss_read_timeseries = function(tsObj, offset = FALSE) {
+dss_read_timeseries = function(tsObj) {
   assert_timeseries(tsObj)
   ts_info =   list(
     "timeGranularitySeconds" = tsObj$getTimeGranularitySeconds(),
@@ -65,10 +63,8 @@ dss_read_timeseries = function(tsObj, offset = FALSE) {
   )
   times = tsObj$getMinutes()
   values = tsObj$getValues()
-  out = data.frame(dss_times_to_posix(times, ts_info, offset),
-    ifelse(abs(values - rep(DSS_MISSING_VALUE,
-      length(values))), NA, values)
-  )
+  out = data.frame(dss_times_to_posix(times, ts_info),
+    format_na(values))
   names(out) = c("datetime", tolower(ts_info[["parameter"]]))
   attr(out, "dss.type") = ts_info[["type"]]
   attr(out, "dss.units") = ts_info[["units"]]
