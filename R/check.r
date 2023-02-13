@@ -88,13 +88,26 @@ assert_read_support = function(obj) {
 #' @keywords internal
 assert_write_support = function(obj) {
   supported_classes = c(
-#    "hec.io.TimeSeriesContainer",
+#    "hec.io.GridContainer",
 #    "hec.io.PairedDataContainer",
-#    "hec.io.GridContainer"
+    "hec.io.TimeSeriesContainer"
   )
-  jclass = .jclass(obj)
+  if (inherits(obj, "raster")) {
+    jclass = "hec.io.GridContainer"
+  } else if (inherits(obj, "data.frame")) {
+    if (ncol(obj) < 2L) {
+      jclass = ""
+    } else if (ncol(obj)  == 2L) {
+      jclass = "hec.io.TimeSeriesContainer"
+    } else {
+      jclass = "hec.io.PairedDataContainer"
+    }
+  } else {
+    jclass = ""
+  }
   if (!(jclass %in% supported_classes)) {
-    stop("No write support for objects of type ", jclass)
+    stop("No write support for objects of type: ",
+      paste(class(obj), collapse = ", "))
   }
 }
 
@@ -137,5 +150,26 @@ assert_grid = function(obj) {
   jclass = .jclass(obj)
   if (jclass != "hec.io.GridContainer") {
     stop("Unexpected data type: ", jclass)
+  }
+}
+
+
+#' @describeIn dss-assertions
+#'
+#' Assert the supplied attributes match the requirements for the
+#' supplied rJava object.
+#'
+#' @importFrom rJava .jclass
+#' @keywords internal
+assert_attributes = function(obj, attributes) {
+  allAttr = list_attributes(obj)
+  missingAttr = setdiff(allAttr[["required"]], names(attributes))
+  badAttr = setdiff(names(attributes), unlist(allAttr))
+  if (length(missingAttr) > 1L) {
+    stop("Missing required attributes: ",
+      paste(missingAttr, collapse = ", "))
+  }
+  if (length(badAttr) > 1L) {
+    stop("Unrecognized attributes: ", paste(badAttr, collapse = ", "))
   }
 }

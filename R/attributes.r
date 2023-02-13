@@ -1,3 +1,78 @@
+#' List DSS Attributes
+#'
+#' Return a vector of attribute names associated with a
+#' DSS object class.
+#'
+#' @param dssObj A DSS object.
+#' @return A list of required and optional attribute names.
+#'
+#' @importFrom rJava .jclass
+#' @keywords internal
+list_attributes = function(dssObj) {
+  jclass = .jclass(dssObj)
+  if (jclass == "hec.io.TimeSeriesContainer") {
+    list_attributes_timeseries()
+  } else if (jclass == "hec.io.PairedDataContainer") {
+    list_attributes_paired()
+  } else if (jclass == "hec.io.GridContainer") {
+    list_attributes_grid()
+  } else {
+    stop("Object of type ", jclass, " is not currently supported.")
+  }
+}
+
+
+#' @rdname list_attributes
+list_attributes_timeseries = function() {
+  list(
+    required = c(
+      "interval",
+      "type",
+      "units"
+    ),
+    optional = c(
+      "subParameter",
+      "version",
+      "subVersion",
+      "watershed",
+      "location",
+      "subLocation",
+      "precision",
+      "quality"
+    ),
+    derived = c(
+      "fileName",
+      "fullName",
+      "startTime",
+      "endTime",
+      "timeZoneRawOffset",
+      "timeZoneID",
+      "parameter",
+      "numberValues",
+      "times",
+      "values"
+    )
+  )
+}
+
+
+#' @rdname list_attributes
+list_attributes_paired = function() {
+  list(
+    required = c(""),
+    optional = c("")
+  )
+}
+
+
+#' @rdname list_attributes
+list_attributes_grid = function() {
+  list(
+    required = c(""),
+    optional = c("")
+  )
+}
+
 #' Read DSS Attributes
 #'
 #' Read attributes from a DSS file.
