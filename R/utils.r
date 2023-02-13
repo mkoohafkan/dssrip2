@@ -8,17 +8,13 @@
 #'   "timeZoneRawOffset", and "type".
 #' @return A POSIXct vector.
 #'
+#' @importFrom lubridate force_tz
 #' @keywords internal
-dss_times_to_posix = function(times, info, offset) {
+dss_times_to_posix = function(times, info) {
   granularity = as.numeric(info[["timeGranularitySeconds"]])
-  if(offset && grepl("^PER-", info[["type"]])) {
-    time_offset = -as.numeric(info[["timeIntervalSeconds"]])
-  } else {
-    time_offset = 0
-  }
    timezone = dss_timezone(info[["timeZoneRawOffset"]])
-   as.POSIXct((times + time_offset) * granularity, tz = timezone,
-     origin = DSS_ORIGIN)
+   as.POSIXct(granularity * (times), origin = DSS_ORIGIN,
+     tz = timezone)
 }
 
 
@@ -28,7 +24,7 @@ dss_times_to_posix = function(times, info, offset) {
 #'
 #' @param tzoffset The DSS object's "timeZoneRawOffset" attribute
 #'   (time offset in milliseconds).
-#' @return An R timezone string, either "UTC" or "Etc/GMT*".
+#' @return An R timezone string in format "etc/GMT*".
 #'
 #' @keywords internal
 dss_timezone = function(tzoffset) {
@@ -36,12 +32,38 @@ dss_timezone = function(tzoffset) {
     tzoffset = 0L
   } else if ((tzoffset %% 3600000L) > 0L) {
     warning("timezone offset is fractional hours. ",
-      "Defaulting to 'etc/GMT+0' (UTC).")
+      "Defaulting to ", DSS_TIMEZONE, ".")
     tzoffset = 0L
   }
   offset_hours = tzoffset %/% 3600000L
   tzsign = ifelse(offset_hours > 0L, "-", "+")
   paste0("etc/GMT", tzsign, abs(offset_hours))
+}
+
+
+#' Format Datetimes
+#'
+#' Helper function to format datetimes.
+#'
+#' @param x A vector to be coerced to datetimes
+#' @param default_tx The default timezone to use for coercing
+#'   objects without a specified timezone.
+#' @return A vector of datetimes.
+#'
+#' @importFrom lubridate as_datetime tz force_tz
+#' @keywords internal
+format_datetimes = function(x, default_tz = "etc/GMT+0") {
+  if (!inherits(x, "POSIXct")) {
+    warning("No timezone set for argument \"x\". Using ",
+      default_tz, ".")
+    as_datetime(x, tz = default_tz)
+  } else if (!nzchar(tz(x))) {
+    warning("No timezone set for argument \"x\". Using ",
+      default_tz, ".")
+    force_tz(datetimes, tzone = default_tz)
+  } else {
+    x
+  }
 }
 
 
@@ -64,4 +86,17 @@ na_fill = function(v, forward = TRUE) {
   v = dir_fun(v)
   i = c(TRUE, !is.na(v[-1]))
   dir_fun(v[i][cumsum(i)])[seq_along(v)]
+}
+
+#' Format NA Values
+#'
+#' Replace the DSS placeholder NA value with R NA values.
+#'
+#' @param x A numeric vector.
+#' @return The vector `x`, possibly with NA values
+#'
+#' @keywords internal
+format_na = function(x) {
+  na_vec = rep(DSS_MISSING_VALUE, length(x))
+  ifelse(abs(x - na_vec) < 1e-5, NA, x)
 }
