@@ -1,9 +1,17 @@
+#' Open DSS File
+#'
+#' Call the Java HecDss Open method.
+#'
+#' @param filename A valid filepath.
+#' @return A DSS file handle Java object.
+#'
 #' @importFrom rJava .jcall
 #' @keywords internal
 dss_file = function(filename) {
-  dssFile = .jcall("hec/heclib/dss/HecDss", "Lhec/heclib/dss/HecDss;",
+  file = .jcall("hec/heclib/dss/HecDss", "Lhec/heclib/dss/HecDss;",
     method = "open", filename)
-  return(dssFile)
+  on.exit(file$done(), add = TRUE)
+  file
 }
 
 
@@ -49,6 +57,7 @@ dss_create = function(filename) {
 dss_squeeze = function(file) {
   assert_dss_connected()
   assert_dss_file(file)
+  on.exit(file$done(), add = TRUE)
   file$getDataManager()$squeeze()
   invisible(TRUE)
 }
