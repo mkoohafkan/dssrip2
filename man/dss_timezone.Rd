@@ -11,7 +11,7 @@ dss_timezone(tzoffset)
 (time offset in milliseconds).}
 }
 \value{
-An R timezone string, either "UTC" or "Etc/GMT*".
+An R timezone string in format "etc/GMT*".
 }
 \description{
 Convert DSS raw timezone offset to an R timezone.

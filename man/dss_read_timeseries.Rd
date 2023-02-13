@@ -4,13 +4,10 @@
 \alias{dss_read_timeseries}
 \title{DSS Time Series}
 \usage{
-dss_read_timeseries(tsObj, offset = FALSE)
+dss_read_timeseries(tsObj)
 }
 \arguments{
 \item{tsObj}{A \code{hec.io.TimeSeriesContainer} Java object reference.}
-
-\item{offset}{(TimeSeries only) If \code{TRUE}, and values are period
-averages, offset timestamps to center on periods.}
 }
 \value{
 A data frame.

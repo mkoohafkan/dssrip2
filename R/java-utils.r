@@ -26,8 +26,6 @@ whichJavaVersion = function() {
 }
 
 
-
-
 #' Java Object Fields And Methods
 #'
 #' Helper functions to get field or call methods of a Java object.

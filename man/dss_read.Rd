@@ -4,7 +4,7 @@
 \alias{dss_read}
 \title{Read DSS Data}
 \usage{
-dss_read(file, path, full = TRUE, offset = FALSE)
+dss_read(file, path, full = TRUE)
 }
 \arguments{
 \item{file}{A DSS file handle, e.g., output of \code{\link[=dss_open]{dss_open()}}.}
@@ -13,9 +13,6 @@ dss_read(file, path, full = TRUE, offset = FALSE)
 
 \item{full}{If \code{TRUE}, read the entire dataset. If \code{FALSE}, only
 read the section as specified in the D Part of the path.}
-
-\item{offset}{(TimeSeries only) If \code{TRUE}, and values are period
-averages, offset timestamps to center on periods.}
 }
 \value{
 A data frame. For a time series object, the first column

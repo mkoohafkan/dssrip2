@@ -11,6 +11,7 @@
 \alias{assert_timeseries}
 \alias{assert_paired}
 \alias{assert_grid}
+\alias{assert_attributes}
 \title{DSS Assertions}
 \usage{
 assert_dss_connected()
@@ -30,6 +31,8 @@ assert_timeseries(obj)
 assert_paired(obj)
 
 assert_grid(obj)
+
+assert_attributes(obj, attributes)
 }
 \description{
 Helper functions for DSS type and format checking.
@@ -53,6 +56,9 @@ Helper functions for DSS type and format checking.
 \item \code{assert_paired()}: Assert the supplied rJava object is a DSS paired data container.
 
 \item \code{assert_grid()}: Assert the supplied rJava object is a DSS grid data container.
+
+\item \code{assert_attributes()}: Assert the supplied attributes match the requirements for the
+supplied rJava object.
 
 }}
 \keyword{internal}

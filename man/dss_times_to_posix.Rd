@@ -4,7 +4,7 @@
 \alias{dss_times_to_posix}
 \title{DSS Time Vector}
 \usage{
-dss_times_to_posix(times, info, offset)
+dss_times_to_posix(times, info)
 }
 \arguments{
 \item{times}{A vector of DSS times.}
