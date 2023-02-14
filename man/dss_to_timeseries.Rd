@@ -2,20 +2,17 @@
 % Please edit documentation in R/write.r
 \name{dss_to_timeseries}
 \alias{dss_to_timeseries}
-\title{DSS to Timeseries}
+\title{Timeseries to DSS}
 \usage{
 dss_to_timeseries(d, attributes)
 }
 \arguments{
-\item{datetimes}{A POSIXct vector.}
+\item{d}{A data frame.}
 
-\item{type}{The DSS data type, e.g. "PER_AVER" or "INST".}
-
-\item{granularity}{The smallest time interval in the data.
-Default is 60L (one  minute).}
+\item{attributes}{A list of \code{TimeSeriesContainer} attributes.}
 }
 \value{
-A named list for writing to DSS.
+A \code{TimeSeriesContainer} Java object reference.
 }
 \description{
 Convert a data frame to a DSS Time Series object.

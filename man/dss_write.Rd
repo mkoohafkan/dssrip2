@@ -12,6 +12,8 @@ to write to DSS.}
 
 \item{file}{A DSS file handle, e.g., output of \code{\link[=dss_open]{dss_open()}}.}
 
+\item{path}{The DSS path to write.}
+
 \item{attributes}{A named list of DSS attributes.}
 }
 \description{

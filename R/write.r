@@ -12,6 +12,7 @@
 #' @param x The dataframe (Time Series or Paired Data) or raster (Grid)
 #'   to write to DSS.
 #' @inheritParams dss_squeeze
+#' @param path The DSS path to write.
 #' @param attributes A named list of DSS attributes.
 #'
 #' @importFrom lubridate is.instant
@@ -34,6 +35,7 @@ dss_write = function(x, file, path, attributes = list()) {
   }
   dssObj$setFullName(path)
   file$put(dssObj)
+  invisible(TRUE)
 }
 
 
@@ -104,15 +106,13 @@ as_hectime = function(x, granularity_seconds) {
 }
 
 
-#' DSS to Timeseries
+#' Timeseries to DSS
 #'
 #' Convert a data frame to a DSS Time Series object.
 #'
-#' @param datetimes A POSIXct vector.
-#' @param type The DSS data type, e.g. "PER_AVER" or "INST".
-#' @param granularity The smallest time interval in the data.
-#'   Default is 60L (one  minute).
-#' @return A named list for writing to DSS.
+#' @param d A data frame.
+#' @param attributes A list of `TimeSeriesContainer` attributes.
+#' @return A `TimeSeriesContainer` Java object reference.
 #'
 #' @importFrom rJava .jnew
 #' @keywords internal
@@ -154,7 +154,16 @@ dss_to_timeseries = function(d, attributes) {
 }
 
 
-#' @importFrom rJava .jarray
+#' Paired Data to DSS
+#'
+#' Convert a data frame to a DSS Paired Data object.
+#'
+#' @param d A data frame.
+#' @param attributes A list of `PairedDataContainer` attributes.
+#' @return A `PairedDataContainer` Java object reference.
+#'
+#' @importFrom rJava .jnew .jarray
+#' @keywords internal
 dss_to_paired = function(d, attributes) {
   # build paired data object
   pdObj = .jnew("hec.io.PairedDataContainer")
@@ -170,8 +179,23 @@ dss_to_paired = function(d, attributes) {
   }
   pdObj$setXOrdinates(d[, 1])
   # need a double[][] array
-  pdObj$setYOrdinates(.jarray(lapply(d[seq.int(2L, ncol(d))], .jarray,
-    "[D"), "[D"))
+  pdObj$setYOrdinates(.jarray(lapply(d[seq.int(2L, ncol(d))],
+    .jarray, "[D"), "[D"))
 
   pdObj
+}
+
+
+#' Grid to DSS
+#'
+#' Convert a raster to a DSS Grid object.
+#'
+#' @param r A raster.
+#' @param attributes A list of `hec.io.GridContainer` attributes.
+#' @return A `hec.io.GridContainer` Java object reference.
+#'
+#' @importFrom rJava .jnew .jarray
+#' @keywords internal
+dss_to_grid = function(r, attributes) {
+  stop("Not implemented")
 }
