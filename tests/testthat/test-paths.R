@@ -1,4 +1,4 @@
-skip_if_not(dss_require())
+skip_if_no_dss()
 
 test_that("path list works", {
   on.exit(f$close(), add = TRUE)

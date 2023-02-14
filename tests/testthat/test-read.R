@@ -1,7 +1,7 @@
-skip_if_not(dss_require())
+skip_if_no_dss()
 
 test_that("timeseries read works", {
-  on.exit(f$close(), add = TRUE)
+  on.exit(f$done(), add = TRUE)
   f = dss_open(system.file("extdata/test.dss", package = "dssrip2"))
   path = "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01JAN2012/1DAY/USGS/"
   # default behavior
@@ -24,7 +24,7 @@ test_that("timeseries read works", {
 
 
 test_that("paired data read works", {
-  on.exit(f$close(), add = TRUE)
+  on.exit(f$done(), add = TRUE)
   f = dss_open(system.file("extdata/test.dss", package = "dssrip2"))
   path = "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/"
   pd = dss_read(f, path)
@@ -34,7 +34,7 @@ test_that("paired data read works", {
 
 
 test_that("grid data read works", {
-  on.exit(f$close(), add = TRUE)
+  on.exit(f$done(), add = TRUE)
   f = dss_open(system.file("extdata/example.dss", package = "dssrip2"))
   path = "/SHG/LCOLORADO/PRECIP/02JAN2020:1500/02JAN2020:1600/Ex15/"
 
