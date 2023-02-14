@@ -60,7 +60,7 @@ format_datetimes = function(x, default_tz = "etc/GMT+0") {
   } else if (!nzchar(tz(x))) {
     warning("No timezone set for argument \"x\". Using ",
       default_tz, ".")
-    force_tz(datetimes, tzone = default_tz)
+    force_tz(x, tzone = default_tz)
   } else {
     x
   }
