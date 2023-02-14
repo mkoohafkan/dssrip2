@@ -59,8 +59,23 @@ list_attributes_timeseries = function() {
 #' @rdname list_attributes
 list_attributes_paired = function() {
   list(
-    required = c(""),
-    optional = c("")
+    required = c(
+      "xunits",
+      "yunits",
+      "xtype",
+      "ytype"
+    ),
+    optional = c(
+      "labels"
+    ),
+    derived = c(
+      "xparameter",
+      "yparameter",
+      "xOrdinates",
+      "yOrdinates",
+      "labelsUsed",
+      "numberCurves"
+    )
   )
 }
 
