@@ -85,11 +85,12 @@ assert_read_support = function(obj) {
 #' Assert the supplied rJava object is a DSS timeseries.
 #'
 #' @importFrom rJava .jclass
+#' @importFrom lubridate is.instant
 #' @keywords internal
 assert_write_support = function(obj) {
   supported_classes = c(
 #    "hec.io.GridContainer",
-#    "hec.io.PairedDataContainer",
+    "hec.io.PairedDataContainer",
     "hec.io.TimeSeriesContainer"
   )
   if (inherits(obj, "raster")) {
@@ -97,7 +98,7 @@ assert_write_support = function(obj) {
   } else if (inherits(obj, "data.frame")) {
     if (ncol(obj) < 2L) {
       jclass = ""
-    } else if (ncol(obj)  == 2L) {
+    } else if ((ncol(obj)  == 2L) && is.instant(obj[[1]])) {
       jclass = "hec.io.TimeSeriesContainer"
     } else {
       jclass = "hec.io.PairedDataContainer"
@@ -105,9 +106,12 @@ assert_write_support = function(obj) {
   } else {
     jclass = ""
   }
-  if (!(jclass %in% supported_classes)) {
-    stop("No write support for objects of type: ",
+  if (!nzchar(jclass)) {
+    stop("Could not identify output type for supplied object type: ",
       paste(class(obj), collapse = ", "))
+  }
+  if (!(jclass %in% supported_classes)) {
+    stop("No write support for ", jclass, " objects")
   }
 }
 

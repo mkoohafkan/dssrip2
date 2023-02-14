@@ -13,6 +13,9 @@
 #'   to write to DSS.
 #' @inheritParams dss_squeeze
 #' @param attributes A named list of DSS attributes.
+#'
+#' @importFrom lubridate is.instant
+#' @export
 dss_write = function(x, file, path, attributes = list()) {
   on.exit(file$done(), add = TRUE)
   assert_write_support(x)
@@ -20,11 +23,11 @@ dss_write = function(x, file, path, attributes = list()) {
   assert_path_format(path)
   if (inherits(x, "raster")) {
     dssObj = dss_to_grid(x, attributes)
-  } else if (inherits(x, "data.frame")) {
-    if (ncol(x) > 2L) {
-      dssObj = dss_to_paired(x, attributes)
-    } else {
+  } else if (inherits(x, "data.frame") && ncol(x) > 1L) {
+    if ((ncol(x) == 2L) && is.instant(x[[1]])) {
       dssObj = dss_to_timeseries(x, attributes)
+    } else {
+      dssObj = dss_to_paired(x, attributes)
     }
   } else {
     stop("Could not determine DSS container type of 'x'.")
@@ -131,10 +134,9 @@ dss_to_timeseries = function(d, attributes) {
   tsObj$setUnits(attributes[["units"]])
   tsObj$setType(attributes[["type"]])
   tsObj$setValues(d[, 2])
-  
+
   tsObj
 
-  
 #  tsObj$setParameter
 #
 #
@@ -149,4 +151,27 @@ dss_to_timeseries = function(d, attributes) {
 #      "times",
 #      "values"
 #
+}
+
+
+#' @importFrom rJava .jarray
+dss_to_paired = function(d, attributes) {
+  # build paired data object
+  pdObj = .jnew("hec.io.PairedDataContainer")
+  assert_attributes(pdObj, attributes)
+  pdObj$setNumberCurves(ncol(d) - 1L)
+  pdObj$setNumberOrdinates(nrow(d))
+  pdObj$setXType(attributes$xtype)
+  pdObj$setYType(attributes$ytype)
+  pdObj$setXUnits(attributes$xunits)
+  pdObj$setYUnits(attributes$yunits)
+  if ("labels" %in% names(attributes)) {
+    pdObj$setLabels(attributes$labels)
+  }
+  pdObj$setXOrdinates(d[, 1])
+  # need a double[][] array
+  pdObj$setYOrdinates(.jarray(lapply(d[seq.int(2L, ncol(d))], .jarray,
+    "[D"), "[D"))
+
+  pdObj
 }
