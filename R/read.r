@@ -85,6 +85,7 @@ dss_read_paired = function(pdObj) {
   assert_paired(pdObj)
   pd_info =   list(
     "xparameter" = pdObj$xparameter,
+    "yparameter" = pdObj$yparameter,
     "labels" = pdObj$getLabels(),
     "labelsUsed" = pdObj$labelsUsed,
     "numberCurves" = pdObj$getNumberCurves(),
@@ -107,11 +108,11 @@ dss_read_paired = function(pdObj) {
     as.data.frame(t(.jevalArray(pdObj$getYOridnates(),
       simplify = TRUE)))
   )
-  names(out) = c(pd_info[["xparameter"]], ynames)
-  attr(out, "dss.type") = unlist(pd_info[c("xtype", "ytype")],
-    use.names = FALSE)
-  attr(out, "dss.units") = unlist(pd_info[c("xunits", "yunits")],
-    use.names = FALSE)
+  names(out) = tolower(c(pd_info[["xparameter"]], ynames))
+  attr(out, "dss.xtype") = pd_info[["xtype"]]
+  attr(out, "dss.ytype") = pd_info[["ytype"]]
+  attr(out, "dss.xunits") = pd_info[["xunits"]]
+  attr(out, "dss.yunits") = pd_info[["yunits"]]
   out
 }
 
