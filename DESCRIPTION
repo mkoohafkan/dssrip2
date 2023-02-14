@@ -6,7 +6,7 @@ Authors@R: c(
     person("Evan", "Heisman", , "evan.a.heisman@usace.army.mil", role = c("aut")),
     person("Cameron", "Bracken", , "", role = c("aut")))
 Description: A wrapper for the HEC-DSS Java API
-    (https://www.hec.usace.army.mil/confluence/dssjavaprogrammer)
+    (https://www.hec.usace.army.mil/confluence/dssdocs/dssjavaprogrammer)
     allowing an interface between R and many common hydrologic models.
     This is a rewrite of the original "dssrip" package.
 License: MIT + file LICENSE
