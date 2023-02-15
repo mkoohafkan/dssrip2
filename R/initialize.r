@@ -59,24 +59,32 @@ dss_connect = function(dss_home = getOption("dss.home"),
   }
   # hec.io.TimeSeriesContainer
   assign("hec.io.TimeSeriesContainer",
-    build_fields_table(.jnew("hec/io/TimeSeriesContainer")), hecJavaObjectFieldsDB)
+    build_fields_table(.jnew("hec/io/TimeSeriesContainer")),
+    hecJavaObjectFieldsDB)
   assign("hec.io.TimeSeriesContainer",
-    build_methods_table(.jnew("hec/io/TimeSeriesContainer")), hecJavaObjectMethodsDB)
+    build_methods_table(.jnew("hec/io/TimeSeriesContainer")),
+    hecJavaObjectMethodsDB)
   # hec.io.PairedDataContainer
   assign("hec.io.PairedDataContainer",
-    build_fields_table(.jnew("hec/io/PairedDataContainer")), hecJavaObjectFieldsDB)
+    build_fields_table(.jnew("hec/io/PairedDataContainer")),
+    hecJavaObjectFieldsDB)
   assign("hec.io.PairedDataContainer",
-    build_methods_table(.jnew("hec/io/PairedDataContainer")), hecJavaObjectMethodsDB)
+    build_methods_table(.jnew("hec/io/PairedDataContainer")),
+    hecJavaObjectMethodsDB)
   # hec.io.GridContainer
   assign("hec.io.GridContainer",
-    build_fields_table(.jnew("hec/io/GridContainer")), hecJavaObjectFieldsDB)
+    build_fields_table(.jnew("hec/io/GridContainer")),
+    hecJavaObjectFieldsDB)
   assign("hec.io.GridContainer",
-    build_methods_table(.jnew("hec/io/GridContainer")), hecJavaObjectMethodsDB)
+    build_methods_table(.jnew("hec/io/GridContainer")),
+    hecJavaObjectMethodsDB)
   # hec.heclib.grid.GridData
 #  assign("hec.io.GridContainer",
-#    build_fields_table(.jnew("hec/heclib/grid/GridData")), hecJavaObjectFieldsDB)
+#    build_fields_table(.jnew("hec/heclib/grid/GridData")),
+#    hecJavaObjectFieldsDB)
 #  assign("hec.io.GridContainer",
-#    build_methods_table(.jnew("hec/heclib/grid/GridData")), hecJavaObjectMethodsDB)
+#    build_methods_table(.jnew("hec/heclib/grid/GridData")),
+#    hecJavaObjectMethodsDB)
   # constants
   assign("DSS_CONSTANTS", J("hec/script/Constants"),
     envir = hecJavaConstantsDB)
@@ -90,6 +98,7 @@ dss_connect = function(dss_home = getOption("dss.home"),
 #' @rdname dss_connect
 #' @importFrom rJava javaImport .jaddLibrary .jaddClassPath
 #'   .jcall
+#' @keywords internal
 dss_connect_win = function(dss_home, message_level, monolith) {
   if (is.null(dss_home) && monolith) {
     dss_home = normalizePath(file.path(Sys.getenv("LOCALAPPDATA"),

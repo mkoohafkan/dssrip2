@@ -22,9 +22,10 @@ Imports:
     utils
 SystemRequirements: 
     HEC-DSSVue (>= 3.2.3, https://www.hec.usace.army.mil/software/hec-dssvue)
+    Java JDK (>= 1.8)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
