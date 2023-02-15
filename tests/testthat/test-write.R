@@ -9,7 +9,7 @@ test_that("time series writing works", {
   attributes = list("type" = "PER-AVER", units = "cfs")
 
   outpath = tempfile(fileext = ".dss")
-  out_file = dss_file(outpath)
+  out_file = dss_create(outpath)
   on.exit(out_file$done(), add = TRUE)
   out_pathname = "/Fake Creek/Fake Town/FLOW//1DAY/FAKE/"
 
@@ -27,7 +27,7 @@ test_that("paired data writing works", {
     xtype = "UNT", ytype = "UNT")
 
   outpath = tempfile(fileext = ".dss")
-  out_file = dss_file(outpath)
+  out_file = dss_create(outpath)
   on.exit(out_file$done(), add = TRUE)
   out_pathname = "/Fake Creek/Fake Town/FLOW-STAGE///FAKE/"
 
@@ -37,4 +37,8 @@ test_that("paired data writing works", {
     tolerance = 1e-5, ignore_attr = c("dss.xtype", "dss.ytype",
       "dss.xunits", "dss.yunits"))
 
+})
+
+test_that("grid data writing works", {
+  skip("not implemented")
 })

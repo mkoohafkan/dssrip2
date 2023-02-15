@@ -2,29 +2,29 @@ skip_if_no_dss()
 
 test_that("path list works", {
   on.exit(f$close(), add = TRUE)
-  f = dss_open(system.file("extdata/test.dss", package = "dssrip2"))
+  f = dss_open(system.file("extdata/example.dss", package = "dssrip2"))
   all_paths = dss_paths(f, pattern = "*", condensed = FALSE)
   all_paths_c = dss_paths(f, pattern = "*", condensed = TRUE)
-  paths1 = dss_paths(f, pattern = "^/RACCOON CREEK/.*/$",
+  paths1 = dss_paths(f, pattern = "^/BRANDYWINE CREEK/.*/$",
     condensed = FALSE)
-  paths1_c = dss_paths(f, pattern = "^/RACCOON CREEK/.*/$",
+  paths1_c = dss_paths(f, pattern = "^/BRANDYWINE CREEK/.*/$",
     condensed = TRUE)
   paths2 = dss_paths(f, pattern = "^/.*/.*/.*/.*/IR-CENTURY/.*$",
     condensed = FALSE)
   paths2_c = dss_paths(f, pattern = "^/.*/.*/.*/.*/IR-CENTURY/.*$",
     condensed = TRUE)
 
-  expect_identical(length(all_paths), 550L)
-  expect_identical(length(all_paths_c), 26L)
+  expect_identical(length(all_paths), 74L)
+  expect_identical(length(all_paths_c), 5L)
 
-  expect_identical(length(paths1), 84L)
-  expect_identical(length(paths1_c), 6L)
+  expect_identical(length(paths1), 74L)
+  expect_identical(length(paths1_c), 5L)
   expect_identical(all(paths1 %in% all_paths), TRUE)
   expect_identical(all(paths1 %in% all_paths_c), FALSE)
   expect_identical(all(paths1_c %in% all_paths_c), TRUE)
 
-  expect_identical(length(paths2), 22L)
-  expect_identical(length(paths2_c), 11L)
+  expect_identical(length(paths2), 4L)
+  expect_identical(length(paths2_c), 2L)
   expect_identical(all(paths2 %in% all_paths), TRUE)
   expect_identical(all(paths2 %in% all_paths_c), FALSE)
   expect_identical(all(paths2_c %in% all_paths_c), TRUE)
