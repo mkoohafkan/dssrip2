@@ -95,18 +95,19 @@ dss_read_paired = function(pdObj) {
     "yunits" = pdObj$getYUnits()
   )
   # y ordinate labels
-  labels = ifelse(pd_info[["labelsUsed"]], pd_info[["labels"]],
-    seq.int(pd_info[["numberCurves"]]))
-  if (pd_info[["labelsUsed"]] || (length(labels) > 1L)) {
-    ynames = paste(pd_info[["yparameter"]], labels, sep = ".")
+  if (pd_info[["labelsUsed"]]) {
+    ynames = pd_info[["labels"]]
+  } else if (pd_info[["numberCurves"]] > 1L) {
+    ynames = paste(pd_info[["yparameter"]],
+      seq_len(pd_info[["numberCurves"]]), sep = "_")
   } else {
     ynames = paste(pd_info[["yparameter"]])
   }
   # sic, typo is in Java
   out = cbind(
     pdObj$getXOridnates(),
-    as.data.frame(t(.jevalArray(pdObj$getYOridnates(),
-      simplify = TRUE)))
+    as.data.frame(format_na(t(.jevalArray(pdObj$getYOridnates(),
+      simplify = TRUE))))
   )
   names(out) = tolower(c(pd_info[["xparameter"]], ynames))
   attr(out, "dss.xtype") = pd_info[["xtype"]]
