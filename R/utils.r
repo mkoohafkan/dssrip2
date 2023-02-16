@@ -52,17 +52,21 @@ dss_timezone = function(tzoffset) {
 #'
 #' @importFrom lubridate as_datetime tz force_tz
 #' @keywords internal
-format_datetimes = function(x, default_tz = "etc/GMT+0") {
+format_datetimes = function(x) {
   if (!inherits(x, "POSIXct")) {
-    warning("No timezone set for argument \"x\". Using ",
-      default_tz, ".", call. = FALSE)
-    as_datetime(x, tz = default_tz)
+    warning("Converting supplied timestamps to 'POSIXct' class, ",
+      "using default timezone ", DSS_TIMEZONE, call. = FALSE)
+    fx = as_datetime(x, tz = DSS_TIMEZONE)
   } else if (!nzchar(tz(x))) {
-    warning("No timezone set for argument \"x\". Using ",
-      default_tz, ".", call. = FALSE)
-    force_tz(x, tzone = default_tz)
+    warning("No timezone specified for supplied timestamps, ",
+      "using ", DSS_TIMEZONE, call. = FALSE)
+    fx = force_tz(x, tzone = DSS_TIMEZONE)
   } else {
-    x
+    fx = x
+  }
+  if (any(is.na(x))) {
+    stop("Supplied timestamps contain or were coerced to NA. ",
+      "Cannot write time series to DSS", call. = FALSE)
   }
 }
 
@@ -88,15 +92,24 @@ na_fill = function(v, forward = TRUE) {
   dir_fun(v[i][cumsum(i)])[seq_along(v)]
 }
 
-#' Format NA Values
+#' Convert NA Values
 #'
-#' Replace the DSS placeholder NA value with R NA values.
+#' Convert between DSS placeholder and R NA values.
 #'
 #' @param x A numeric vector.
-#' @return The vector `x`, possibly with NA values
+#' @return The vector `x`, possibly with NA/placeholder values.
 #'
 #' @keywords internal
-format_na = function(x) {
+java_to_na = function(x) {
   na_vec = rep(DSS_MISSING_VALUE, length(x))
   ifelse(abs(x - na_vec) < 1e-5, NA, x)
+}
+
+
+#' @rdname java_to_na
+#'
+#' @keywords internal
+na_to_java = function(x) {
+  na_vec = rep(DSS_MISSING_VALUE, length(x))
+  ifelse(is.na(x), DSS_MISSING_VALUE, x)
 }

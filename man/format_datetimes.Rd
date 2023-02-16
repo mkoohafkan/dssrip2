@@ -4,7 +4,7 @@
 \alias{format_datetimes}
 \title{Format Datetimes}
 \usage{
-format_datetimes(x, default_tz = "etc/GMT+0")
+format_datetimes(x)
 }
 \arguments{
 \item{x}{A vector to be coerced to datetimes}
