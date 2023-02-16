@@ -32,7 +32,7 @@ dss_timezone = function(tzoffset) {
     tzoffset = 0L
   } else if ((tzoffset %% 3600000L) > 0L) {
     warning("timezone offset is fractional hours. ",
-      "Defaulting to ", DSS_TIMEZONE, ".")
+      "Defaulting to ", DSS_TIMEZONE, ".", call. = FALSE)
     tzoffset = 0L
   }
   offset_hours = tzoffset %/% 3600000L
@@ -55,11 +55,11 @@ dss_timezone = function(tzoffset) {
 format_datetimes = function(x, default_tz = "etc/GMT+0") {
   if (!inherits(x, "POSIXct")) {
     warning("No timezone set for argument \"x\". Using ",
-      default_tz, ".")
+      default_tz, ".", call. = FALSE)
     as_datetime(x, tz = default_tz)
   } else if (!nzchar(tz(x))) {
     warning("No timezone set for argument \"x\". Using ",
-      default_tz, ".")
+      default_tz, ".", call. = FALSE)
     force_tz(x, tzone = default_tz)
   } else {
     x
