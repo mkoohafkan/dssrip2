@@ -6,8 +6,9 @@
   <!-- badges: end -->
 
 A cannibilizationa and rewrite of
-[dssrip](https://github.com/eheisman/dssrip). Support for additional
-DSS data types and writing DSS data are planned.
+[dssrip](https://github.com/eheisman/dssrip). Supports reading and
+writing time series and paired data to DSS. Linux support and
+read/write support for DSS grid data is planned.
  
  # Setup
 
@@ -69,11 +70,10 @@ options in your R profile:
 options(dss.monolith = TRUE)
 ```
 
-By default, `dssrip2` will install Monolith to your `%LOCALAPPDATA%`
-folder (but this can be overridden). If the option `dss.monolith` is
-set to `TRUE`, `dssrip2` will interpret the `dss.home` option as the
-Monolith file path, which allows you to specify a custom file path
-to Monolith.
+By default, `dssrip2` will install HEC-Monolith to your
+`%LOCALAPPDATA%` folder, but this can be overridden. If the option
+`dss.monolith` is set to `TRUE`, `dssrip2` will interpret the
+`dss.home` option as the HEC-Monolith file path.
 
 
 # Usage
@@ -88,19 +88,19 @@ filepath = system.file("extdata/test.dss", package = "dssrip2")
 conn = dss_file(filepath)
 ```
 
-To close the file connection, use the `$close()` or `$done()` methods:
+DSS files will usually close on their own after some period of
+inactivity, but it is best practice for users to explicitly signal
+to DSS when they are finished working with a file by calling the 
+file's `$done()` method:
 
 ```r
-conn$close()
+conn$done()
 ```
-
-Dss files will usually close on their own after some period of
-inactivity, but it is best practice for users to explicitly close
-files when they are done working with them.
 
 ## Reading data
 
-`dssrip2` automatically detects the data type being read, so the same function call can be used for reading time series and paired data.
+`dssrip2` automatically detects the data type being read, so the same
+function call can be used for reading time series and paired data.
 
 ```r
 # time series
@@ -108,4 +108,23 @@ dss_read(conn, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01JAN1946/1DAY/USGS/")
 
 # paired data container
 dss_read(conn, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/")
+```
+
+## Writing data
+
+`dssrip2` deduces detects the data type to write based on the supplied
+R object, so the same function call can be used for reading time
+series and paired data. However, writing DSS objects requires
+additional attributes that must be explicitly supplied by the user:
+
+```r
+data(Nile)
+nile = data.frame(datetime = as.Date(sprintf("%d-10-01", time(Nile))),
+  flow = as.vector(Nile) * 1e8)
+nile_meta = list(units = "cubic meters", type = "PER-CUM")
+path = "//NILE RIVER/VOLUME//1YEAR/R DATASET/"
+tf = tempfile(fileext = ".dss")
+conn = dss_create(tf)
+
+dss_write(nile, f, path, nile_meta)
 ```
