@@ -9,6 +9,8 @@
 \alias{assert_read_support}
 \alias{assert_write_support}
 \alias{assert_timeseries}
+\alias{assert_timeseries_type}
+\alias{assert_timeseries_interval}
 \alias{assert_paired}
 \alias{assert_grid}
 \alias{assert_attributes}
@@ -27,6 +29,10 @@ assert_read_support(obj)
 assert_write_support(obj)
 
 assert_timeseries(obj)
+
+assert_timeseries_type(type)
+
+assert_timeseries_interval(type)
 
 assert_paired(obj)
 
@@ -52,6 +58,10 @@ Helper functions for DSS type and format checking.
 \item \code{assert_write_support()}: Assert the supplied rJava object is a DSS timeseries.
 
 \item \code{assert_timeseries()}: Assert the supplied rJava object is a DSS timeseries.
+
+\item \code{assert_timeseries_type()}: Assert the supplied time series type is recognized.
+
+\item \code{assert_timeseries_interval()}: Assert the supplied time series interval is recognized.
 
 \item \code{assert_paired()}: Assert the supplied rJava object is a DSS paired data container.
 

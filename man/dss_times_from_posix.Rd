@@ -4,15 +4,14 @@
 \alias{dss_times_from_posix}
 \title{DSS Times From POSIXct}
 \usage{
-dss_times_from_posix(datetimes)
+dss_times_from_posix(datetimes, dss_interval)
 }
 \arguments{
-\item{datetimes}{A POSIXct vector.}
-
-\item{type}{The DSS data type, e.g. "PER_AVER" or "INST".}
-
-\item{granularity}{The smallest time interval in the data.
+\item{datetimes}{A POSIXct vector.
 Default is 60L (one  minute).}
+
+\item{dss_interval}{The DSS time interval, e.g., "15MIN", "1DAY",
+"IR-CENTURY", etc.}
 }
 \value{
 A named list for writing to DSS.

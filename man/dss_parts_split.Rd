@@ -4,14 +4,16 @@
 \alias{dss_parts_split}
 \title{DSS Path To Parts}
 \usage{
-dss_parts_split(path)
+dss_parts_split(path, keep = FALSE)
 }
 \arguments{
 \item{path}{A vector of DSS paths.}
+
+\item{keep}{If \code{TRUE}, preserve the supplied paths in the output.}
 }
 \value{
-A dataframe with fields "path", "A", "B", "C",
-"D", "E", "F".
+A dataframe with fields "A", "B", "C",
+"D", "E", "F" and optional field "path" (if \code{keep = TRUE}).
 }
 \description{
 Split DSS path into parts.

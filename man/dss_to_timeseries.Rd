@@ -4,12 +4,15 @@
 \alias{dss_to_timeseries}
 \title{Timeseries to DSS}
 \usage{
-dss_to_timeseries(d, attributes)
+dss_to_timeseries(d, attributes, dss_interval)
 }
 \arguments{
 \item{d}{A data frame.}
 
 \item{attributes}{A list of \code{TimeSeriesContainer} attributes.}
+
+\item{dss_interval}{The DSS time interval, e.g., "15MIN", "1DAY",
+"IR-CENTURY", etc.}
 }
 \value{
 A \code{TimeSeriesContainer} Java object reference.
