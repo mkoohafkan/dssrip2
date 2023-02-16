@@ -1,0 +1,217 @@
+---
+title: "Quick Start with dssrip2"
+author: "Michael Koohafkan"
+date: "2023-02-16"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Quick Start}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+
+The R package `dssrip2` provides a simple interface to read and write
+HEC-DSS files.
+
+## Connecting to HEC-DSSVue
+
+If you have HEC-DSSVue installed on your machine, call `dss_connect()`
+and supply the path to the install folder:
+
+
+```r
+library(dssrip2)
+
+dss_connect("C:/Program Files/HEC/HEC-DSSVue")
+```
+
+Alternatively, you can download the HEC Monolith Jars (and associated
+dependencies) and connect to those instead:
+
+
+```r
+dss_install_monolith()
+dss_connect(monolith = TRUE)
+```
+
+By default, HEC Monolith installs to APPDATA. For simplified startup,
+you can add the following options to `.Rprofile`:
+
+
+```r
+# for HEC-DSSVue
+options(dss.home = "C:/Program Files/HEC/HEC-DSSVue")
+
+# alternatively, for HEC Monolith in the default direcory
+options(dss.monolith = TRUE)
+```
+
+Review the `dss_connect()` and `dss_install_monolith()` help files for
+more information on configuration.
+
+
+## Reading DSS data
+
+Start by opening a DSS File:
+
+
+```r
+f = dss_open(system.file("extdata/example.dss", package = "dssrip2"))
+```
+
+This file contains five datasets:
+
+1. A daily flow timeseries
+2. A 15-minute stage timeseries
+3. An annual peak flow irregular timeseries
+4. An annual peak stage irregular timeseries
+5. A flow-elevation paired datasets
+
+The DSS catalog can be read into R using `dss_catalog()`:
+
+
+```r
+dss_catalog(f, condensed = TRUE)
+#> [1] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01Oct1946 - 30Sep2012/1DAY/USGS/"                   
+#> [2] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-ANNUAL PEAK/30Apr1947 - 30Oct2012/IR-CENTURY/USGS/" 
+#> [3] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/"                      
+#> [4] "/BRANDYWINE CREEK/WILMINGTON, DE/GAGE HEIGHT/31Aug2012 - 30Sep2012/15MIN/USGS/"           
+#> [5] "/BRANDYWINE CREEK/WILMINGTON, DE/STAGE-ANNUAL PEAK/01JAN1900 - 01JAN2000/IR-CENTURY/USGS/"
+```
+
+`dss_catalog()` supports regex pattern matching to subset the path list:
+
+
+```r
+dss_catalog(f, "/.*/.*/FLOW.*/.*/.*/.*/")
+#> [1] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01Oct1946 - 30Sep2012/1DAY/USGS/"                  
+#> [2] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-ANNUAL PEAK/30Apr1947 - 30Oct2012/IR-CENTURY/USGS/"
+#> [3] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/"
+```
+
+`dssrip2` also provides a variety of functions are provided to assist
+with manipulating DSS paths:
+
+
+```r
+path = "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01Oct1946 - 30Sep2012/1DAY/USGS/"
+
+# split path into parts
+dss_parts_split(path)
+#>                  A              B    C                     D    E    F
+#> 1 BRANDYWINE CREEK WILMINGTON, DE FLOW 01Oct1946 - 30Sep2012 1DAY USGS
+
+# replace path part
+dss_parts_replace(path, list(B = "WILMINGTON, DELAWARE"))
+#> [1] "/BRANDYWINE CREEK/WILMINGTON, DELAWARE/FLOW/01Oct1946 - 30Sep2012/1DAY/USGS/"
+
+# combine parts into path
+dss_parts_combine(list(A = "BASIN", B = "LOCATION", C = "PARAMETER",
+  D = "", E = "1DAY", F = "EXAMPLE"))
+#> [1] "/BASIN/LOCATION/PARAMETER//1DAY/EXAMPLE/"
+```
+
+`dssrip2` provides the function `dss_read()` to read DSS datasets into
+R. The output format is automatically deduced from the DSS data type:
+
+- DSS regular and irregular time series are converted into two-column data frames.
+- DSS paired datasets are converted into two-column (or more) data frames.
+- DSS grid data is converted into SpatRasters
+  (see [`package:terra`](https://cran.r-project.org/package=terra)
+  for more information).
+
+
+```r
+# read in a regular timeseries
+dss_read(f, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW//1DAY/USGS/")
+#>     datetime flow
+#> 1 1946-10-02  235
+#> 2 1946-10-03  220
+#> 3 1946-10-04  210
+#> 4 1946-10-05  200
+#> 5 1946-10-06  195
+#>  [ reached 'max' / getOption("max.print") -- omitted 24102 rows ]
+
+# read in a single chunk of a regular timeseries
+dss_read(f, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01JAN1948/1DAY/USGS/",
+  full = FALSE)
+#>     datetime flow
+#> 1 1948-01-02  522
+#> 2 1948-01-03 2780
+#> 3 1948-01-04 1030
+#> 4 1948-01-05  590
+#> 5 1948-01-06  518
+#>  [ reached 'max' / getOption("max.print") -- omitted 361 rows ]
+
+# read in irregular timeseries
+dss_read(f, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-ANNUAL PEAK//IR-CENTURY/USGS/")
+#>     datetime flow-annual peak
+#> 1 1947-05-01             4730
+#> 2 1948-09-11             5160
+#> 3 1948-12-31             4940
+#> 4 1950-08-04             4610
+#> 5 1950-11-26            11500
+#>  [ reached 'max' / getOption("max.print") -- omitted 62 rows ]
+
+# read in a paired dataset
+dss_read(f, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/")
+#>   flow stage
+#> 1 2000  5.00
+#> 2 3260  6.24
+#> 3 3470  6.36
+#> 4 3470  6.43
+#> 5 3680  6.62
+#>  [ reached 'max' / getOption("max.print") -- omitted 62 rows ]
+```
+
+
+## Writing DSS data
+
+`dssrip2` Also provides write support for time series and paired data
+containers. As with reading data, `dssrip2` determines the appropriate
+DSS dataset type from the structure of the supplied input.
+
+
+```r
+outfile = tempfile(fileext = ".dss")
+
+f = dss_create(outfile)
+
+# create a regular timeseries from the LakeHuron dataset
+data(LakeHuron)
+lake_huron = data.frame(date = as.Date(sprintf("%d-10-01",
+  time(LakeHuron))), elev = as.vector(LakeHuron))
+lake_huron_path = "/GREAT LAKES/LAKE HURON/ELEV//1YEAR/R DATASET/"
+lake_huron_meta = list(units = "feet", type = "INST")
+
+dss_write(lake_huron, f, lake_huron_path, lake_huron_meta)
+#> Warning: No timezone set for argument "x". Using etc/GMT+0.
+
+# create an irregular timeseries from the airquality dataset
+data(airquality)
+aq = do.call(rbind, lapply(split(airquality, airquality$Month),
+  function(x)
+    x[which.max(x$Temp), ]))
+temps = data.frame(date = as.Date(sprintf("1973-%d-%d",
+  aq$Month, aq$Day)), temperature = aq$Temp)
+temps_path = "/NEW YORK/NEW YORK CITY/TEMPERATURE//IR-YEAR/R DATASET/"
+temps_meta = list(units = "degrees F", type = "INST")
+
+dss_write(temps, f, temps_path, temps_meta)
+#> Warning: No timezone set for argument "x". Using etc/GMT+0.
+
+# create paired dataset from the Loblolly dataset
+data(Loblolly)
+growth = reshape(Loblolly, direction = "wide", idvar = "age", timevar = "Seed")
+names(growth) = gsub("height.", "seed_", names(growth))
+growth_path = "//LOBLOLLY PINES/AGE-HEIGHT///R DATASET/"
+growth_meta = list(xunits = "years", yunits = "feet",
+  xtype = "UNT", ytype = "UNT", labels = names(growth)[2:ncol(growth)])
+
+dss_write(growth, f, growth_path, growth_meta)
+```
+
+That's it!
+

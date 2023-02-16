@@ -1,3 +1,5 @@
 ^jartest\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+^vignettes/_quickstart.rmd$
+^build_vignettes.r$
