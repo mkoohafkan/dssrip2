@@ -199,13 +199,18 @@ dss_to_paired = function(d, attributes) {
   # build paired data object
   pdObj = .jnew("hec.io.PairedDataContainer")
   assert_attributes(pdObj, attributes)
-  pdObj$setNumberCurves(ncol(d) - 1L)
+  ncurves = ncol(d) - 1L
+ pdObj$setNumberCurves(ncurves)
   pdObj$setNumberOrdinates(nrow(d))
   pdObj$setXType(attributes$xtype)
-  pdObj$setYType(attributes$ytype)
   pdObj$setXUnits(attributes$xunits)
+  pdObj$setYType(attributes$ytype)
   pdObj$setYUnits(attributes$yunits)
   if ("labels" %in% names(attributes)) {
+    if (length(attributes$labels) != ncurves) {
+      stop("Attribute \"labels\" does not match the supplied dataset ",
+      "(expects length of 1 or ", ncurves, ")")
+    }
     pdObj$setLabels(attributes$labels)
     pdObj$labelsUsed = TRUE
   }

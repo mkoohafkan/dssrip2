@@ -38,6 +38,18 @@ test_that("paired data writing works", {
     tolerance = 1e-5, ignore_attr = c("dss.xtype", "dss.ytype",
       "dss.xunits", "dss.yunits"))
 
+  # test labels and NA values
+  d2 = data.frame(flow = c(10, 12, NA, 13, 15) * 1000,
+    foo = c(17.1, 17.2, 17.3, 17.4, 17.6),
+    bar = c(13.7, 13.8, 13.8, 13.9, 14.1),
+    baz = c(10.36, 10.3, 10.4, 10.4, 10.))
+  attributes2 = list(xunits = "cfs", yunits = "feet",
+    xtype = "UNT", ytype = "UNT", labels = names(d2[2:4]))
+  out_pathname2 = "/Fake Creek/Fake Town/FLOW-STAGE///FAKE2/"
+
+  dss_write(d2, out_file, out_pathname2, attributes2)
+
+
 })
 
 
