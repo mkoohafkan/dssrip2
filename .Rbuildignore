@@ -3,3 +3,7 @@
 ^LICENSE\.md$
 ^vignettes/_quickstart.rmd$
 ^build_vignettes.r$
+^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

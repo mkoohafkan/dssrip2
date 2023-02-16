@@ -1,5 +1,10 @@
 # DSS R Interface Project (2)
 
+  <!-- badges: start -->
+  ![CRAN Release](https://www.r-pkg.org/badges/version-last-release/dssrip2)
+  [![R-CMD-check](https://github.com/mkoohafkan/dssrip2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mkoohafkan/dssrip2/actions/workflows/R-CMD-check.yaml)
+  <!-- badges: end -->
+
 A cannibilizationa and rewrite of
 [dssrip](https://github.com/eheisman/dssrip). Support for additional
 DSS data types and writing DSS data are planned.
