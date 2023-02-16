@@ -106,25 +106,37 @@ function call can be used for reading time series and paired data.
 # time series
 dss_read(conn, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01JAN1946/1DAY/USGS/")
 
-# paired data container
+# paired data
 dss_read(conn, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/")
 ```
 
 ## Writing data
 
-`dssrip2` deduces detects the data type to write based on the supplied
+`dssrip2` deduces the data type to write based on the supplied
 R object, so the same function call can be used for reading time
 series and paired data. However, writing DSS objects requires
 additional attributes that must be explicitly supplied by the user:
 
 ```r
+tf = tempfile(fileext = ".dss")
+conn = dss_create(tf)
+
+# time series
 data(Nile)
 nile = data.frame(datetime = as.Date(sprintf("%d-10-01", time(Nile))),
   flow = as.vector(Nile) * 1e8)
 nile_meta = list(units = "cubic meters", type = "PER-CUM")
 path = "//NILE RIVER/VOLUME//1YEAR/R DATASET/"
-tf = tempfile(fileext = ".dss")
-conn = dss_create(tf)
+dss_write(nile, conn, path, nile_meta)
 
-dss_write(nile, f, path, nile_meta)
+# paired data
+data(CO2)
+uptake = reshape(CO2[c("Plant", "conc", "uptake")],
+  direction = "wide", idvar = "conc", timevar = "Plant")
+names(uptake) = gsub("uptake.", "", names(uptake))
+uptake_meta = list(xtype = "LINEAR", ytype = "LINEAR",
+  xunits = "mL/L", yunits = "umol/m^2",
+  labels = names(uptake)[2:ncol(uptake)])
+path = "//PLANT CO2 UPTAKE/CONCENTRATION-UPTAKE///R DATASET/"
+dss_write(uptake, conn, path, uptake_meta)
 ```
