@@ -121,9 +121,6 @@
     <loc>https://hydroecology.net/dssrip2/reference/format_datetimes.html</loc>
   </url>
   <url>
-    <loc>https://hydroecology.net/dssrip2/reference/format_na.html</loc>
-  </url>
-  <url>
     <loc>https://hydroecology.net/dssrip2/reference/get_field.html</loc>
   </url>
   <url>
@@ -131,6 +128,9 @@
   </url>
   <url>
     <loc>https://hydroecology.net/dssrip2/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://hydroecology.net/dssrip2/reference/java_to_na.html</loc>
   </url>
   <url>
     <loc>https://hydroecology.net/dssrip2/reference/list_attributes.html</loc>
