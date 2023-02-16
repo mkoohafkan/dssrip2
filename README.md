@@ -10,7 +10,7 @@ A cannibilizationa and rewrite of
 writing time series and paired data to DSS. Linux support and
 read/write support for DSS grid data is planned.
  
- # Setup
+# Setup
 
 You can install the `dssrip2` directly using
 
@@ -18,7 +18,7 @@ You can install the `dssrip2` directly using
 remotes::install_github("mkoohafkan/dssrip2")
 ```
 
- ## Existing HEC-DSSVue install
+## Existing HEC-DSSVue install
 
 A 64-bit install of HEC-DSSVue and a 64-bit JDK are required. To load
 DSS functionality, call
