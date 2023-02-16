@@ -8,14 +8,14 @@ test_that("time series writing works", {
   )
   attributes = list("type" = "PER-AVER", units = "cfs")
 
-  outpath = tempfile(fileext = ".dss")
-  out_file = dss_create(outpath)
-  on.exit(out_file$done(), add = TRUE)
-  out_pathname = "/Fake Creek/Fake Town/FLOW//1DAY/FAKE/"
+  tf = tempfile(fileext = ".dss")
+  conn = dss_create(tf)
+  on.exit(conn$done(), add = TRUE)
+  path = "/Fake Creek/Fake Town/FLOW//1DAY/FAKE/"
 
-  dss_write(d, out_file, out_pathname, attributes)
+  dss_write(d, conn, path, attributes)
 
-  expect_identical(d, dss_read(out_file, out_pathname),
+  expect_identical(d, dss_read(conn, path),
     ignore_attr = c("dss.type", "dss.units"))
 
 })
@@ -27,14 +27,14 @@ test_that("paired data writing works", {
   attributes = list(xunits = "cfs", yunits = "stage",
     xtype = "UNT", ytype = "UNT")
 
-  outpath = tempfile(fileext = ".dss")
-  out_file = dss_create(outpath)
-  on.exit(out_file$done(), add = TRUE)
-  out_pathname = "/Fake Creek/Fake Town/FLOW-STAGE///FAKE/"
+  tf = tempfile(fileext = ".dss")
+  conn = dss_create(tf)
+  on.exit(conn$done(), add = TRUE)
+  path = "/Fake Creek/Fake Town/FLOW-STAGE///FAKE/"
 
-  dss_write(d, out_file, out_pathname, attributes)
+  dss_write(d, conn, path, attributes)
 
-  expect_equal(d, dss_read(out_file, out_pathname),
+  expect_equal(d, dss_read(conn, path),
     tolerance = 1e-5, ignore_attr = c("dss.xtype", "dss.ytype",
       "dss.xunits", "dss.yunits"))
 
@@ -45,10 +45,9 @@ test_that("paired data writing works", {
     baz = c(10.36, 10.3, 10.4, 10.4, 10.))
   attributes2 = list(xunits = "cfs", yunits = "feet",
     xtype = "UNT", ytype = "UNT", labels = names(d2[2:4]))
-  out_pathname2 = "/Fake Creek/Fake Town/FLOW-STAGE///FAKE2/"
+  path2 = "/Fake Creek/Fake Town/FLOW-STAGE///FAKE2/"
 
-  dss_write(d2, out_file, out_pathname2, attributes2)
-
+  dss_write(d2, conn, path2, attributes2)
 
 })
 
