@@ -74,11 +74,16 @@
 </h1></div>
 <p><!-- badges: start --> <img src="https://www.r-pkg.org/badges/version-last-release/dssrip2" alt="CRAN Release"><a href="https://github.com/mkoohafkan/dssrip2/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/mkoohafkan/dssrip2/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <!-- badges: end --></p>
 <p>A cannibilizationa and rewrite of <a href="https://github.com/eheisman/dssrip" class="external-link">dssrip</a>. Supports reading and writing time series and paired data to DSS. Linux support and read/write support for DSS grid data is planned.</p>
-<p># Setup</p>
+</div>
+<div class="section level1">
+<h1 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+</h1>
 <p>You can install the <code>dssrip2</code> directly using</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mkoohafkan/dssrip2"</span><span class="op">)</span></span></code></pre></div>
-<p>## Existing HEC-DSSVue install</p>
+<div class="section level2">
+<h2 id="existing-hec-dssvue-install">Existing HEC-DSSVue install<a class="anchor" aria-label="anchor" href="#existing-hec-dssvue-install"></a>
+</h2>
 <p>A 64-bit install of HEC-DSSVue and a 64-bit JDK are required. To load DSS functionality, call</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mkoohafkan/dssrip2" class="external-link">dssrip2</a></span><span class="op">)</span></span>
@@ -99,6 +104,7 @@
 <span>  dss.home <span class="op">=</span> <span class="st">"C:/Program Files/HEC/HEC-DSSVue"</span>,</span>
 <span>  dss.messagelevel <span class="op">=</span> <span class="fl">1L</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+</div>
 <div class="section level2">
 <h2 id="monolith">Monolith<a class="anchor" aria-label="anchor" href="#monolith"></a>
 </h2>
