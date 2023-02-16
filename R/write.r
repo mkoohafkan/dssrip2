@@ -164,7 +164,7 @@ dss_to_timeseries = function(d, attributes, dss_interval) {
   # value properties
   tsObj$setUnits(attributes[["units"]])
   tsObj$setType(attributes[["type"]])
-  tsObj$setValues(as.numeric(d[, 2]))
+  tsObj$setValues(na_to_java(as.numeric(d[, 2])))
 
   tsObj
 
@@ -214,7 +214,11 @@ dss_to_paired = function(d, attributes) {
     pdObj$setLabels(attributes$labels)
     pdObj$labelsUsed = TRUE
   }
-  pdObj$setXOrdinates(d[, 1])
+  # set NA values
+  for (n in seq(2, ncurves)) {
+    d[n] = na_to_java(d[[n]])
+  }
+  pdObj$setXOrdinates(na_to_java(d[, 1]))
   # need a double[][] array
   pdObj$setYOrdinates(.jarray(lapply(d[seq.int(2L, ncol(d))],
     .jarray, "[D"), "[D"))

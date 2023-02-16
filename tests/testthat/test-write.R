@@ -31,7 +31,6 @@ test_that("paired data writing works", {
   conn = dss_create(tf)
   on.exit(conn$done(), add = TRUE)
   path = "/Fake Creek/Fake Town/FLOW-STAGE///FAKE/"
-
   dss_write(d, conn, path, attributes)
 
   expect_equal(d, dss_read(conn, path),
@@ -46,7 +45,6 @@ test_that("paired data writing works", {
   attributes2 = list(xunits = "cfs", yunits = "feet",
     xtype = "UNT", ytype = "UNT", labels = names(d2[2:4]))
   path2 = "/Fake Creek/Fake Town/FLOW-STAGE///FAKE2/"
-
   dss_write(d2, conn, path2, attributes2)
 
 })

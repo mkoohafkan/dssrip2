@@ -64,7 +64,7 @@ dss_read_timeseries = function(tsObj) {
   times = tsObj$getMinutes()
   values = tsObj$getValues()
   out = data.frame(dss_times_to_posix(times, ts_info),
-    format_na(values))
+    java_to_na(values))
   names(out) = c("datetime", tolower(ts_info[["parameter"]]))
   attr(out, "dss.type") = ts_info[["type"]]
   attr(out, "dss.units") = ts_info[["units"]]
@@ -106,7 +106,7 @@ dss_read_paired = function(pdObj) {
   # sic, typo is in Java
   out = cbind(
     pdObj$getXOridnates(),
-    as.data.frame(format_na(t(.jevalArray(pdObj$getYOridnates(),
+    as.data.frame(java_to_na(t(.jevalArray(pdObj$getYOridnates(),
       simplify = TRUE))))
   )
   names(out) = tolower(c(pd_info[["xparameter"]], ynames))
