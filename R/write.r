@@ -26,7 +26,8 @@ dss_write = function(x, file, path, attributes = list()) {
     dssObj = dss_to_grid(x, attributes)
   } else if (inherits(x, "data.frame") && ncol(x) > 1L) {
     if ((ncol(x) == 2L) && is.instant(x[[1]])) {
-      dssObj = dss_to_timeseries(x, attributes)
+      dssObj = dss_to_timeseries(x, attributes,
+        dss_parts_split(path)["E"])
     } else {
       dssObj = dss_to_paired(x, attributes)
     }
@@ -44,19 +45,47 @@ dss_write = function(x, file, path, attributes = list()) {
 #' Convert POSIXct timestamps to DSS times.
 #'
 #' @param datetimes A POSIXct vector.
-#' @param type The DSS data type, e.g. "PER_AVER" or "INST".
-#' @param granularity The smallest time interval in the data.
 #'   Default is 60L (one  minute).
+#' @inheritParams dss_to_timeseries
 #' @return A named list for writing to DSS.
 #'
 #' @importFrom rJava .jnew
 #' @importFrom lubridate as_datetime tz
 #' @keywords internal
-dss_times_from_posix = function(datetimes) {
+dss_times_from_posix = function(datetimes, dss_interval) {
+  dss_interval = toupper(dss_interval[1])
+  assert_timeseries_interval(dss_interval)
+
   timeIntervalSeconds = unique(as.integer(as.numeric(diff(datetimes),
     "secs")))
-  if (length(timeIntervalSeconds) > 1L) {
-    stop("Argument \"datetimes\" is not a regular timeseries.")
+
+  if (grepl("^[0-9]MIN$", dss_interval)) {
+    base_interval = as.integer(gsub("MIN$", "", dss_interval)) * 60L
+    expected_interval = base_interval
+  } else if(grepl("^[0-9]HOUR$", dss_interval)) {
+    base_interval = as.integer(gsub("HOUR$", "", dss_interval)) * 3600L
+    expected_interval = base_interval
+  } else if (grepl("^1DAY$", dss_interval)) {
+    base_interval = 86400L
+    expected_interval = base_interval
+  } else if (grepl("^1WEEK$", dss_interval)) {
+    base_interval = 86400L * 7L
+    expected_interval = base_interval
+  } else if (grepl("^1YEAR$", dss_interval)) {
+    expected_interval = c(365L, 366L) * 86400L
+  } else if (grepl("^1MON$", dss_interval)) {
+    expected_interval = c(28L, 29L, 30L, 31L) * 86400L
+  } else if (grepl("SEMI-MONTH$", dss_interval)) {
+    expected_interval = c(14L, 15L, 16L) * 86400
+  } else if (grepl("TRI-MONTH$", dss_interval)) {
+    expected_interval = c(9L, 10L, 11L) * 86400
+  } else {
+    # irregular time series
+    expected_interval = timeIntervalSeconds
+  }
+  if (!all(timeIntervalSeconds %in% expected_interval)) {
+    warning("Time intervals in data do not match specified DSS interval of ",
+      dss_interval, call. = FALSE)
   }
   min_interval = min(timeIntervalSeconds)
   if (min_interval < 60) {
@@ -74,7 +103,6 @@ dss_times_from_posix = function(datetimes) {
     units = "mins"))
   # return list of time properties for writing to DSS
   list(
-    "timeIntervalSeconds" = timeIntervalSeconds,
     "timeZoneRawOffset" = timeZoneRawOffset,
     "timeGranularitySeconds" = granularity_seconds,
     "times" = .jnew("hec.heclib.util.HecTimeArray", times)
@@ -94,6 +122,7 @@ dss_times_from_posix = function(datetimes) {
 #' @return A Java `hec.heclib.util.HecTime` object.
 #'
 #' @importFrom rJava .jnew
+#' @importFrom lubridate tz
 #' @keywords internal
 as_hectime = function(x, granularity_seconds) {
   tObj = .jnew("hec.heclib.util.HecTime")
@@ -112,18 +141,20 @@ as_hectime = function(x, granularity_seconds) {
 #'
 #' @param d A data frame.
 #' @param attributes A list of `TimeSeriesContainer` attributes.
+#' @param dss_interval The DSS time interval, e.g., "15MIN", "1DAY",
+#'   "IR-CENTURY", etc.
 #' @return A `TimeSeriesContainer` Java object reference.
 #'
 #' @importFrom rJava .jnew
 #' @keywords internal
-dss_to_timeseries = function(d, attributes) {
+dss_to_timeseries = function(d, attributes, dss_interval) {
   formatted_times = format_datetimes(d[, 1])
   # build time series object
   tsObj = .jnew("hec.io.TimeSeriesContainer")
   assert_attributes(tsObj, attributes)
   tsObj$numberValues = length(formatted_times)
   # get time properties
-  dsstimes = dss_times_from_posix(formatted_times)
+  dsstimes = dss_times_from_posix(formatted_times, dss_interval)
   tsObj$setTimeGranularitySeconds(dsstimes$timeGranularitySeconds)
   tsObj$setTimes(dsstimes$times)
   tsObj$setStartTime(as_hectime(min(formatted_times),
@@ -133,7 +164,7 @@ dss_to_timeseries = function(d, attributes) {
   # value properties
   tsObj$setUnits(attributes[["units"]])
   tsObj$setType(attributes[["type"]])
-  tsObj$setValues(d[, 2])
+  tsObj$setValues(as.numeric(d[, 2]))
 
   tsObj
 
@@ -176,6 +207,7 @@ dss_to_paired = function(d, attributes) {
   pdObj$setYUnits(attributes$yunits)
   if ("labels" %in% names(attributes)) {
     pdObj$setLabels(attributes$labels)
+    pdObj$labelsUsed = TRUE
   }
   pdObj$setXOrdinates(d[, 1])
   # need a double[][] array
