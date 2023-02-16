@@ -68,6 +68,7 @@ format_datetimes = function(x) {
     stop("Supplied timestamps contain or were coerced to NA. ",
       "Cannot write time series to DSS", call. = FALSE)
   }
+  fx
 }
 
 
