@@ -5,12 +5,12 @@
   [![R-CMD-check](https://github.com/mkoohafkan/dssrip2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mkoohafkan/dssrip2/actions/workflows/R-CMD-check.yaml)
   <!-- badges: end -->
 
-A cannibilizationa and rewrite of
-[dssrip](https://github.com/eheisman/dssrip). Supports reading and
+A cannibilization and rewrite of
+[`dssrip`](https://github.com/eheisman/dssrip). Supports reading and
 writing time series and paired data to DSS. Linux support and
 read/write support for DSS grid data is planned.
  
-# Setup
+## Setup
 
 You can install the `dssrip2` directly using
 
@@ -18,7 +18,7 @@ You can install the `dssrip2` directly using
 remotes::install_github("mkoohafkan/dssrip2")
 ```
 
-## Existing HEC-DSSVue install
+### Existing HEC-DSSVue install
 
 A 64-bit install of HEC-DSSVue and a 64-bit JDK are required. To load
 DSS functionality, call
@@ -55,7 +55,7 @@ options(
 ```
 
 
-## Monolith
+### Monolith
 
 `dssrip2` supports HEC Monolith.
 ```r
@@ -76,9 +76,9 @@ By default, `dssrip2` will install HEC-Monolith to your
 `dss.home` option as the HEC-Monolith file path.
 
 
-# Usage
+## Usage
 
-## File connections
+### File connections
 
 Connections to DSS files must be handled manually by the user. To
 create a file connection, use
@@ -97,7 +97,7 @@ file's `$done()` method:
 conn$done()
 ```
 
-## Reading data
+### Reading data
 
 `dssrip2` automatically detects the data type being read, so the same
 function call can be used for reading time series and paired data.
@@ -110,7 +110,7 @@ dss_read(conn, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01JAN1946/1DAY/USGS/")
 dss_read(conn, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/")
 ```
 
-## Writing data
+### Writing data
 
 `dssrip2` deduces the data type to write based on the supplied
 R object, so the same function call can be used for reading time
