@@ -129,6 +129,31 @@ assert_timeseries = function(obj) {
   }
 }
 
+#' @describeIn dss-assertions
+#'
+#' Assert the supplied time series type is recognized.
+#'
+#' @keywords internal
+assert_timeseries_type = function(type) {
+  if (!(type %in% TSC_TYPES)) {
+    stop("Unrecognized time series type ", shQuote(type),
+    ". Time series type must be one of: ", paste(TSC_TYPES,
+    collapse = ", "))
+  }
+}
+
+#' @describeIn dss-assertions
+#'
+#' Assert the supplied time series interval is recognized.
+#'
+#' @keywords internal
+assert_timeseries_interval = function(type) {
+  if (!(type %in% TSC_INTERVALS)) {
+    stop("Unrecognized time series type ", shQuote(type),
+    ". Time series type must be one of: ", paste(TSC_INTERVALS,
+    collapse = ", "))
+  }
+}
 
 #' @describeIn dss-assertions
 #'
