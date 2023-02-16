@@ -4,7 +4,7 @@ test_that("time series writing works", {
   d = data.frame(
     datetime = seq(as.POSIXct("2021-01-01", tz = "etc/GMT+0"),
       as.POSIXct("2021-01-05", tz = "etc/GMT+0"), by = "1 day"),
-    flow = c(10, 12, 14, 13, 10) * 1000
+    flow = c(10, 12, NA, 13, 10) * 1000
   )
   attributes = list("type" = "PER-AVER", units = "cfs")
 
@@ -17,6 +17,7 @@ test_that("time series writing works", {
 
   expect_identical(d, dss_read(out_file, out_pathname),
     ignore_attr = c("dss.type", "dss.units"))
+
 })
 
 
@@ -38,6 +39,7 @@ test_that("paired data writing works", {
       "dss.xunits", "dss.yunits"))
 
 })
+
 
 test_that("grid data writing works", {
   skip("not implemented")

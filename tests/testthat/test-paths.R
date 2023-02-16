@@ -3,15 +3,15 @@ skip_if_no_dss()
 test_that("path list works", {
   on.exit(f$close(), add = TRUE)
   f = dss_open(system.file("extdata/example.dss", package = "dssrip2"))
-  all_paths = dss_paths(f, pattern = "*", condensed = FALSE)
-  all_paths_c = dss_paths(f, pattern = "*", condensed = TRUE)
-  paths1 = dss_paths(f, pattern = "^/BRANDYWINE CREEK/.*/$",
+  all_paths = dss_catalog(f, pattern = "*", condensed = FALSE)
+  all_paths_c = dss_catalog(f, pattern = "*", condensed = TRUE)
+  paths1 = dss_catalog(f, pattern = "^/BRANDYWINE CREEK/.*/$",
     condensed = FALSE)
-  paths1_c = dss_paths(f, pattern = "^/BRANDYWINE CREEK/.*/$",
+  paths1_c = dss_catalog(f, pattern = "^/BRANDYWINE CREEK/.*/$",
     condensed = TRUE)
-  paths2 = dss_paths(f, pattern = "^/.*/.*/.*/.*/IR-CENTURY/.*$",
+  paths2 = dss_catalog(f, pattern = "^/.*/.*/.*/.*/IR-CENTURY/.*$",
     condensed = FALSE)
-  paths2_c = dss_paths(f, pattern = "^/.*/.*/.*/.*/IR-CENTURY/.*$",
+  paths2_c = dss_catalog(f, pattern = "^/.*/.*/.*/.*/IR-CENTURY/.*$",
     condensed = TRUE)
 
   expect_identical(length(all_paths), 74L)
@@ -35,9 +35,12 @@ test_that("path parts works", {
 
   path = "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01JAN2012/1DAY/USGS/"
   parts = dss_parts_split(path)
+  parts_all = dss_parts_split(path, keep = TRUE)
 
-  expect_identical(names(parts), c("path", LETTERS[1:6]))
-  expect_identical(parts[["path"]], path)
+  expect_identical(names(parts), LETTERS[1:6])
+  expect_identical(names(parts_all), c("path", LETTERS[1:6]))
+  expect_identical(parts, parts_all[LETTERS[1:6]])
+  expect_identical(parts_all[["path"]], path)
   expect_identical(parts[["A"]], "BRANDYWINE CREEK")
   expect_identical(parts[["B"]], "WILMINGTON, DE")
   expect_identical(parts[["C"]], "FLOW")
