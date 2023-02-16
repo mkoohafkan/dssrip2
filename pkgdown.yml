@@ -1,0 +1,10 @@
+pandoc: 2.19.2
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  quickstart: quickstart.html
+last_built: 2023-02-16T19:59Z
+urls:
+  reference: https://hydroecology.net/dssrip2/reference
+  article: https://hydroecology.net/dssrip2/articles
+
