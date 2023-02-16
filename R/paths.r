@@ -9,7 +9,7 @@
 #' @return A vector of paths.
 #'
 #' @export
-dss_paths = function(file, pattern = "*", condensed = TRUE,
+dss_catalog = function(file, pattern = "*", condensed = TRUE,
   rebuild = FALSE) {
   assert_dss_connected()
   assert_dss_file(file)
@@ -27,16 +27,21 @@ dss_paths = function(file, pattern = "*", condensed = TRUE,
 #' Split DSS path into parts.
 #'
 #' @param path A vector of DSS paths.
-#' @return A dataframe with fields "path", "A", "B", "C",
-#'   "D", "E", "F".
+#' @param keep If `TRUE`, preserve the supplied paths in the output.
+#' @return A dataframe with fields "A", "B", "C",
+#'   "D", "E", "F" and optional field "path" (if `keep = TRUE`).
 #'
 #' @export
-dss_parts_split = function(path) {
+dss_parts_split = function(path, keep = FALSE) {
   assert_path_format(path)
   parts = as.data.frame(do.call(rbind, strsplit(path, "/")))[, -1L]
   # drop first column, will be blank
   names(parts) = DSS_PARTS
-  cbind(path, parts[DSS_PARTS])
+  if (keep) {
+    cbind(path, parts[DSS_PARTS])
+  } else {
+    parts[DSS_PARTS]
+  }
 }
 
 
