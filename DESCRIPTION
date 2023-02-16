@@ -10,7 +10,8 @@ Description: A wrapper for the HEC-DSS Java API
     allowing an interface between R and many common hydrologic models.
     This is a rewrite of the original "dssrip" package.
 License: MIT + file LICENSE
-Depends:
+URL: https://github.com/mkoohafkan/dssrip2
+BugReports: https://github.com/mkoohafkan/dssrip2/issuesDepends:
     R (>= 3.6)
 Imports:
     rJava (>= 1.0),
