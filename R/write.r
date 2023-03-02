@@ -17,7 +17,8 @@
 #'
 #' @seealso [dss_open()] [dss_catalog()] [dss_squeeze()]
 #'
-#'
+#' @importFrom rJava new J
+#' @export
 dss_delete = function(file, path, full = TRUE, squeeze = FALSE) {
   assert_dss_connected()
   assert_dss_file(file)
@@ -33,7 +34,7 @@ dss_delete = function(file, path, full = TRUE, squeeze = FALSE) {
   if (length(delete_paths) < 1L) {
     stop("Could not find pathname ", path)
   }
-  path_vector = rJava::new(J("java.util.Vector"))
+  path_vector = new(J("java.util.Vector"), length(delete_paths))
   for (p in delete_paths) {
     path_vector$add(p)
   }
