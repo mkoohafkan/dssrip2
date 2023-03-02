@@ -43,6 +43,7 @@ dss_require = function(dss_home = getOption("dss.home"),
 #'
 #' @param dss_home The path to the HEC-DSS install folder.
 #' @inheritParams dss_message_level
+#' @param monolith If `TRUE`, connect to HEC-Monolith libraries.
 #'
 #' @details both [dss_connect()] and [dss_require()] configure the JVM
 #'   to use the HEC-DSS Java library. [dss_require()] is designed for

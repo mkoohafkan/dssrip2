@@ -38,6 +38,9 @@ dss_open = function(filename) {
 
 
 #' @rdname dss_open
+#'
+#' @param version The DSS version of the created file (6 or 7).
+#'
 #' @export
 dss_create = function(filename, version = 7L) {
   assert_dss_connected()

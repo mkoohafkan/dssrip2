@@ -11,6 +11,8 @@ dss_create(filename, version = 7L)
 }
 \arguments{
 \item{filename}{Location of DSS file to open.}
+
+\item{version}{The DSS version of the created file (6 or 7).}
 }
 \value{
 A \code{hec.heclib.dss.HecDss} Java object reference.

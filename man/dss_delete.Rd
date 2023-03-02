@@ -11,6 +11,9 @@ dss_delete(file, path, full = TRUE, squeeze = FALSE)
 
 \item{path}{A vector of DSS paths.}
 
+\item{full}{If \code{TRUE}, delete the entire dataset. If \code{FALSE}, only
+delete the section as specified in the D Part of the path.}
+
 \item{squeeze}{If \code{TRUE}, squeeze the file after deleting records.}
 }
 \description{

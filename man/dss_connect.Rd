@@ -22,6 +22,8 @@ dss_connect(
 
 \item{message_level}{An integer specifying the DSS message level.
 Default is 2L. Use 1L to suppress all messages from DSS.}
+
+\item{monolith}{If \code{TRUE}, connect to HEC-Monolith libraries.}
 }
 \description{
 Connect to DSS via the JVM.

@@ -11,6 +11,8 @@
 #'
 #' @inheritParams dss_squeeze
 #' @inheritParams dss_parts_split
+#' @param full If `TRUE`, delete the entire dataset. If `FALSE`, only
+#'   delete the section as specified in the D Part of the path.
 #' @param squeeze If `TRUE`, squeeze the file after deleting records.
 #'
 #' @seealso [dss_open()] [dss_catalog()] [dss_squeeze()]
