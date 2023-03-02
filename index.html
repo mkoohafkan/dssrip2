@@ -32,7 +32,7 @@
     
     <a class="navbar-brand me-2" href="index.html">dssrip2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1-0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2-0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,7 @@
 <div class="page-header"><h1 id="dss-r-interface-project-2">DSS R Interface Project (2)<a class="anchor" aria-label="anchor" href="#dss-r-interface-project-2"></a>
 </h1></div>
 <p><!-- badges: start --> <img src="https://www.r-pkg.org/badges/version-last-release/dssrip2" alt="CRAN Release"><a href="https://github.com/mkoohafkan/dssrip2/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/mkoohafkan/dssrip2/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <!-- badges: end --></p>
-<p>A cannibilization and rewrite of <a href="https://github.com/eheisman/dssrip" class="external-link"><code>dssrip</code></a>. Supports reading and writing time series and paired data to DSS. Linux support and read/write support for DSS grid data is planned.</p>
+<p>A rewrite of <a href="https://github.com/eheisman/dssrip" class="external-link"><code>dssrip</code></a>. Supports reading and writing time series and paired data to DSS. Linux support and read/write support for DSS grid data is planned.</p>
 <div class="section level2">
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
@@ -129,7 +129,8 @@
 <span><span class="va">conn</span> <span class="op">=</span> <span class="fu"><a href="reference/dss_file.html">dss_file</a></span><span class="op">(</span><span class="va">filepath</span><span class="op">)</span></span></code></pre></div>
 <p>DSS files will usually close on their own after some period of inactivity, but it is best practice for users to explicitly signal to DSS when they are finished working with a file by calling the file’s <code>$done()</code> method:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">conn</span><span class="op">$</span><span class="fu">done</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/dss_close.html">dss_close</a></span><span class="op">(</span><span class="va">conn</span><span class="op">)</span></span>
+<span><span class="co"># or directly call conn$done()</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="reading-data">Reading data<a class="anchor" aria-label="anchor" href="#reading-data"></a>

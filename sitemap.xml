@@ -55,7 +55,22 @@
     <loc>https://hydroecology.net/dssrip2/reference/dss_catalog.html</loc>
   </url>
   <url>
+    <loc>https://hydroecology.net/dssrip2/reference/dss_close.html</loc>
+  </url>
+  <url>
     <loc>https://hydroecology.net/dssrip2/reference/dss_connect.html</loc>
+  </url>
+  <url>
+    <loc>https://hydroecology.net/dssrip2/reference/dss_connect_unix.html</loc>
+  </url>
+  <url>
+    <loc>https://hydroecology.net/dssrip2/reference/dss_connect_win.html</loc>
+  </url>
+  <url>
+    <loc>https://hydroecology.net/dssrip2/reference/dss_convert.html</loc>
+  </url>
+  <url>
+    <loc>https://hydroecology.net/dssrip2/reference/dss_delete.html</loc>
   </url>
   <url>
     <loc>https://hydroecology.net/dssrip2/reference/dss_file.html</loc>
@@ -110,6 +125,9 @@
   </url>
   <url>
     <loc>https://hydroecology.net/dssrip2/reference/dss_to_timeseries.html</loc>
+  </url>
+  <url>
+    <loc>https://hydroecology.net/dssrip2/reference/dss_version.html</loc>
   </url>
   <url>
     <loc>https://hydroecology.net/dssrip2/reference/dss_write.html</loc>

@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">dssrip2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1-0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2-0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,7 +72,7 @@
                         <h4 data-toc-skip class="author">Michael
 Koohafkan</h4>
             
-            <h4 data-toc-skip class="date">2023-02-16</h4>
+            <h4 data-toc-skip class="date">2023-03-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mkoohafkan/dssrip2/blob/HEAD/vignettes/quickstart.rmd" class="external-link"><code>vignettes/quickstart.rmd</code></a></small>
       <div class="d-none name"><code>quickstart.rmd</code></div>
@@ -230,7 +230,8 @@ supplied input.</p>
 <span><span class="va">lake_huron_meta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"feet"</span>, type <span class="op">=</span> <span class="st">"INST"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/dss_write.html">dss_write</a></span><span class="op">(</span><span class="va">lake_huron</span>, <span class="va">f</span>, <span class="va">lake_huron_path</span>, <span class="va">lake_huron_meta</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: No timezone set for argument "x". Using etc/GMT+0.</span></span>
+<span><span class="co">#&gt; Warning: Converting supplied timestamps to 'POSIXct' class, using default</span></span>
+<span><span class="co">#&gt; timezone etc/GMT+0</span></span>
 <span></span>
 <span><span class="co"># create an irregular timeseries from the airquality dataset</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span>
@@ -243,7 +244,8 @@ supplied input.</p>
 <span><span class="va">temps_meta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"degrees F"</span>, type <span class="op">=</span> <span class="st">"INST"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/dss_write.html">dss_write</a></span><span class="op">(</span><span class="va">temps</span>, <span class="va">f</span>, <span class="va">temps_path</span>, <span class="va">temps_meta</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: No timezone set for argument "x". Using etc/GMT+0.</span></span>
+<span><span class="co">#&gt; Warning: Converting supplied timestamps to 'POSIXct' class, using default</span></span>
+<span><span class="co">#&gt; timezone etc/GMT+0</span></span>
 <span></span>
 <span><span class="co"># create paired dataset from the Loblolly dataset</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Loblolly</span><span class="op">)</span></span>
@@ -254,6 +256,13 @@ supplied input.</p>
 <span>  xtype <span class="op">=</span> <span class="st">"UNT"</span>, ytype <span class="op">=</span> <span class="st">"UNT"</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">growth</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">growth</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/dss_write.html">dss_write</a></span><span class="op">(</span><span class="va">growth</span>, <span class="va">f</span>, <span class="va">growth_path</span>, <span class="va">growth_meta</span><span class="op">)</span></span></code></pre></div>
+<p>It is good practice to close a DSS file once you are finished working
+with it. For the most part, <code>dssrip2</code> will call the file’s
+<code>$done()</code> method at the completion of every operation to
+implicitly close the file, so you but you can also explicitly close a
+file:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/dss_close.html">dss_close</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span></code></pre></div>
 <p>That’s it!</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
