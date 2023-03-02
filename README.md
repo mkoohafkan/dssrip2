@@ -37,7 +37,7 @@ options(dss.monolith = TRUE)
 By default, `dssrip2` will install HEC-Monolith to your
 `%LOCALAPPDATA%` folder, but this can be overridden. If the option
 `dss.monolith` is set to `TRUE`, `dssrip2` will interpret the
-`dss.home` option as the HEC-Monolith file path.
+`dss.home` option as the HEC-Monolith directory path.
 
 ### Existing HEC-DSSVue install
 
