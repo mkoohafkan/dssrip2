@@ -169,5 +169,13 @@ growth_meta = list(xunits = "years", yunits = "feet",
 dss_write(growth, f, growth_path, growth_meta)
 ```
 
-That's it!
+It is good practice to close a DSS file once you are finished working
+with it. For the most part, `dssrip2` will call the file's `$done()`
+method at the completion of every operation to implicitly close the
+file, so you but you can also explicitly close a file:
 
+```{r}
+dss_close(f)
+```
+
+That's it!

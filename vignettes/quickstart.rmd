@@ -1,7 +1,7 @@
 ---
 title: "Quick Start with dssrip2"
 author: "Michael Koohafkan"
-date: "2023-02-16"
+date: "2023-03-02"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Quick Start}
@@ -187,7 +187,8 @@ lake_huron_path = "/GREAT LAKES/LAKE HURON/ELEV//1YEAR/R DATASET/"
 lake_huron_meta = list(units = "feet", type = "INST")
 
 dss_write(lake_huron, f, lake_huron_path, lake_huron_meta)
-#> Warning: No timezone set for argument "x". Using etc/GMT+0.
+#> Warning: Converting supplied timestamps to 'POSIXct' class, using default
+#> timezone etc/GMT+0
 
 # create an irregular timeseries from the airquality dataset
 data(airquality)
@@ -200,7 +201,8 @@ temps_path = "/NEW YORK/NEW YORK CITY/TEMPERATURE//IR-YEAR/R DATASET/"
 temps_meta = list(units = "degrees F", type = "INST")
 
 dss_write(temps, f, temps_path, temps_meta)
-#> Warning: No timezone set for argument "x". Using etc/GMT+0.
+#> Warning: Converting supplied timestamps to 'POSIXct' class, using default
+#> timezone etc/GMT+0
 
 # create paired dataset from the Loblolly dataset
 data(Loblolly)
@@ -213,5 +215,14 @@ growth_meta = list(xunits = "years", yunits = "feet",
 dss_write(growth, f, growth_path, growth_meta)
 ```
 
-That's it!
+It is good practice to close a DSS file once you are finished working
+with it. For the most part, `dssrip2` will call the file's `$done()`
+method at the completion of every operation to implicitly close the
+file, so you but you can also explicitly close a file:
 
+
+```r
+dss_close(f)
+```
+
+That's it!

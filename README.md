@@ -5,10 +5,9 @@
   [![R-CMD-check](https://github.com/mkoohafkan/dssrip2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mkoohafkan/dssrip2/actions/workflows/R-CMD-check.yaml)
   <!-- badges: end -->
 
-A cannibilization and rewrite of
-[`dssrip`](https://github.com/eheisman/dssrip). Supports reading and
-writing time series and paired data to DSS. Linux support and
-read/write support for DSS grid data is planned.
+A rewrite of [`dssrip`](https://github.com/eheisman/dssrip). Supports
+reading and writing time series and paired data to DSS. Linux support
+and read/write support for DSS grid data is planned.
  
 ## Setup
 
@@ -94,7 +93,8 @@ to DSS when they are finished working with a file by calling the
 file's `$done()` method:
 
 ```r
-conn$done()
+dss_close(conn)
+# or directly call conn$done()
 ```
 
 ### Reading data
