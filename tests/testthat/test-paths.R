@@ -1,7 +1,8 @@
-skip_if_no_dss()
-
 test_that("path list works", {
-  on.exit(conn$close(), add = TRUE)
+  
+  skip_if_no_dss()
+
+  on.exit(dss_close(conn), add = TRUE)
   conn = dss_open(system.file("extdata/example.dss", package = "dssrip2"))
   all_paths = dss_catalog(conn, pattern = "*", condensed = FALSE)
   all_paths_c = dss_catalog(conn, pattern = "*", condensed = TRUE)

@@ -3,7 +3,8 @@
 #' Get a list of DSS paths in a file.
 #'
 #' @inheritParams dss_squeeze
-#' @inheritParams base::grep
+#' @param pattern character string containing a regular expression to
+#'   be matched against the DSS pathname catalog.
 #' @param condensed If `TRUE` returned the condensed path catalog.
 #' @param rebuild If `TRUE`, force rebuild the catalog.
 #' @return A vector of paths.
@@ -16,12 +17,15 @@ dss_catalog = function(file, pattern = "*", condensed = TRUE,
   rebuild = FALSE) {
   assert_dss_connected()
   assert_dss_file(file)
+  if (length(pattern) != 1L) {
+    stop("Argument \"pattern\" must be length 1")
+  }
   if (condensed) {
     paths = .javaVectorToStrings(file$getCondensedCatalog())
   } else {
     paths = .javaVectorToStrings(file$getCatalogedPathnames(rebuild))
   }
-  paths[grep(pattern, paths)]
+  as.character(paths)[grep(toupper(pattern), toupper(paths))]
 }
 
 
