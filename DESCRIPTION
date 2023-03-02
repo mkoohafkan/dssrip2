@@ -1,6 +1,6 @@
 Package: dssrip2
 Title: DSS R Interface Project (2)
-Version: 0.2-0
+Version: 0.3-0
 Authors@R: c(
     person("Michael", "Koohafkan", , "michael.c.koohafkan@usace.army.mil", role = c("aut", "cre")),
     person("Evan", "Heisman", , "evan.a.heisman@usace.army.mil", role = c("aut")),
