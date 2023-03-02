@@ -5,15 +5,43 @@
 # Appendix B 5.3, 5.4, 5.5
 
 
+#' Delete DSS Records
+#'
+#' Delete records from a DSS file.
+#'
+#' @inheritParams dss_squeeze
+#' @inheritParams dss_parts_split
+#' @param squeeze If `TRUE`, squeeze the file after deleting records.
+#'
+#' @seealso [dss_open()] [dss_catalog()] [dss_squeeze()]
+#'
+#'
+dss_delete = function(file, path, squeeze = FALSE) {
+  stop("not implemented")
+  assert_dss_connected()
+  assert_dss_file(file)
+  assert_path_format(path)
+  on.exit(file$done(), add = TRUE)
+  file$getDataManager()$delete(path)
+  if (squeeze) {
+    dss_squeeze(file)
+  }
+  invisible(TRUE)
+}
 
 
-#' Write to DSS
+
+#' Write DSS Records
+#'
+#' Write a DSS time series, paired dataset, or grid to a DSS file.
 #'
 #' @param x The dataframe (Time Series or Paired Data) or raster (Grid)
 #'   to write to DSS.
 #' @inheritParams dss_squeeze
 #' @param path The DSS path to write.
 #' @param attributes A named list of DSS attributes.
+#'
+#' @seealso [dss_open()] [dss_read()] [dss_catalog()] [dss_attributes()]
 #'
 #' @importFrom lubridate is.instant
 #' @export
