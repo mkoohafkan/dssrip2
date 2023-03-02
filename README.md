@@ -8,7 +8,8 @@
 A rewrite of [`dssrip`](https://github.com/eheisman/dssrip). Supports
 reading and writing time series and paired data to DSS. Linux support
 and read/write support for DSS grid data is planned.
- 
+
+
 ## Setup
 
 You can install the `dssrip2` directly using
@@ -17,10 +18,33 @@ You can install the `dssrip2` directly using
 remotes::install_github("mkoohafkan/dssrip2")
 ```
 
+### Monolith
+
+`dssrip2` can connect to HEC-Monolith libraries using
+
+```r
+dss_install_monolith()
+dss_connect(monolith = TRUE)
+```
+
+To use Monolith automatically, set the following
+options in your R profile:
+
+```r
+options(dss.monolith = TRUE)
+```
+
+By default, `dssrip2` will install HEC-Monolith to your
+`%LOCALAPPDATA%` folder, but this can be overridden. If the option
+`dss.monolith` is set to `TRUE`, `dssrip2` will interpret the
+`dss.home` option as the HEC-Monolith file path.
+
 ### Existing HEC-DSSVue install
 
-A 64-bit install of HEC-DSSVue and a 64-bit JDK are required. To load
-DSS functionality, call
+If you don't want to use the HEC-Monolith libraries, `dssrip2` can
+connect to an existing HEC-DSSVue program installation instead.
+To use this option, both a 64-bit install of HEC-DSSVue and a 64-bit
+JDK are required. To load DSS functionality, call
 
 ```r
 library(dssrip2)
@@ -52,27 +76,6 @@ options(
   dss.messagelevel = 1L
 )
 ```
-
-
-### Monolith
-
-`dssrip2` supports HEC Monolith.
-```r
-dss_install_monolith()
-dss_connect(monolith = TRUE)
-```
-
-To use Monolith automatically, set the following
-options in your R profile:
-
-```r
-options(dss.monolith = TRUE)
-```
-
-By default, `dssrip2` will install HEC-Monolith to your
-`%LOCALAPPDATA%` folder, but this can be overridden. If the option
-`dss.monolith` is set to `TRUE`, `dssrip2` will interpret the
-`dss.home` option as the HEC-Monolith file path.
 
 
 ## Usage
