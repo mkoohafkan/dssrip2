@@ -1,5 +1,3 @@
-skip_if_no_dss()
-
 test_that("NA fill works", {
 
   v1 = c(1L, 2L, NA, NA, 5L)

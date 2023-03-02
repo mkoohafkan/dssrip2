@@ -1,6 +1,7 @@
 skip_if_no_dss()
 
 test_that("time series writing works", {
+  on.exit(dss_close(conn), add = TRUE)
   d = data.frame(
     datetime = seq(as.POSIXct("2021-01-01", tz = "etc/GMT+0"),
       as.POSIXct("2021-01-05", tz = "etc/GMT+0"), by = "1 day"),
@@ -22,6 +23,7 @@ test_that("time series writing works", {
 
 
 test_that("paired data writing works", {
+  on.exit(dss_close(conn), add = TRUE)
   d = data.frame(flow = c(10, 12, 14, 13, 10) * 1000,
     stage = c(17.1, 17.3, 17.6, 17.4, 17.2))
   attributes = list(xunits = "cfs", yunits = "stage",
@@ -56,9 +58,7 @@ test_that("grid data writing works", {
 
 
 test_that("deleting records works", {
-
-  skip("not implemented")
-
+  on.exit(dss_close(conn), add = TRUE)
   d = data.frame(
     datetime = seq(as.POSIXct("2021-01-01", tz = "etc/GMT+0"),
       as.POSIXct("2021-01-05", tz = "etc/GMT+0"), by = "1 day"),
@@ -69,9 +69,22 @@ test_that("deleting records works", {
   tf = tempfile(fileext = ".dss")
   conn = dss_create(tf)
   on.exit(conn$done(), add = TRUE)
-  path = "/Fake Creek/Fake Town/FLOW//1DAY/FAKE/"
+  path1 = "/Fake Creek/Fake Town/FLOW//1DAY/FAKE/"
+  path2 = "/Another Fake Creek/Fake Town/FLOW//1DAY/FAKE/"
+  dss_write(d, conn, path1, attributes)
+  dss_write(d, conn, path2, attributes)
+  expect_error(dss_delete(conn, "/Fake Creek/Fake Town/FLOW//1DAY/NOT EXIST/",
+    full = TRUE))
+  delete_path2 = "/ANOTHER FAKE CREEK/FAKE TOWN/FLOW/01JAN2020/1DAY/FAKE/"
+  dss_delete(conn, path1, full = TRUE)
+  dss_delete(conn, delete_path2, full = FALSE)
 
-  dss_write(d, conn, path, attributes)
-  dss_delete(conn, path)
+  expect_identical(dss_catalog(conn, path1, condensed = TRUE),
+    character(0))
+  expect_identical(dss_catalog(conn, delete_path2, condensed = FALSE),
+    character(0))
+  expect_identical(dss_catalog(conn, dss_parts_replace(path2,
+    list(D = ".*")), condensed = FALSE),
+    "/ANOTHER FAKE CREEK/FAKE TOWN/FLOW/01JAN2021/1DAY/FAKE/")
 
 })

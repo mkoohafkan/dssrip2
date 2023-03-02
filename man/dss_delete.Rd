@@ -4,7 +4,7 @@
 \alias{dss_delete}
 \title{Delete DSS Records}
 \usage{
-dss_delete(file, path, squeeze = FALSE)
+dss_delete(file, path, full = TRUE, squeeze = FALSE)
 }
 \arguments{
 \item{file}{A DSS file handle, e.g., output of \code{\link[=dss_open]{dss_open()}}.}
