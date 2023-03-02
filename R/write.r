@@ -16,16 +16,30 @@
 #' @seealso [dss_open()] [dss_catalog()] [dss_squeeze()]
 #'
 #'
-dss_delete = function(file, path, squeeze = FALSE) {
-  stop("not implemented")
+dss_delete = function(file, path, full = TRUE, squeeze = FALSE) {
   assert_dss_connected()
   assert_dss_file(file)
   assert_path_format(path)
   on.exit(file$done(), add = TRUE)
-  file$getDataManager()$delete(path)
+  if (full) {
+    path = dss_parts_replace(path, list(D = ".*"))
+  }
+  search_pattern = paste(sprintf("(%s)", path), collapse = "|")
+  # cannot delete a condensed path; must provide full set of paths
+  delete_paths = dss_catalog(file, condensed = FALSE,
+    pattern = search_pattern)
+  if (length(delete_paths) < 1L) {
+    stop("Could not find pathname ", path)
+  }
+  path_vector = rJava::new(J("java.util.Vector"))
+  for (p in delete_paths) {
+    path_vector$add(p)
+  }
+  file$getDataManager()$delete(path_vector)
   if (squeeze) {
     dss_squeeze(file)
   }
+  dss_catalog(file, condensed = FALSE, rebuild = TRUE)
   invisible(TRUE)
 }
 

@@ -1,7 +1,7 @@
 skip_if_no_dss()
 
 test_that("DSS file open works", {
-  on.exit(conn$close(), add = TRUE)
+  on.exit(dss_close(conn), add = TRUE)
   conn = dss_open(system.file("extdata/example.dss", package = "dssrip2"))
   expect_s4_class(conn, "jobjRef")
 })
@@ -17,6 +17,7 @@ test_that("DSS file creation works", {
 
   f1 = dss_create(tf1)
   f2 = dss_create(tf2, version = 6L)
+  expect_error(dss_create(tf3, version = 5L))
   f3 = dss_create(tf3, version = 7L)
 
   expect_s4_class(f1, "jobjRef")
@@ -24,7 +25,6 @@ test_that("DSS file creation works", {
   expect_identical(dss_version(f1), 7L)
   expect_identical(dss_version(f2), 6L)
   expect_identical(dss_version(f3), 7L)
-  expect_error(dss_create(tf, version = 5L))
 
   dss_convert(f1, tf4)
   dss_convert(f2, tf5)
