@@ -3,8 +3,6 @@
 \name{dss_require}
 \alias{dss_require}
 \alias{dss_connect}
-\alias{dss_connect_win}
-\alias{dss_connect_unix}
 \title{Connect To DSS}
 \usage{
 dss_require(
@@ -18,10 +16,6 @@ dss_connect(
   message_level = getOption("dss.messagelevel"),
   monolith = getOption("dss.monolith")
 )
-
-dss_connect_win(dss_home, message_level, monolith)
-
-dss_connect_unix(dss_home, message_level, monolith)
 }
 \arguments{
 \item{dss_home}{The path to the HEC-DSS install folder.}
@@ -35,7 +29,10 @@ Connect to DSS via the JVM.
 \details{
 both \code{\link[=dss_connect]{dss_connect()}} and \code{\link[=dss_require]{dss_require()}} configure the JVM
 to use the HEC-DSS Java library. \code{\link[=dss_require]{dss_require()}} is designed for
-use inside other functions; it returns \verb{FALSE`` and gives a warning (rather than an error as }\code{\link[=dss_connect]{dss_connect()}} does by default)
+use inside other packages; it returns \code{FALSE} and gives a
+warning (rather than an error as \code{\link[=dss_connect]{dss_connect()}} does)
 if the HEC-DSS Java library cannot be loaded correctly.
 }
-\keyword{internal}
+\seealso{
+\code{\link[=dss_message_level]{dss_message_level()}} \code{\link[=dss_install_monolith]{dss_install_monolith()}}
+}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/read.r
 \name{dss_read}
 \alias{dss_read}
-\title{Read DSS Data}
+\title{Read DSS Records}
 \usage{
 dss_read(file, path, full = TRUE)
 }
@@ -20,12 +20,12 @@ will be "datetime". Further columns will be named according to
 the DSS "parameter" value specified in the object metadata.
 }
 \description{
-Read data from a DSS file.
+Read records from a DSS file.
 }
 \details{
 The returned data frame includes additional attributes
 \code{"dss.type"} and \code{"dss.units"} describing the DSS data format.
 }
 \seealso{
-\code{\link[=dss_attributes]{dss_attributes()}}
+\code{\link[=dss_open]{dss_open()}} \code{\link[=dss_catalog]{dss_catalog()}} \code{\link[=dss_attributes]{dss_attributes()}}
 }

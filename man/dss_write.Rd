@@ -2,7 +2,7 @@
 % Please edit documentation in R/write.r
 \name{dss_write}
 \alias{dss_write}
-\title{Write to DSS}
+\title{Write DSS Records}
 \usage{
 dss_write(x, file, path, attributes = list())
 }
@@ -17,5 +17,8 @@ to write to DSS.}
 \item{attributes}{A named list of DSS attributes.}
 }
 \description{
-Write to DSS
+Write a DSS time series, paired dataset, or grid to a DSS file.
+}
+\seealso{
+\code{\link[=dss_open]{dss_open()}} \code{\link[=dss_read]{dss_read()}} \code{\link[=dss_catalog]{dss_catalog()}} \code{\link[=dss_attributes]{dss_attributes()}}
 }

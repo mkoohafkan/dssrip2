@@ -16,3 +16,6 @@ A vector of paths.
 \description{
 Combine DSS parts into a path.
 }
+\seealso{
+\code{\link[=dss_catalog]{dss_catalog()}} \code{\link[=dss_parts_split]{dss_parts_split()}} \code{\link[=dss_parts_replace]{dss_parts_replace()}}
+}

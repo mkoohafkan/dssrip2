@@ -4,7 +4,7 @@
 \alias{dss_file}
 \title{Open DSS File}
 \usage{
-dss_file(filename)
+dss_file(filename, ...)
 }
 \arguments{
 \item{filename}{A valid filepath.}

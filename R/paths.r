@@ -8,6 +8,9 @@
 #' @param rebuild If `TRUE`, force rebuild the catalog.
 #' @return A vector of paths.
 #'
+#' @seealso [dss_open()] [dss_read()] [dss_parts_split()]
+#'   [dss_parts_combine()] [dss_parts_replace()]
+#'
 #' @export
 dss_catalog = function(file, pattern = "*", condensed = TRUE,
   rebuild = FALSE) {
@@ -31,6 +34,8 @@ dss_catalog = function(file, pattern = "*", condensed = TRUE,
 #' @return A dataframe with fields "A", "B", "C",
 #'   "D", "E", "F" and optional field "path" (if `keep = TRUE`).
 #'
+#' @seealso [dss_catalog()] [dss_parts_combine()] [dss_parts_replace()]
+#'
 #' @export
 dss_parts_split = function(path, keep = FALSE) {
   assert_path_format(path)
@@ -53,6 +58,8 @@ dss_parts_split = function(path, keep = FALSE) {
 #'   "D", "E", "F".
 #' @return A vector of paths.
 #'
+#' @seealso [dss_catalog()] [dss_parts_split()] [dss_parts_replace()]
+#'
 #' @export
 dss_parts_combine = function(parts) {
   assert_parts_format(parts)
@@ -70,6 +77,8 @@ dss_parts_combine = function(parts) {
 #' @param replacement A list of replacement path parts "A", "B", "C",
 #'   "D", "E", "F".
 #' @return A vector of paths, with parts replaced.
+#'
+#' @seealso [dss_catalog()] [dss_parts_split()] [dss_parts_combine()]
 #'
 #' @export
 dss_parts_replace = function(path, replacement = list()) {

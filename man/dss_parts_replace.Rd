@@ -18,3 +18,6 @@ A vector of paths, with parts replaced.
 \description{
 Replace DSS path parts with specified values.
 }
+\seealso{
+\code{\link[=dss_catalog]{dss_catalog()}} \code{\link[=dss_parts_split]{dss_parts_split()}} \code{\link[=dss_parts_combine]{dss_parts_combine()}}
+}

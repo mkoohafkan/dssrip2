@@ -3,12 +3,15 @@ hecJavaObjectMethodsDB = new.env()
 hecJavaConstantsDB = new.env()
 hecJavaConnectionDB = new.env()
 
+
 #' DSS Message Level
 #'
 #' Set the DSS message level.
 #'
 #' @param message_level An integer specifying the DSS message level.
 #'   Default is 2L. Use 1L to suppress all messages from DSS.
+#'
+#' @seealso [dss_connect()]
 #'
 #' @importFrom rJava .jcall
 #' @export
@@ -43,9 +46,11 @@ dss_require = function(dss_home = getOption("dss.home"),
 #'
 #' @details both [dss_connect()] and [dss_require()] configure the JVM
 #'   to use the HEC-DSS Java library. [dss_require()] is designed for
-#'   use inside other functions; it returns `FALSE`` and gives a
-#'   warning (rather than an error as `[dss_connect()] does by default)
+#'   use inside other packages; it returns `FALSE` and gives a
+#'   warning (rather than an error as [dss_connect()] does)
 #'   if the HEC-DSS Java library cannot be loaded correctly.
+#'
+#' @seealso [dss_message_level()] [dss_install_monolith()]
 #'
 #' @importFrom rJava .jnew J
 #' @export
@@ -95,7 +100,12 @@ dss_connect = function(dss_home = getOption("dss.home"),
 }
 
 
-#' @rdname dss_connect
+#' Connect To DSS (Windows)
+#'
+#' Connect to DSS in a Windows environment.
+#'
+#' @inheritParams dss_connect
+#'
 #' @importFrom rJava javaImport .jaddLibrary .jaddClassPath
 #'   .jcall
 #' @keywords internal
@@ -115,7 +125,12 @@ dss_connect_win = function(dss_home, message_level, monolith) {
 }
 
 
-#' @rdname dss_connect
+#' Connect To DSS (Unix)
+#'
+#' Connect to DSS in a Unix environment.
+#'
+#' @inheritParams dss_connect
+#'
 #' @keywords internal
 dss_connect_unix = function(dss_home, message_level, monolith) {
   stop("Linux/MacOS is not currently supported.")

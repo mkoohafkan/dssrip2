@@ -7,7 +7,7 @@
 \usage{
 dss_open(filename)
 
-dss_create(filename)
+dss_create(filename, version = 7L)
 }
 \arguments{
 \item{filename}{Location of DSS file to open.}
@@ -23,4 +23,7 @@ Objects created by this function must be explicitly closed
 using the \verb{$close()} or \verb{$done()} methods. If this function fails
 with a message that \code{javaHeclib.dll} cannot be found, this usually
 indicates that \code{dss.home} is not set correctly.
+}
+\seealso{
+\code{\link[=dss_close]{dss_close()}} \code{\link[=dss_version]{dss_version()}}
 }

@@ -23,4 +23,7 @@ dss_install_monolith_unix(assets, install_path, overwrite)
 \description{
 Download the HEC Monolith Libraries.
 }
+\seealso{
+\code{\link[=dss_connect]{dss_connect()}}
+}
 \keyword{internal}

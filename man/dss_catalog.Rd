@@ -27,3 +27,7 @@ A vector of paths.
 \description{
 Get a list of DSS paths in a file.
 }
+\seealso{
+\code{\link[=dss_open]{dss_open()}} \code{\link[=dss_read]{dss_read()}} \code{\link[=dss_parts_split]{dss_parts_split()}}
+\code{\link[=dss_parts_combine]{dss_parts_combine()}} \code{\link[=dss_parts_replace]{dss_parts_replace()}}
+}

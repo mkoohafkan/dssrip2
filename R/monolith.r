@@ -160,6 +160,8 @@ asset_query_nexus = function(artifactId,
 #'   `install_path` and recreate.
 #' @param requirements_file The list of required assets. For expert use only.
 #'
+#' @seealso [dss_connect()]
+#'
 #' @importFrom utils packageName
 #' @export
 dss_install_monolith = function(install_path, overwrite = TRUE, requirements_file) {

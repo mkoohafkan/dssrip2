@@ -18,3 +18,6 @@ A dataframe with fields "A", "B", "C",
 \description{
 Split DSS path into parts.
 }
+\seealso{
+\code{\link[=dss_catalog]{dss_catalog()}} \code{\link[=dss_parts_combine]{dss_parts_combine()}} \code{\link[=dss_parts_replace]{dss_parts_replace()}}
+}
