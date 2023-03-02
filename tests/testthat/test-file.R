@@ -8,7 +8,6 @@ test_that("DSS file open works", {
 
 
 test_that("DSS file creation works", {
-  on.exit(conn$close(), add = TRUE)
   tf1 = tempfile(fileext = ".dss")
   tf2 = tempfile(fileext = ".dss")
   tf3 = tempfile(fileext = ".dss")
