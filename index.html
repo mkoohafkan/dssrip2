@@ -125,7 +125,7 @@
 </h3>
 <p>Connections to DSS files must be handled manually by the user. To create a file connection, use</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">filepath</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/test.dss"</span>, package <span class="op">=</span> <span class="st">"dssrip2"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">filepath</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/example.dss"</span>, package <span class="op">=</span> <span class="st">"dssrip2"</span><span class="op">)</span></span>
 <span><span class="va">conn</span> <span class="op">=</span> <span class="fu"><a href="reference/dss_file.html">dss_file</a></span><span class="op">(</span><span class="va">filepath</span><span class="op">)</span></span></code></pre></div>
 <p>DSS files will usually close on their own after some period of inactivity, but it is best practice for users to explicitly signal to DSS when they are finished working with a file by calling the file’s <code>$done()</code> method:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">

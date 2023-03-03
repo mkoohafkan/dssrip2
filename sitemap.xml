@@ -31,12 +31,6 @@
     <loc>https://hydroecology.net/dssrip2/reference/asset_query_nexus.html</loc>
   </url>
   <url>
-    <loc>https://hydroecology.net/dssrip2/reference/build_fields_table.html</loc>
-  </url>
-  <url>
-    <loc>https://hydroecology.net/dssrip2/reference/dot-javaVectorToStrings.html</loc>
-  </url>
-  <url>
     <loc>https://hydroecology.net/dssrip2/reference/dss-assertions.html</loc>
   </url>
   <url>
@@ -139,9 +133,6 @@
     <loc>https://hydroecology.net/dssrip2/reference/format_datetimes.html</loc>
   </url>
   <url>
-    <loc>https://hydroecology.net/dssrip2/reference/get_field.html</loc>
-  </url>
-  <url>
     <loc>https://hydroecology.net/dssrip2/reference/get_jars.html</loc>
   </url>
   <url>
@@ -161,8 +152,5 @@
   </url>
   <url>
     <loc>https://hydroecology.net/dssrip2/reference/na_fill.html</loc>
-  </url>
-  <url>
-    <loc>https://hydroecology.net/dssrip2/reference/whichJavaVersion.html</loc>
   </url>
 </urlset>
