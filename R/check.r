@@ -194,11 +194,11 @@ assert_attributes = function(obj, attributes) {
   allAttr = list_attributes(obj)
   missingAttr = setdiff(allAttr[["required"]], names(attributes))
   badAttr = setdiff(names(attributes), unlist(allAttr))
-  if (length(missingAttr) > 1L) {
+  if (length(missingAttr) > 0L) {
     stop("Missing required attributes: ",
       paste(missingAttr, collapse = ", "))
   }
-  if (length(badAttr) > 1L) {
+  if (length(badAttr) > 0L) {
     stop("Unrecognized attributes: ", paste(badAttr, collapse = ", "))
   }
 }
