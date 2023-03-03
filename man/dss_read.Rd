@@ -23,8 +23,8 @@ the DSS "parameter" value specified in the object metadata.
 Read records from a DSS file.
 }
 \details{
-The returned data frame includes additional attributes
-\code{"dss.type"} and \code{"dss.units"} describing the DSS data format.
+The returned data frame includes additional attribute
+\code{"dss_attributes"} describing the DSS data format.
 }
 \seealso{
 \code{\link[=dss_open]{dss_open()}} \code{\link[=dss_catalog]{dss_catalog()}} \code{\link[=dss_attributes]{dss_attributes()}}

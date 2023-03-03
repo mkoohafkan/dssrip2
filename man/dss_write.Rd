@@ -4,17 +4,16 @@
 \alias{dss_write}
 \title{Write DSS Records}
 \usage{
-dss_write(x, file, path, attributes = list())
+dss_write(x, file, path)
 }
 \arguments{
 \item{x}{The dataframe (Time Series or Paired Data) or raster (Grid)
-to write to DSS.}
+to write to DSS. Must include attribute \code{"dss_attributes"}
+containing required attributes.}
 
 \item{file}{A DSS file handle, e.g., output of \code{\link[=dss_open]{dss_open()}}.}
 
 \item{path}{The DSS path to write.}
-
-\item{attributes}{A named list of DSS attributes.}
 }
 \description{
 Write a DSS time series, paired dataset, or grid to a DSS file.

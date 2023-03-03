@@ -4,12 +4,10 @@
 \alias{dss_to_paired}
 \title{Paired Data to DSS}
 \usage{
-dss_to_paired(d, attributes)
+dss_to_paired(d, param_part)
 }
 \arguments{
 \item{d}{A data frame.}
-
-\item{attributes}{A list of \code{PairedDataContainer} attributes.}
 }
 \value{
 A \code{PairedDataContainer} Java object reference.

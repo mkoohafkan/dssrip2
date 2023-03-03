@@ -10,15 +10,17 @@ test_that("timeseries read works", {
   expect_identical(nrow(ts1), 24107L)
   expect_identical(names(ts1), c("datetime", "flow"))
   expect_identical(names(ts1), c("datetime", "flow"))
-  expect_identical(attr(ts1, "dss.units"), "cfs")
-  expect_identical(attr(ts1, "dss.type"), "PER-AVER")
+  expect_identical(attr(ts1, "dss_attributes")$units, "cfs")
+  expect_identical(attr(ts1, "dss_attributes")$type, "PER-AVER")
   # cheeck full vs. not
   ts1_full = dss_read(conn, path, FALSE)
   expect_s3_class(ts1_full, "data.frame")
   expect_identical(nrow(ts1_full), 274L)
   expect_identical(names(ts1), names(ts1_full))
-  expect_identical(attr(ts1_full, "dss.units"), attr(ts1, "dss.units"))
-  expect_identical(attr(ts1_full, "dss.type"), attr(ts1, "dss.type"))
+  expect_identical(attr(ts1_full, "dss_attributes")$units,
+    attr(ts1, "dss_attributes")$units)
+  expect_identical(attr(ts1_full, "dss_attributes")$type,
+    attr(ts1, "dss_attributes")$type)
 
   # test missing values and timestamps
   path2 = "/BRANDYWINE CREEK/WILMINGTON, DE/GAGE HEIGHT/01AUG2012/15MIN/USGS/"
@@ -48,10 +50,8 @@ test_that("paired data read works", {
   expect_type(pd[[2]], "double")
   expect_identical(nrow(pd), 67L)
   expect_identical(names(pd), c("flow", "stage"))
-  expect_identical(attr(pd, "dss.xtype"), "UNT")
-  expect_identical(attr(pd, "dss.ytype"), "UNT")
-  expect_identical(attr(pd, "dss.xunits"), "cfs")
-  expect_identical(attr(pd, "dss.yunits"), "feet")
+  expect_identical(attr(pd, "dss_attributes"), list(xparameter = "FLOW", yparameter = "STAGE",
+    xtype = "UNT", ytype = "UNT", xunits = "cfs", yunits = "feet"))
 
 })
 
