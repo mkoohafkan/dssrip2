@@ -65,9 +65,7 @@ list_attributes_paired = function() {
       "xtype",
       "ytype"
     ),
-    optional = c(
-      "labels"
-    ),
+    optional = c(),
     derived = c(
       "xparameter",
       "yparameter",
