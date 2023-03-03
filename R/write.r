@@ -47,6 +47,29 @@ dss_delete = function(file, path, full = TRUE, squeeze = FALSE) {
 }
 
 
+#' Guess DSS Class
+#'
+#' Guess the DSS container based on the R object structure.
+#'
+#' @param x An R object.
+#' @return The DSS Java object type.
+#'
+#' @importFrom lubridate is.instant
+#' @keywords internal
+guess_dss_container = function(x) {
+  if (inherits(x, "raster")) {
+    "hec.io.GridContainer"
+  } else if (inherits(x, "data.frame") && ncol(x) > 1L) {
+    if ((ncol(x) == 2L) && is.instant(x[[1]])) {
+      "hec.io.TimeSeriesContainer"
+    } else {
+      "hec.io.PairedDataContainer"
+    }
+  } else {
+    stop("Could not determine DSS container type of 'x'.")
+  }
+}
+
 
 #' Write DSS Records
 #'
@@ -60,24 +83,20 @@ dss_delete = function(file, path, full = TRUE, squeeze = FALSE) {
 #'
 #' @seealso [dss_open()] [dss_read()] [dss_catalog()] [dss_attributes()]
 #'
-#' @importFrom lubridate is.instant
 #' @export
 dss_write = function(x, file, path) {
   on.exit(file$done(), add = TRUE)
   assert_write_support(x)
   assert_dss_file(file)
   assert_path_format(path)
-  if (inherits(x, "raster")) {
-    dssObj = dss_to_grid(x)
-  } else if (inherits(x, "data.frame") && ncol(x) > 1L) {
-    if ((ncol(x) == 2L) && is.instant(x[[1]])) {
-      dssObj = dss_to_timeseries(x, dss_parts_split(path)[["E"]])
-    } else {
-      dssObj = dss_to_paired(x, dss_parts_split(path)[["C"]])
-    }
-  } else {
-    stop("Could not determine DSS container type of 'x'.")
-  }
+  class_name = guess_dss_container(x)
+  dssObj = switch(class_name,
+    "hec.io.GridContainer" = dss_to_grid(x),
+    "hec.io.TimeSeriesContainer" = dss_to_timeseries(x,
+      dss_parts_split(path)[["E"]]),
+    "hec.io.PairedDataContainer" = dss_to_paired(x,
+      dss_parts_split(path)[["C"]])
+  )
   dssObj$setFullName(path)
   file$put(dssObj)
   invisible(TRUE)
@@ -188,14 +207,14 @@ as_hectime = function(x, granularity_seconds) {
 #'   "IR-CENTURY", etc.
 #' @return A `TimeSeriesContainer` Java object reference.
 #'
-#' @importFrom rJava .jnew
+#' @importFrom rJava .jnew .jclass
 #' @keywords internal
 dss_to_timeseries = function(d, dss_interval) {
   formatted_times = format_datetimes(d[, 1])
   # build time series object
   tsObj = .jnew("hec.io.TimeSeriesContainer")
   attributes = attr(d, "dss_attributes")
-  assert_attributes(tsObj, attributes)
+  assert_attributes(.jclass(tsObj), attributes)
   tsObj$numberValues = length(formatted_times)
   # get time properties
   dsstimes = dss_times_from_posix(formatted_times, dss_interval)
@@ -242,9 +261,9 @@ dss_to_paired = function(d, param_part) {
   # build paired data object
   pdObj = .jnew("hec.io.PairedDataContainer")
   attributes = attr(d, "dss_attributes")
-  assert_attributes(pdObj, attributes)
+  assert_attributes(.jclass(pdObj), attributes)
   ncurves = ncol(d) - 1L
- pdObj$setNumberCurves(ncurves)
+  pdObj$setNumberCurves(ncurves)
   pdObj$setNumberOrdinates(nrow(d))
   pdObj$setXType(attributes$xtype)
   pdObj$setXUnits(attributes$xunits)
@@ -259,10 +278,10 @@ dss_to_paired = function(d, param_part) {
     pdObj$setLabels(names(d)[-1])
   }
   # set NA values
-  for (n in seq(2, ncurves)) {
+  for (n in seq_len(ncol(d))) {
     d[n] = na_to_java(d[[n]])
   }
-  pdObj$setXOrdinates(na_to_java(d[, 1]))
+  pdObj$setXOrdinates(d[, 1])
   # need a double[][] array
   pdObj$setYOrdinates(.jarray(lapply(d[seq.int(2L, ncol(d))],
     .jarray, "[D"), "[D"))
