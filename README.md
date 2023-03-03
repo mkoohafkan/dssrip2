@@ -86,7 +86,7 @@ Connections to DSS files must be handled manually by the user. To
 create a file connection, use
 
 ```r
-filepath = system.file("extdata/test.dss", package = "dssrip2")
+filepath = system.file("extdata/example.dss", package = "dssrip2")
 conn = dss_file(filepath)
 ```
 

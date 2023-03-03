@@ -12,6 +12,7 @@
 #' @seealso [dss_open()] [dss_read()] [dss_parts_split()]
 #'   [dss_parts_combine()] [dss_parts_replace()]
 #'
+#' @importFrom rJava .jevalArray
 #' @export
 dss_catalog = function(file, pattern = "*", condensed = TRUE,
   rebuild = FALSE) {
