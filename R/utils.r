@@ -102,8 +102,7 @@ na_fill = function(v, forward = TRUE) {
 #'
 #' @keywords internal
 java_to_na = function(x) {
-  na_vec = rep(DSS_MISSING_VALUE, length(x))
-  ifelse(abs(x - na_vec) < 1e-5, NA, x)
+  ifelse(abs(x - DSS_MISSING_VALUE) < 1e-5, NA, x)
 }
 
 
@@ -111,6 +110,5 @@ java_to_na = function(x) {
 #'
 #' @keywords internal
 na_to_java = function(x) {
-  na_vec = rep(DSS_MISSING_VALUE, length(x))
   ifelse(is.na(x), DSS_MISSING_VALUE, x)
 }
