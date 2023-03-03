@@ -21,10 +21,12 @@ dss_catalog = function(file, pattern = "*", condensed = TRUE,
     stop("Argument \"pattern\" must be length 1")
   }
   if (condensed) {
-    paths = .javaVectorToStrings(file$getCondensedCatalog())
+    catalog = file$getCondensedCatalog()
   } else {
-    paths = .javaVectorToStrings(file$getCatalogedPathnames(rebuild))
+    catalog = file$getCatalogedPathnames(rebuild)
   }
+  paths = sapply(.jevalArray(catalog$toArray()), function(x)
+    x$toString())
   as.character(paths)[grep(toupper(pattern), toupper(paths))]
 }
 
