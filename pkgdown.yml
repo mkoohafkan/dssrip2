@@ -3,7 +3,7 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   quickstart: quickstart.html
-last_built: 2023-03-03T18:31Z
+last_built: 2023-03-06T16:16Z
 urls:
   reference: https://hydroecology.net/dssrip2/reference
   article: https://hydroecology.net/dssrip2/articles

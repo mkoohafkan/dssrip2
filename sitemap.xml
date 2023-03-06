@@ -37,15 +37,6 @@
     <loc>https://hydroecology.net/dssrip2/reference/dss_attributes.html</loc>
   </url>
   <url>
-    <loc>https://hydroecology.net/dssrip2/reference/dss_attributes_grid.html</loc>
-  </url>
-  <url>
-    <loc>https://hydroecology.net/dssrip2/reference/dss_attributes_paired.html</loc>
-  </url>
-  <url>
-    <loc>https://hydroecology.net/dssrip2/reference/dss_attributes_timeseries.html</loc>
-  </url>
-  <url>
     <loc>https://hydroecology.net/dssrip2/reference/dss_catalog.html</loc>
   </url>
   <url>
@@ -134,6 +125,9 @@
   </url>
   <url>
     <loc>https://hydroecology.net/dssrip2/reference/get_jars.html</loc>
+  </url>
+  <url>
+    <loc>https://hydroecology.net/dssrip2/reference/guess_dss_container.html</loc>
   </url>
   <url>
     <loc>https://hydroecology.net/dssrip2/reference/index.html</loc>

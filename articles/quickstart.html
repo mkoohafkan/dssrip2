@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">dssrip2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4-0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5-0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,7 +72,7 @@
                         <h4 data-toc-skip class="author">Michael
 Koohafkan</h4>
             
-            <h4 data-toc-skip class="date">2023-03-02</h4>
+            <h4 data-toc-skip class="date">2023-03-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mkoohafkan/dssrip2/blob/HEAD/vignettes/quickstart.rmd" class="external-link"><code>vignettes/quickstart.rmd</code></a></small>
       <div class="d-none name"><code>quickstart.rmd</code></div>
@@ -227,9 +227,12 @@ supplied input.</p>
 <span><span class="va">lake_huron</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%d-10-01"</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/time.html" class="external-link">time</a></span><span class="op">(</span><span class="va">LakeHuron</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, elev <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">LakeHuron</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">lake_huron_path</span> <span class="op">=</span> <span class="st">"/GREAT LAKES/LAKE HURON/ELEV//1YEAR/R DATASET/"</span></span>
-<span><span class="va">lake_huron_meta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"feet"</span>, type <span class="op">=</span> <span class="st">"INST"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/dss_write.html">dss_write</a></span><span class="op">(</span><span class="va">lake_huron</span>, <span class="va">f</span>, <span class="va">lake_huron_path</span>, <span class="va">lake_huron_meta</span><span class="op">)</span></span>
+<span><span class="co"># additional attributes are required to write DSS data</span></span>
+<span><span class="va">lake_huron</span> <span class="op">=</span> <span class="fu"><a href="../reference/dss_attributes.html">dss_add_attributes</a></span><span class="op">(</span><span class="va">lake_huron</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"feet"</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"INST"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/dss_write.html">dss_write</a></span><span class="op">(</span><span class="va">lake_huron</span>, <span class="va">f</span>, <span class="va">lake_huron_path</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Converting supplied timestamps to 'POSIXct' class, using default</span></span>
 <span><span class="co">#&gt; timezone etc/GMT+0</span></span>
 <span></span>
@@ -241,9 +244,12 @@ supplied input.</p>
 <span><span class="va">temps</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"1973-%d-%d"</span>,</span>
 <span>  <span class="va">aq</span><span class="op">$</span><span class="va">Month</span>, <span class="va">aq</span><span class="op">$</span><span class="va">Day</span><span class="op">)</span><span class="op">)</span>, temperature <span class="op">=</span> <span class="va">aq</span><span class="op">$</span><span class="va">Temp</span><span class="op">)</span></span>
 <span><span class="va">temps_path</span> <span class="op">=</span> <span class="st">"/NEW YORK/NEW YORK CITY/TEMPERATURE//IR-YEAR/R DATASET/"</span></span>
-<span><span class="va">temps_meta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"degrees F"</span>, type <span class="op">=</span> <span class="st">"INST"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/dss_write.html">dss_write</a></span><span class="op">(</span><span class="va">temps</span>, <span class="va">f</span>, <span class="va">temps_path</span>, <span class="va">temps_meta</span><span class="op">)</span></span>
+<span><span class="co"># additional attributes</span></span>
+<span><span class="va">temps</span> <span class="op">=</span> <span class="fu"><a href="../reference/dss_attributes.html">dss_add_attributes</a></span><span class="op">(</span><span class="va">temps</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"degrees F"</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"INST"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/dss_write.html">dss_write</a></span><span class="op">(</span><span class="va">temps</span>, <span class="va">f</span>, <span class="va">temps_path</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Converting supplied timestamps to 'POSIXct' class, using default</span></span>
 <span><span class="co">#&gt; timezone etc/GMT+0</span></span>
 <span></span>
@@ -252,10 +258,12 @@ supplied input.</p>
 <span><span class="va">growth</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reshape.html" class="external-link">reshape</a></span><span class="op">(</span><span class="va">Loblolly</span>, direction <span class="op">=</span> <span class="st">"wide"</span>, idvar <span class="op">=</span> <span class="st">"age"</span>, timevar <span class="op">=</span> <span class="st">"Seed"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">growth</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"height."</span>, <span class="st">"seed_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">growth</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">growth_path</span> <span class="op">=</span> <span class="st">"//LOBLOLLY PINES/AGE-HEIGHT///R DATASET/"</span></span>
-<span><span class="va">growth_meta</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>xunits <span class="op">=</span> <span class="st">"years"</span>, yunits <span class="op">=</span> <span class="st">"feet"</span>,</span>
-<span>  xtype <span class="op">=</span> <span class="st">"UNT"</span>, ytype <span class="op">=</span> <span class="st">"UNT"</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">growth</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">growth</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/dss_write.html">dss_write</a></span><span class="op">(</span><span class="va">growth</span>, <span class="va">f</span>, <span class="va">growth_path</span>, <span class="va">growth_meta</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># additional attributes</span></span>
+<span><span class="va">growth</span> <span class="op">=</span> <span class="fu"><a href="../reference/dss_attributes.html">dss_add_attributes</a></span><span class="op">(</span><span class="va">growth</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>xunits <span class="op">=</span> <span class="st">"years"</span>,</span>
+<span>  yunits <span class="op">=</span> <span class="st">"feet"</span>, xtype <span class="op">=</span> <span class="st">"UNT"</span>, ytype <span class="op">=</span> <span class="st">"UNT"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/dss_write.html">dss_write</a></span><span class="op">(</span><span class="va">growth</span>, <span class="va">f</span>, <span class="va">growth_path</span><span class="op">)</span></span></code></pre></div>
 <p>It is good practice to close a DSS file once you are finished working
 with it. For the most part, <code>dssrip2</code> will call the file’s
 <code>$done()</code> method at the completion of every operation to
