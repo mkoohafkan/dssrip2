@@ -128,18 +128,18 @@ conn = dss_create(tf)
 data(Nile)
 nile = data.frame(datetime = as.Date(sprintf("%d-10-01", time(Nile))),
   flow = as.vector(Nile) * 1e8)
-nile_meta = list(units = "cubic meters", type = "PER-CUM")
+nile = dss_add_attributes(nile, list(units = "cubic meters",
+  type = "PER-CUM"))
 path = "//NILE RIVER/VOLUME//1YEAR/R DATASET/"
-dss_write(nile, conn, path, nile_meta)
+dss_write(nile, conn, path)
 
 # paired data
 data(CO2)
 uptake = reshape(CO2[c("Plant", "conc", "uptake")],
   direction = "wide", idvar = "conc", timevar = "Plant")
 names(uptake) = gsub("uptake.", "", names(uptake))
-uptake_meta = list(xtype = "LINEAR", ytype = "LINEAR",
-  xunits = "mL/L", yunits = "umol/m^2",
-  labels = names(uptake)[2:ncol(uptake)])
+uptake = dss_add_attributes(uptake, list(xtype = "LINEAR",
+  ytype = "LINEAR", xunits = "mL/L", yunits = "umol/m^2"))
 path = "//PLANT CO2 UPTAKE/CONCENTRATION-UPTAKE///R DATASET/"
-dss_write(uptake, conn, path, uptake_meta)
+dss_write(uptake, conn, path)
 ```

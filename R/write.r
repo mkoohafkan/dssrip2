@@ -47,38 +47,56 @@ dss_delete = function(file, path, full = TRUE, squeeze = FALSE) {
 }
 
 
+#' Guess DSS Class
+#'
+#' Guess the DSS container based on the R object structure.
+#'
+#' @param x An R object.
+#' @return The DSS Java object type.
+#'
+#' @importFrom lubridate is.instant
+#' @keywords internal
+guess_dss_container = function(x) {
+  if (inherits(x, "raster")) {
+    "hec.io.GridContainer"
+  } else if (inherits(x, "data.frame") && ncol(x) > 1L) {
+    if ((ncol(x) == 2L) && is.instant(x[[1]])) {
+      "hec.io.TimeSeriesContainer"
+    } else {
+      "hec.io.PairedDataContainer"
+    }
+  } else {
+    stop("Could not determine DSS container type of 'x'.")
+  }
+}
+
 
 #' Write DSS Records
 #'
 #' Write a DSS time series, paired dataset, or grid to a DSS file.
 #'
 #' @param x The dataframe (Time Series or Paired Data) or raster (Grid)
-#'   to write to DSS.
+#'   to write to DSS. Must include attribute `"dss_attributes"`
+#'   containing required attributes.
 #' @inheritParams dss_squeeze
 #' @param path The DSS path to write.
-#' @param attributes A named list of DSS attributes.
 #'
 #' @seealso [dss_open()] [dss_read()] [dss_catalog()] [dss_attributes()]
 #'
-#' @importFrom lubridate is.instant
 #' @export
-dss_write = function(x, file, path, attributes = list()) {
+dss_write = function(x, file, path) {
   on.exit(file$done(), add = TRUE)
   assert_write_support(x)
   assert_dss_file(file)
   assert_path_format(path)
-  if (inherits(x, "raster")) {
-    dssObj = dss_to_grid(x, attributes)
-  } else if (inherits(x, "data.frame") && ncol(x) > 1L) {
-    if ((ncol(x) == 2L) && is.instant(x[[1]])) {
-      dssObj = dss_to_timeseries(x, attributes,
-        dss_parts_split(path)["E"])
-    } else {
-      dssObj = dss_to_paired(x, attributes)
-    }
-  } else {
-    stop("Could not determine DSS container type of 'x'.")
-  }
+  class_name = guess_dss_container(x)
+  dssObj = switch(class_name,
+    "hec.io.GridContainer" = dss_to_grid(x),
+    "hec.io.TimeSeriesContainer" = dss_to_timeseries(x,
+      dss_parts_split(path)[["E"]]),
+    "hec.io.PairedDataContainer" = dss_to_paired(x,
+      dss_parts_split(path)[["C"]])
+  )
   dssObj$setFullName(path)
   file$put(dssObj)
   invisible(TRUE)
@@ -185,18 +203,18 @@ as_hectime = function(x, granularity_seconds) {
 #' Convert a data frame to a DSS Time Series object.
 #'
 #' @param d A data frame.
-#' @param attributes A list of `TimeSeriesContainer` attributes.
 #' @param dss_interval The DSS time interval, e.g., "15MIN", "1DAY",
 #'   "IR-CENTURY", etc.
 #' @return A `TimeSeriesContainer` Java object reference.
 #'
-#' @importFrom rJava .jnew
+#' @importFrom rJava .jnew .jclass
 #' @keywords internal
-dss_to_timeseries = function(d, attributes, dss_interval) {
+dss_to_timeseries = function(d, dss_interval) {
   formatted_times = format_datetimes(d[, 1])
   # build time series object
   tsObj = .jnew("hec.io.TimeSeriesContainer")
-  assert_attributes(tsObj, attributes)
+  attributes = attr(d, "dss_attributes")
+  assert_attributes(.jclass(tsObj), attributes)
   tsObj$numberValues = length(formatted_times)
   # get time properties
   dsstimes = dss_times_from_posix(formatted_times, dss_interval)
@@ -235,35 +253,35 @@ dss_to_timeseries = function(d, attributes, dss_interval) {
 #' Convert a data frame to a DSS Paired Data object.
 #'
 #' @param d A data frame.
-#' @param attributes A list of `PairedDataContainer` attributes.
 #' @return A `PairedDataContainer` Java object reference.
 #'
 #' @importFrom rJava .jnew .jarray
 #' @keywords internal
-dss_to_paired = function(d, attributes) {
+dss_to_paired = function(d, param_part) {
   # build paired data object
   pdObj = .jnew("hec.io.PairedDataContainer")
-  assert_attributes(pdObj, attributes)
+  attributes = attr(d, "dss_attributes")
+  assert_attributes(.jclass(pdObj), attributes)
   ncurves = ncol(d) - 1L
- pdObj$setNumberCurves(ncurves)
+  pdObj$setNumberCurves(ncurves)
   pdObj$setNumberOrdinates(nrow(d))
   pdObj$setXType(attributes$xtype)
   pdObj$setXUnits(attributes$xunits)
   pdObj$setYType(attributes$ytype)
   pdObj$setYUnits(attributes$yunits)
-  if ("labels" %in% names(attributes)) {
-    if (length(attributes$labels) != ncurves) {
-      stop("Attribute \"labels\" does not match the supplied dataset ",
-      "(expects length of 1 or ", ncurves, ")")
-    }
-    pdObj$setLabels(attributes$labels)
-    pdObj$labelsUsed = TRUE
+  # check for labels
+  yparam = strsplit(param_part, "-")[[c(1, 2)]]
+  if (all(grepl(sprintf("^%s(_[0-9]+)*", yparam), names(d)[-1],
+    ignore.case = TRUE))) {
+    pdObj$labelsUsed = FALSE
+  } else {
+    pdObj$setLabels(names(d)[-1])
   }
   # set NA values
-  for (n in seq(2, ncurves)) {
+  for (n in seq_len(ncol(d))) {
     d[n] = na_to_java(d[[n]])
   }
-  pdObj$setXOrdinates(na_to_java(d[, 1]))
+  pdObj$setXOrdinates(d[, 1])
   # need a double[][] array
   pdObj$setYOrdinates(.jarray(lapply(d[seq.int(2L, ncol(d))],
     .jarray, "[D"), "[D"))
@@ -277,11 +295,13 @@ dss_to_paired = function(d, attributes) {
 #' Convert a raster to a DSS Grid object.
 #'
 #' @param r A raster.
-#' @param attributes A list of `hec.io.GridContainer` attributes.
 #' @return A `hec.io.GridContainer` Java object reference.
 #'
 #' @importFrom rJava .jnew .jarray
 #' @keywords internal
-dss_to_grid = function(r, attributes) {
+dss_to_grid = function(r) {
   stop("Not implemented")
+  attributes = attr(r, "dss_attributes")
+
+
 }

@@ -2,52 +2,61 @@ skip_if_no_dss()
 
 test_that("time series writing works", {
   on.exit(dss_close(conn), add = TRUE)
+  tf = tempfile(fileext = ".dss")
+  conn = dss_create(tf)
+
   d = data.frame(
     datetime = seq(as.POSIXct("2021-01-01", tz = "etc/GMT+0"),
       as.POSIXct("2021-01-05", tz = "etc/GMT+0"), by = "1 day"),
     flow = c(10, 12, NA, 13, 10) * 1000
   )
-  attributes = list("type" = "PER-AVER", units = "cfs")
-
-  tf = tempfile(fileext = ".dss")
-  conn = dss_create(tf)
-  on.exit(conn$done(), add = TRUE)
+  attr(d, "dss_attributes") = list(type = "PER-AVER", units = "cfs")
   path = "/Fake Creek/Fake Town/FLOW//1DAY/FAKE/"
 
-  dss_write(d, conn, path, attributes)
+  dss_write(d, conn, path)
+  expect_identical(d, dss_read(conn, path))
 
-  expect_identical(d, dss_read(conn, path),
-    ignore_attr = c("dss.type", "dss.units"))
+  d2 = d
+  attr(d2, "dss_attributes") = NULL
+  expect_error(dss_write(d2, conn, path))
 
 })
 
 
 test_that("paired data writing works", {
   on.exit(dss_close(conn), add = TRUE)
-  d = data.frame(flow = c(10, 12, 14, 13, 10) * 1000,
-    stage = c(17.1, 17.3, 17.6, 17.4, 17.2))
-  attributes = list(xunits = "cfs", yunits = "stage",
-    xtype = "UNT", ytype = "UNT")
-
   tf = tempfile(fileext = ".dss")
   conn = dss_create(tf)
-  on.exit(conn$done(), add = TRUE)
-  path = "/Fake Creek/Fake Town/FLOW-STAGE///FAKE/"
-  dss_write(d, conn, path, attributes)
 
-  expect_equal(d, dss_read(conn, path),
-    tolerance = 1e-5, ignore_attr = c("dss.xtype", "dss.ytype",
-      "dss.xunits", "dss.yunits"))
+  d = data.frame(flow = c(10, 12, 14, 13, 10) * 1000,
+    stage = c(17.1, 17.3, 17.6, 17.4, 17.2))
+  attr(d, "dss_attributes") = list(xtype = "UNT", ytype = "UNT",
+    xunits = "cfs", yunits = "stage")
+  path = "/Fake Creek/Fake Town/FLOW-STAGE///FAKE/"
+  dss_write(d, conn, path)
+
+  expect_equal(dss_read(conn, path), d, tolerance = 1e-5,
+    ignore_attr = "dss_attributes")
+  expect_equal(attr(dss_read(conn, path), "dss_attributes")[-c(1, 2)],
+    attr(d, "dss_attributes"))
+
 
   # test labels and NA values
   d2 = data.frame(flow = c(10, 12, NA, 13, 15) * 1000,
     foo = c(17.1, 17.2, 17.3, 17.4, 17.6),
     bar = c(13.7, 13.8, 13.8, 13.9, 14.1),
-    baz = c(10.36, 10.3, 10.4, 10.4, 10.))
-  attributes2 = list(xunits = "cfs", yunits = "feet",
-    xtype = "UNT", ytype = "UNT", labels = names(d2[2:4]))
+    baz = c(10.36, 10.3, 10.4, 10.4, 10.0))
+  attr(d2, "dss_attributes") = list(xunits = "cfs", yunits = "feet",
+    xtype = "UNT", ytype = "UNT")
   path2 = "/Fake Creek/Fake Town/FLOW-STAGE///FAKE2/"
-  dss_write(d2, conn, path2, attributes2)
+  dss_write(d2, conn, path2)
+
+  expect_equal(dss_read(conn, path2), d2, tolerance = 1e-5,
+    ignore_attr = "dss_attributes")
+
+  d3 = d2
+  attr(d3, "dss_attributes") = NULL
+  expect_error(dss_write(d3, conn, path2))
 
 })
 
@@ -64,15 +73,15 @@ test_that("deleting records works", {
       as.POSIXct("2021-01-05", tz = "etc/GMT+0"), by = "1 day"),
     flow = c(10, 12, NA, 13, 10) * 1000
   )
-  attributes = list("type" = "PER-AVER", units = "cfs")
+  attr(d, "dss_attributes") = list("type" = "PER-AVER", units = "cfs")
 
   tf = tempfile(fileext = ".dss")
   conn = dss_create(tf)
   on.exit(conn$done(), add = TRUE)
   path1 = "/Fake Creek/Fake Town/FLOW//1DAY/FAKE/"
   path2 = "/Another Fake Creek/Fake Town/FLOW//1DAY/FAKE/"
-  dss_write(d, conn, path1, attributes)
-  dss_write(d, conn, path2, attributes)
+  dss_write(d, conn, path1)
+  dss_write(d, conn, path2)
   expect_error(dss_delete(conn, "/Fake Creek/Fake Town/FLOW//1DAY/NOT EXIST/",
     full = TRUE))
   delete_path2 = "/ANOTHER FAKE CREEK/FAKE TOWN/FLOW/01JAN2020/1DAY/FAKE/"

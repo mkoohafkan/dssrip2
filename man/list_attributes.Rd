@@ -7,7 +7,7 @@
 \alias{list_attributes_grid}
 \title{List DSS Attributes}
 \usage{
-list_attributes(dssObj)
+list_attributes(class_name)
 
 list_attributes_timeseries()
 
@@ -16,7 +16,7 @@ list_attributes_paired()
 list_attributes_grid()
 }
 \arguments{
-\item{dssObj}{A DSS object.}
+\item{class_name}{A DSS Java object class name.}
 }
 \value{
 A list of required and optional attribute names.

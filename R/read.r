@@ -10,8 +10,8 @@
 #'   will be "datetime". Further columns will be named according to
 #'   the DSS "parameter" value specified in the object metadata.
 #'
-#' @details The returned data frame includes additional attributes
-#'   `"dss.type"` and `"dss.units"` describing the DSS data format.
+#' @details The returned data frame includes additional attribute
+#'   `"dss_attributes"` describing the DSS data format.
 #'
 #' @seealso [dss_open()] [dss_catalog()] [dss_attributes()]
 #' @importFrom rJava .jclass
@@ -66,8 +66,9 @@ dss_read_timeseries = function(tsObj) {
   out = data.frame(dss_times_to_posix(times, ts_info),
     java_to_na(values))
   names(out) = c("datetime", tolower(ts_info[["parameter"]]))
-  attr(out, "dss.type") = ts_info[["type"]]
-  attr(out, "dss.units") = ts_info[["units"]]
+  # DSS attributes
+  keep_attributes = c("type", "units")
+  attr(out, "dss_attributes") = ts_info[keep_attributes]
   out
 }
 
@@ -105,15 +106,15 @@ dss_read_paired = function(pdObj) {
   }
   # sic, typo is in Java
   out = cbind(
-    pdObj$getXOridnates(),
+    java_to_na(pdObj$getXOridnates()),
     as.data.frame(java_to_na(t(.jevalArray(pdObj$getYOridnates(),
       simplify = TRUE))))
   )
   names(out) = tolower(c(pd_info[["xparameter"]], ynames))
-  attr(out, "dss.xtype") = pd_info[["xtype"]]
-  attr(out, "dss.ytype") = pd_info[["ytype"]]
-  attr(out, "dss.xunits") = pd_info[["xunits"]]
-  attr(out, "dss.yunits") = pd_info[["yunits"]]
+  # attributes
+  keep_attributes = c("xparameter", "yparameter", "xtype", "ytype",
+    "xunits", "yunits")
+  attr(out, "dss_attributes") = pd_info[keep_attributes]
   out
 }
 
@@ -176,11 +177,8 @@ dss_read_grid = function(gridObj) {
     names = zname
   )
   out[abs(out - grid_info[["noDataValue"]]) < 1e-5] = NA
-
-  attr(out, "dss.type") = grid_info[["dataType"]]
-  attr(out, "dss.units") = grid_info[["dataUnits"]]
-  attr(out, "dss.times") = c(grid_info[["startTime"]],
-    grid_info[["endTime"]])
-
+  # attributes
+  keep_attributes = c("dataType", "dataUnits", "startTime", "endTime")
+  attr(out, "dss_attributes") = grid_info[keep_attributes]
   out
 }

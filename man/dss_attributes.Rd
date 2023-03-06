@@ -2,22 +2,22 @@
 % Please edit documentation in R/attributes.r
 \name{dss_attributes}
 \alias{dss_attributes}
-\title{Read DSS Attributes}
+\alias{dss_add_attributes}
+\title{DSS Attributes}
 \usage{
-dss_attributes(file, path)
+dss_attributes(x)
+
+dss_add_attributes(x, attributes_list = list())
 }
 \arguments{
-\item{file}{A DSS file handle, e.g., output of \code{\link[=dss_open]{dss_open()}}.}
+\item{x}{An R object.}
 
-\item{path}{The DSS path to query attributes for.}
+\item{attributes_list}{A named list of DSS attributes.}
 }
 \value{
-A List of attributes.
+The object \code{x}, with additional attribute
+\code{"dss_attributes"}.
 }
 \description{
-Read attributes from a DSS file.
+Get and set DSS attributes.
 }
-\seealso{
-\code{\link[=dss_read]{dss_read()}}
-}
-\keyword{internal}

@@ -1,7 +1,7 @@
 ---
 title: "Quick Start with dssrip2"
 author: "Michael Koohafkan"
-date: "2023-03-02"
+date: "2023-03-03"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Quick Start}
@@ -184,9 +184,12 @@ data(LakeHuron)
 lake_huron = data.frame(date = as.Date(sprintf("%d-10-01",
   time(LakeHuron))), elev = as.vector(LakeHuron))
 lake_huron_path = "/GREAT LAKES/LAKE HURON/ELEV//1YEAR/R DATASET/"
-lake_huron_meta = list(units = "feet", type = "INST")
 
-dss_write(lake_huron, f, lake_huron_path, lake_huron_meta)
+# additional attributes are required to write DSS data
+lake_huron = dss_add_attributes(lake_huron, list(units = "feet",
+  type = "INST"))
+
+dss_write(lake_huron, f, lake_huron_path)
 #> Warning: Converting supplied timestamps to 'POSIXct' class, using default
 #> timezone etc/GMT+0
 
@@ -198,9 +201,12 @@ aq = do.call(rbind, lapply(split(airquality, airquality$Month),
 temps = data.frame(date = as.Date(sprintf("1973-%d-%d",
   aq$Month, aq$Day)), temperature = aq$Temp)
 temps_path = "/NEW YORK/NEW YORK CITY/TEMPERATURE//IR-YEAR/R DATASET/"
-temps_meta = list(units = "degrees F", type = "INST")
 
-dss_write(temps, f, temps_path, temps_meta)
+# additional attributes
+temps = dss_add_attributes(temps, list(units = "degrees F",
+  type = "INST"))
+
+dss_write(temps, f, temps_path)
 #> Warning: Converting supplied timestamps to 'POSIXct' class, using default
 #> timezone etc/GMT+0
 
@@ -209,10 +215,12 @@ data(Loblolly)
 growth = reshape(Loblolly, direction = "wide", idvar = "age", timevar = "Seed")
 names(growth) = gsub("height.", "seed_", names(growth))
 growth_path = "//LOBLOLLY PINES/AGE-HEIGHT///R DATASET/"
-growth_meta = list(xunits = "years", yunits = "feet",
-  xtype = "UNT", ytype = "UNT", labels = names(growth)[2:ncol(growth)])
 
-dss_write(growth, f, growth_path, growth_meta)
+# additional attributes
+growth = dss_add_attributes(growth, list(xunits = "years",
+  yunits = "feet", xtype = "UNT", ytype = "UNT"))
+
+dss_write(growth, f, growth_path)
 ```
 
 It is good practice to close a DSS file once you are finished working

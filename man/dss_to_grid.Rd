@@ -4,12 +4,10 @@
 \alias{dss_to_grid}
 \title{Grid to DSS}
 \usage{
-dss_to_grid(r, attributes)
+dss_to_grid(r)
 }
 \arguments{
 \item{r}{A raster.}
-
-\item{attributes}{A list of \code{hec.io.GridContainer} attributes.}
 }
 \value{
 A \code{hec.io.GridContainer} Java object reference.
