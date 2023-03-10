@@ -22,6 +22,14 @@ A vector of paths.
 \description{
 Get a list of DSS paths in a file.
 }
+\section{Java Virtual Machine Parameters}{
+
+When working with very large DSS files, you may need to initialize
+the Java Virtual Machine (JVM) with a larger heap size. For more
+information see the help vignette:
+\code{vignette("Java Virtual Machine Parameters", package = "dssrip2")}
+}
+
 \seealso{
 \code{\link[=dss_open]{dss_open()}} \code{\link[=dss_read]{dss_read()}} \code{\link[=dss_parts_split]{dss_parts_split()}}
 \code{\link[=dss_parts_combine]{dss_parts_combine()}} \code{\link[=dss_parts_replace]{dss_parts_replace()}}

@@ -13,6 +13,8 @@
 #' @details The returned data frame includes additional attribute
 #'   `"dss_attributes"` describing the DSS data format.
 #'
+#' @inheritSection dss_connect Java Virtual Machine Parameters
+#'
 #' @seealso [dss_open()] [dss_catalog()] [dss_attributes()]
 #' @importFrom rJava .jclass
 #' @export

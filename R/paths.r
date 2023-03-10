@@ -9,6 +9,8 @@
 #' @param rebuild If `TRUE`, force rebuild the catalog.
 #' @return A vector of paths.
 #'
+#' @inheritSection dss_connect Java Virtual Machine Parameters
+#' 
 #' @seealso [dss_open()] [dss_read()] [dss_parts_split()]
 #'   [dss_parts_combine()] [dss_parts_replace()]
 #'

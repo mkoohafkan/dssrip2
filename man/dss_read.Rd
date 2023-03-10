@@ -26,6 +26,14 @@ Read records from a DSS file.
 The returned data frame includes additional attribute
 \code{"dss_attributes"} describing the DSS data format.
 }
+\section{Java Virtual Machine Parameters}{
+
+When working with very large DSS files, you may need to initialize
+the Java Virtual Machine (JVM) with a larger heap size. For more
+information see the help vignette:
+\code{vignette("Java Virtual Machine Parameters", package = "dssrip2")}
+}
+
 \seealso{
 \code{\link[=dss_open]{dss_open()}} \code{\link[=dss_catalog]{dss_catalog()}} \code{\link[=dss_attributes]{dss_attributes()}}
 }

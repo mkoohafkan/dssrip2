@@ -48,6 +48,12 @@ dss_require = function(dss_home = getOption("dss.home"),
 #'   warning (rather than an error as [dss_connect()] does)
 #'   if the HEC-DSS Java library cannot be loaded correctly.
 #'
+#' @section Java Virtual Machine Parameters:
+#' When working with very large DSS files, you may need to initialize
+#' the Java Virtual Machine (JVM) with a larger heap size. For more
+#' information see the help vignette:
+#' `vignette("Java Virtual Machine Parameters", package = "dssrip2")`
+#'
 #' @seealso [dss_message_level()] [dss_install_monolith()]
 #'
 #' @importFrom rJava .jnew J
