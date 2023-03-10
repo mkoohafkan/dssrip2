@@ -1,0 +1,77 @@
+---
+title: "Java Virtual Machine Parameters"
+author: "Michael Koohafkan"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Java Virtual Machine Parameters}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+## Introduction
+
+Like other Java-dependent packages, the performance of `dssrip2` is
+dependent on the configuration of the Java Virtual Machine (JVM).
+The JVM can be configured in different ways by passing parameters
+that control how the JVM is initialized. Because the JVM is shared by
+all packages in an R session, it is generally not good practice for
+individual packages to set JVM parameters as only the parameters
+specified by the *first loaded package* will be applied. Instead, JVM
+parameters should be specified in `.Rprofile`.
+
+JVM parameters can be set using the option `java.parameters` as follows:
+
+```r
+options(java.parameters = "-<parameter> -<parameter> -<parameter>")
+```
+
+Several resources describing JVM parameters are available. For a
+brief summary of the most common JVM parameters, see
+[this Java Dev Journal article](https://www.javadevjournal.com/java/jvm-parameters/).
+
+
+## BLUF: Recommended JVM parameters for `dssrip2`
+
+Adding the following setting to your .Rprofile should resolve most
+JVM errors encountered when using `dssrip2`:
+
+```r
+options(java.parameters = "-Xmx8000M")
+```
+
+where `-Xmx` refers to the JVM maximum heap size. Here we set it to
+8000 MB, but depending on your requirements you can set it lower or
+higher. The general format is `-Xmx<Heap Size>[Unit]`, where `[unit]` 
+can be `k`/`K` for kilobytes, `m`/`M` for megabytes, or `g`/`G` for
+gigabytes.
+
+
+## An abridged list of JVM parameters
+
+Below is a list of the most common JVM parameters affecting the
+performance of Java-dependent R packages:
+
+
+* Maximum Heap Size: `-Xmx<Heap Size>[Unit]`
+  * e.g., set maximum heap size to 8000 MB: `-Xmx8000M`
+* Minimum Heap Size: `-Xms<Heap Size>[Unit]`
+  * e.g., set minimum heap size to 1000 MB: `-Xms1000M`
+* Initial Young Generation Heap Size: `-XX:NewSize=<young size>[Unit]`
+* Maximum Young Generation Heap Size: `-XX:MaxNewSize=<young size>[Unit]`
+* Serial Garbage Collector: `-XX:+UseSerialGC`
+* Parallel Garbage Collector: `-XX:+UseParallelGC`
+* CMS Garbage Collector: `XX:+USeParNewGC`
+* G1 Garbage Collector: `XX:+USeG1GC`
+* Print Garbage Collection Details Messages: `-XX:+PrintGCDetails`
+* Print Date Stamp in GC Details Messages: `-XX:+PrintGCDateStamps`
+* Redirect Garbage Collection Details Messages: `-Xloggc:<filename>`
+* Enable Log Rotation: `-XX:+UseGCLogFileRotation`
+  *  Helpful for handling large log files.
+* Number of Log Rotation Files: `-XX:NumberOfGClogFiles=<number of files>`
+  * Default value is 1, should be always >= 1.
+* Log File Rotation Size: `-XX:GCLogFileSize=<file size>[Unit]`
+
+For more information on Java Garbage Collectors, see
+[this Java Dev Journal article](https://www.javadevjournal.com/java/java-garbage-collector/).
