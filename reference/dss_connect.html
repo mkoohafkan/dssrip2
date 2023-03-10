@@ -24,6 +24,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/java-parameters.html">Java Virtual Machine Parameters</a>
     <a class="dropdown-item" href="../articles/quickstart.html">Quick Start with dssrip2</a>
   </div>
 </li>
@@ -89,6 +90,15 @@ to use the HEC-DSS Java library. <code>dss_require()</code> is designed for
 use inside other packages; it returns <code>FALSE</code> and gives a
 warning (rather than an error as <code>dss_connect()</code> does)
 if the HEC-DSS Java library cannot be loaded correctly.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="java-virtual-machine-parameters">Java Virtual Machine Parameters<a class="anchor" aria-label="anchor" href="#java-virtual-machine-parameters"></a></h2>
+    
+
+<p>When working with very large DSS files, you may need to initialize
+the Java Virtual Machine (JVM) with a larger heap size. For more
+information see the help vignette:
+<code>vignette("Java Virtual Machine Parameters", package = "dssrip2")</code></p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
