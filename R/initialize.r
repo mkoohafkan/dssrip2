@@ -73,6 +73,21 @@ dss_connect = function(dss_home = getOption("dss.home"),
 }
 
 
+#' HEC Monolith Default Directory
+#'
+#' Platform-dependent default install directory for HEC-Monolith.
+#'
+#' @keywords internal
+monolith_default_dir = function() {
+  if (.Platform$OS.type == "windows") {
+    normalizePath(file.path(Sys.getenv("LOCALAPPDATA"), "dssrip2",
+      "monolith"), mustWork = FALSE)
+  } else {
+    stop("Linux/MacOS is not currently supported.")
+  }
+}
+
+
 #' Connect To DSS (Windows)
 #'
 #' Connect to DSS in a Windows environment.
@@ -84,8 +99,7 @@ dss_connect = function(dss_home = getOption("dss.home"),
 #' @keywords internal
 dss_connect_win = function(dss_home, message_level, monolith) {
   if (is.null(dss_home) && monolith) {
-    dss_home = normalizePath(file.path(Sys.getenv("LOCALAPPDATA"),
-      "dssrip2", "monolith"), mustWork = FALSE)
+    dss_home = monolith_default_dir()
   }
   hec_lib_path = normalizePath(file.path(dss_home,
     "lib/javaHeclib.dll"), mustWork = TRUE)

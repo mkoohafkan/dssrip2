@@ -23,12 +23,12 @@ Imports:
     digest (>= 0.6),
     lubridate (>= 1.9),
     utils
-Suggests: 
+Suggests:
     knitr (>= 1.26),
     rmarkdown (>= 2.0),
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
-SystemRequirements: 
+SystemRequirements:
     HEC-DSSVue (>= 3.2.3, https://www.hec.usace.army.mil/software/hec-dssvue)
     Java JDK (>= 1.8)
 Encoding: UTF-8
