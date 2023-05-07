@@ -28,7 +28,7 @@ dss_read = function(filename, path, full = TRUE) {
     }
   }
   file = dss_file(filename)
-  on.exit(file$done, add = TRUE)
+  on.exit(file$done(), add = TRUE)
   dssObj = file$get(path, full)
   assert_read_support(dssObj)
   jclass = .jclass(dssObj)
