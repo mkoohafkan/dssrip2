@@ -20,7 +20,7 @@ dss_catalog = function(filename, pattern = "*", condensed = TRUE,
   rebuild = FALSE) {
   assert_dss_connected()
   file = dss_file(filename)
-  on.exit(file$done, add = TRUE)
+  on.exit(file$done(), add = TRUE)
   if (length(pattern) != 1L) {
     stop("Argument \"pattern\" must be length 1")
   }
