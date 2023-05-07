@@ -4,10 +4,10 @@
 \alias{dss_squeeze}
 \title{Squeeze a DSS File}
 \usage{
-dss_squeeze(file)
+dss_squeeze(filename)
 }
 \arguments{
-\item{file}{A DSS file handle, e.g., output of \code{\link[=dss_open]{dss_open()}}.}
+\item{filename}{A DSS file path.}
 }
 \description{
 Calls the squeeze method on file to remove deleted or overwritten

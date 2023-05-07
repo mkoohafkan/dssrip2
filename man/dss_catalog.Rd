@@ -4,10 +4,10 @@
 \alias{dss_catalog}
 \title{Get DSS Paths}
 \usage{
-dss_catalog(file, pattern = "*", condensed = TRUE, rebuild = FALSE)
+dss_catalog(filename, pattern = "*", condensed = TRUE, rebuild = FALSE)
 }
 \arguments{
-\item{file}{A DSS file handle, e.g., output of \code{\link[=dss_open]{dss_open()}}.}
+\item{filename}{A DSS file path.}
 
 \item{pattern}{character string containing a regular expression to
 be matched against the DSS pathname catalog.}
@@ -31,6 +31,6 @@ information see the help vignette:
 }
 
 \seealso{
-\code{\link[=dss_open]{dss_open()}} \code{\link[=dss_read]{dss_read()}} \code{\link[=dss_parts_split]{dss_parts_split()}}
+\code{\link[=dss_read]{dss_read()}} \code{\link[=dss_parts_split]{dss_parts_split()}}
 \code{\link[=dss_parts_combine]{dss_parts_combine()}} \code{\link[=dss_parts_replace]{dss_parts_replace()}}
 }

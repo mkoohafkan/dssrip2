@@ -1,43 +1,79 @@
 skip_if_no_dss()
 
-test_that("DSS file open works", {
-  on.exit(dss_close(conn), add = TRUE)
-  conn = dss_open(system.file("extdata/example.dss", package = "dssrip2"))
-  expect_s4_class(conn, "jobjRef")
-})
-
-
 test_that("DSS file creation works", {
   tf1 = tempfile(fileext = ".dss")
   tf2 = tempfile(fileext = ".dss")
   tf3 = tempfile(fileext = ".dss")
-  tf4 = tempfile(fileext = ".dss")
-  tf5 = tempfile(fileext = ".dss")
-  on.exit(unlink(c(tf1, tf2, tf3, tf4, tf5)), add = TRUE)
+  on.exit(unlink(c(tf1, tf2, tf3)), add = TRUE)
+  on.exit(dss_close_all(), add = TRUE)
 
-  f1 = dss_create(tf1)
-  f2 = dss_create(tf2, version = 6L)
+  expect_true(dss_create(tf1))
+  expect_true(dss_create(tf2, version = 6L))
   expect_error(dss_create(tf3, version = 5L))
-  f3 = dss_create(tf3, version = 7L)
+  expect_true(dss_create(tf3, version = 7L))
 
-  expect_s4_class(f1, "jobjRef")
-  expect_s4_class(f2, "jobjRef")
-  expect_identical(dss_version(f1), 7L)
-  expect_identical(dss_version(f2), 6L)
-  expect_identical(dss_version(f3), 7L)
+  expect_setequal(normalizePath(c(tf1, tf2, tf3)),
+    normalizePath(.store$list()))
 
-  dss_convert(f1, tf4)
-  dss_convert(f2, tf5)
-  f4 = dss_open(tf4)
-  f5 = dss_open(tf5)
+})
 
-  expect_identical(dss_version(f4), 6L)
-  expect_identical(dss_version(f5), 7L)
 
-  dss_close(f1)
-  dss_close(f2)
-  dss_close(f3)
-  dss_close(f4)
-  dss_close(f5)
+test_that("DSS file close works", {
+  tf1 = tempfile(fileext = ".dss")
+  tf2 = tempfile(fileext = ".dss")
+  tf3 = tempfile(fileext = ".dss")
+  tf4 = tempfile(fileext = ".dss")
+  on.exit(unlink(c(tf1, tf2, tf3, tf4)), add = TRUE)
+
+  dss_create(tf1)
+  dss_create(tf2, version = 6L)
+  dss_create(tf3, version = 7L)
+  dss_create(tf4, version = 7L)
+
+  expect_true(dss_close(tf1))
+  expect_setequal(.store$list(), normalize_path(c(tf2, tf3, tf4),
+    TRUE))
+
+  expect_true(dss_close_all())
+  expect_identical(.store$list(), character())
+
+})
+
+
+
+test_that("DSS file version detection works", {
+  tf1 = tempfile(fileext = ".dss")
+  tf2 = tempfile(fileext = ".dss")
+  tf3 = tempfile(fileext = ".dss")
+  on.exit(unlink(c(tf1, tf2, tf3)), add = TRUE)
+  on.exit(dss_close_all(), add = TRUE)
+
+  dss_create(tf1)
+  dss_create(tf2, version = 6L)
+  dss_create(tf3, version = 7L)
+
+  expect_identical(dss_version(tf1), 7L)
+  expect_identical(dss_version(tf2), 6L)
+  expect_identical(dss_version(tf3), 7L)
+
+})
+
+
+test_that("DSS file version conversion works", {
+  tf1 = tempfile(fileext = ".dss")
+  tf2 = tempfile(fileext = ".dss")
+  tf3 = tempfile(fileext = ".dss")
+  tf4 = tempfile(fileext = ".dss")
+  on.exit(unlink(c(tf1, tf2, tf3, tf4)), add = TRUE)
+  on.exit(dss_close_all(), add = TRUE)
+
+  expect_true(dss_create(tf1, version = 7L))
+  expect_true(dss_create(tf2, version = 6L))
+
+  dss_convert(tf1, tf3)
+  dss_convert(tf2, tf4)
+
+  expect_identical(dss_version(tf3), 6L)
+  expect_identical(dss_version(tf4), 7L)
 
 })

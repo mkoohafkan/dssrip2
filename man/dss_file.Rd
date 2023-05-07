@@ -2,17 +2,23 @@
 % Please edit documentation in R/files.r
 \name{dss_file}
 \alias{dss_file}
-\title{Open DSS File}
+\title{DSS File Handle}
 \usage{
-dss_file(filename, ...)
+dss_file(filename, exists = TRUE, ...)
 }
 \arguments{
-\item{filename}{A valid filepath.}
+\item{filename}{A DSS file path.}
+
+\item{exists}{If \code{TRUE}, assert that the DSS file exists.}
+
+\item{...}{Additional arguments passed to the
+\code{hec.heclib.dss.HecDss} Java object \code{open} method. Typically,
+this is an unnamed argument specifying the DSS file version.}
 }
 \value{
-A DSS file handle Java object.
+A \code{hec.heclib.dss.HecDss} Java object reference.
 }
 \description{
-Call the Java HecDss Open method.
+Retrieve a DSS file handle.
 }
 \keyword{internal}

@@ -2,20 +2,19 @@
 % Please edit documentation in R/files.r
 \name{dss_close}
 \alias{dss_close}
+\alias{dss_close_all}
 \title{Close DSS File}
 \usage{
-dss_close(file, implicit = FALSE)
+dss_close(filename)
+
+dss_close_all()
 }
 \arguments{
-\item{file}{A DSS file handle, e.g., output of \code{\link[=dss_open]{dss_open()}}.}
-
-\item{implicit}{If \code{TRUE}, use method \code{done()} instead of \code{close()}.}
+\item{filename}{A DSS file path.}
 }
 \description{
-Close a DSS file. This function is provided for completion of the
-interface but is not strictly required as these methods can be
-called directly from the file object (i.e., \code{file$done()}).
-}
-\seealso{
-\code{\link[=dss_open]{dss_open()}}
+Close a DSS file. This should only be used when the user has
+finished working with a DSS file, and is not strictly required
+as the package will implictly close a DSS file after every
+operation.
 }

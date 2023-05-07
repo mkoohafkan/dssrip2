@@ -4,10 +4,10 @@
 \alias{dss_read}
 \title{Read DSS Records}
 \usage{
-dss_read(file, path, full = TRUE)
+dss_read(filename, path, full = TRUE)
 }
 \arguments{
-\item{file}{A DSS file handle, e.g., output of \code{\link[=dss_open]{dss_open()}}.}
+\item{filename}{A DSS file path.}
 
 \item{path}{The DSS path to extract.}
 
@@ -35,5 +35,5 @@ information see the help vignette:
 }
 
 \seealso{
-\code{\link[=dss_open]{dss_open()}} \code{\link[=dss_catalog]{dss_catalog()}} \code{\link[=dss_attributes]{dss_attributes()}}
+\code{\link[=dss_catalog]{dss_catalog()}} \code{\link[=dss_attributes]{dss_attributes()}}
 }

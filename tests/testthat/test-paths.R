@@ -2,17 +2,19 @@ test_that("path list works", {
   
   skip_if_no_dss()
 
-  on.exit(dss_close(conn), add = TRUE)
-  conn = dss_open(system.file("extdata/example.dss", package = "dssrip2"))
-  all_paths = dss_catalog(conn, pattern = "*", condensed = FALSE)
-  all_paths_c = dss_catalog(conn, pattern = "*", condensed = TRUE)
-  paths1 = dss_catalog(conn, pattern = "^/BRANDYWINE CREEK/.*/$",
+  on.exit(dss_close_all(), add = TRUE)
+  
+  exfile = system.file("extdata/example.dss", package = "dssrip2")
+
+  all_paths = dss_catalog(exfile, pattern = "*", condensed = FALSE)
+  all_paths_c = dss_catalog(exfile, pattern = "*", condensed = TRUE)
+  paths1 = dss_catalog(exfile, pattern = "^/BRANDYWINE CREEK/.*/$",
     condensed = FALSE)
-  paths1_c = dss_catalog(conn, pattern = "^/BRANDYWINE CREEK/.*/$",
+  paths1_c = dss_catalog(exfile, pattern = "^/BRANDYWINE CREEK/.*/$",
     condensed = TRUE)
-  paths2 = dss_catalog(conn, pattern = "^/.*/.*/.*/.*/IR-CENTURY/.*$",
+  paths2 = dss_catalog(exfile, pattern = "^/.*/.*/.*/.*/IR-CENTURY/.*$",
     condensed = FALSE)
-  paths2_c = dss_catalog(conn, pattern = "^/.*/.*/.*/.*/IR-CENTURY/.*$",
+  paths2_c = dss_catalog(exfile, pattern = "^/.*/.*/.*/.*/IR-CENTURY/.*$",
     condensed = TRUE)
 
   expect_identical(length(all_paths), 74L)
@@ -31,6 +33,7 @@ test_that("path list works", {
   expect_identical(all(paths2_c %in% all_paths_c), TRUE)
 
 })
+
 
 test_that("path parts works", {
 

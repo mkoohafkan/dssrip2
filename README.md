@@ -80,25 +80,22 @@ options(
 
 ## Usage
 
-### File connections
+### Creating Files
 
-Connections to DSS files must be handled manually by the user. To
-create a file connection, use
-
-```r
-filepath = system.file("extdata/example.dss", package = "dssrip2")
-conn = dss_file(filepath)
-```
-
-DSS files will usually close on their own after some period of
-inactivity, but it is best practice for users to explicitly signal
-to DSS when they are finished working with a file by calling the 
-file's `$done()` method:
+`dssrip2` can create DSS version 6 and 7 files:
 
 ```r
-dss_close(conn)
-# or directly call conn$done()
+tf1 = tempfile(fileext = ".dss")
+tf2 = tempfile(fileext = ".dss")
+
+# create a DSS-7 file (default behavior)
+dss_create(tf1)
+# create a DSS-6 file
+dss_create(tf2, version = 6)
 ```
+
+`dssrip2` also provides methods to convert 
+
 
 ### Reading data
 
@@ -106,11 +103,22 @@ dss_close(conn)
 function call can be used for reading time series and paired data.
 
 ```r
+exfile = system.file("extdata/example.dss", package = "dssrip2")
+
 # time series
-dss_read(conn, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01JAN1946/1DAY/USGS/")
+dss_read(exfile, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01JAN1946/1DAY/USGS/")
 
 # paired data
-dss_read(conn, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/")
+dss_read(exfile, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/")
+```
+
+DSS files will usually close on their own after some period of
+inactivity, but it is best practice for users to explicitly close the
+file when they are finished:
+
+```r
+dss_close(exfile)
+# or close all files opened by dssrip2 with dss_close_all()
 ```
 
 ### Writing data
@@ -122,7 +130,7 @@ additional attributes that must be explicitly supplied by the user:
 
 ```r
 tf = tempfile(fileext = ".dss")
-conn = dss_create(tf)
+dss_create(tf)
 
 # time series
 data(Nile)
@@ -131,7 +139,7 @@ nile = data.frame(datetime = as.Date(sprintf("%d-10-01", time(Nile))),
 nile = dss_add_attributes(nile, list(units = "cubic meters",
   type = "PER-CUM"))
 path = "//NILE RIVER/VOLUME//1YEAR/R DATASET/"
-dss_write(nile, conn, path)
+dss_write(nile, tf, path)
 
 # paired data
 data(CO2)
@@ -141,5 +149,5 @@ names(uptake) = gsub("uptake.", "", names(uptake))
 uptake = dss_add_attributes(uptake, list(xtype = "LINEAR",
   ytype = "LINEAR", xunits = "mL/L", yunits = "umol/m^2"))
 path = "//PLANT CO2 UPTAKE/CONCENTRATION-UPTAKE///R DATASET/"
-dss_write(uptake, conn, path)
+dss_write(uptake, tf, path)
 ```

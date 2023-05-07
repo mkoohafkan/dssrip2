@@ -1,7 +1,7 @@
 ---
 title: "Quick Start with dssrip2"
 author: "Michael Koohafkan"
-date: "2023-03-03"
+date: "2023-05-06"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Quick Start}
@@ -54,11 +54,11 @@ more information on configuration.
 
 ## Reading DSS data
 
-Start by opening a DSS File:
+`dssrip2` provides an example dataset:
 
 
 ```r
-f = dss_open(system.file("extdata/example.dss", package = "dssrip2"))
+exfile = system.file("extdata/example.dss", package = "dssrip2")
 ```
 
 This file contains five datasets:
@@ -73,7 +73,7 @@ The DSS catalog can be read into R using `dss_catalog()`:
 
 
 ```r
-dss_catalog(f, condensed = TRUE)
+dss_catalog(exfile, condensed = TRUE)
 #> [1] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01Oct1946 - 30Sep2012/1DAY/USGS/"                   
 #> [2] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-ANNUAL PEAK/30Apr1947 - 30Oct2012/IR-CENTURY/USGS/" 
 #> [3] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/"                      
@@ -85,7 +85,7 @@ dss_catalog(f, condensed = TRUE)
 
 
 ```r
-dss_catalog(f, "/.*/.*/FLOW.*/.*/.*/.*/")
+dss_catalog(exfile, "/.*/.*/FLOW.*/.*/.*/.*/")
 #> [1] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01Oct1946 - 30Sep2012/1DAY/USGS/"                  
 #> [2] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-ANNUAL PEAK/30Apr1947 - 30Oct2012/IR-CENTURY/USGS/"
 #> [3] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/"
@@ -125,7 +125,7 @@ R. The output format is automatically deduced from the DSS data type:
 
 ```r
 # read in a regular timeseries
-dss_read(f, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW//1DAY/USGS/")
+dss_read(exfile, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW//1DAY/USGS/")
 #>     datetime flow
 #> 1 1946-10-02  235
 #> 2 1946-10-03  220
@@ -135,7 +135,7 @@ dss_read(f, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW//1DAY/USGS/")
 #>  [ reached 'max' / getOption("max.print") -- omitted 24102 rows ]
 
 # read in a single chunk of a regular timeseries
-dss_read(f, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01JAN1948/1DAY/USGS/",
+dss_read(exfile, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01JAN1948/1DAY/USGS/",
   full = FALSE)
 #>     datetime flow
 #> 1 1948-01-02  522
@@ -146,7 +146,7 @@ dss_read(f, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01JAN1948/1DAY/USGS/",
 #>  [ reached 'max' / getOption("max.print") -- omitted 361 rows ]
 
 # read in irregular timeseries
-dss_read(f, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-ANNUAL PEAK//IR-CENTURY/USGS/")
+dss_read(exfile, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-ANNUAL PEAK//IR-CENTURY/USGS/")
 #>     datetime flow-annual peak
 #> 1 1947-05-01             4730
 #> 2 1948-09-11             5160
@@ -156,7 +156,7 @@ dss_read(f, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-ANNUAL PEAK//IR-CENTURY/USGS/
 #>  [ reached 'max' / getOption("max.print") -- omitted 62 rows ]
 
 # read in a paired dataset
-dss_read(f, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/")
+dss_read(exfile, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/")
 #>   flow stage
 #> 1 2000  5.00
 #> 2 3260  6.24
@@ -177,7 +177,7 @@ DSS dataset type from the structure of the supplied input.
 ```r
 outfile = tempfile(fileext = ".dss")
 
-f = dss_create(outfile)
+dss_create(outfile)
 
 # create a regular timeseries from the LakeHuron dataset
 data(LakeHuron)
@@ -189,7 +189,7 @@ lake_huron_path = "/GREAT LAKES/LAKE HURON/ELEV//1YEAR/R DATASET/"
 lake_huron = dss_add_attributes(lake_huron, list(units = "feet",
   type = "INST"))
 
-dss_write(lake_huron, f, lake_huron_path)
+dss_write(lake_huron, outfile, lake_huron_path)
 #> Warning: Converting supplied timestamps to 'POSIXct' class, using default
 #> timezone etc/GMT+0
 
@@ -206,7 +206,7 @@ temps_path = "/NEW YORK/NEW YORK CITY/TEMPERATURE//IR-YEAR/R DATASET/"
 temps = dss_add_attributes(temps, list(units = "degrees F",
   type = "INST"))
 
-dss_write(temps, f, temps_path)
+dss_write(temps, outfile, temps_path)
 #> Warning: Converting supplied timestamps to 'POSIXct' class, using default
 #> timezone etc/GMT+0
 
@@ -220,17 +220,20 @@ growth_path = "//LOBLOLLY PINES/AGE-HEIGHT///R DATASET/"
 growth = dss_add_attributes(growth, list(xunits = "years",
   yunits = "feet", xtype = "UNT", ytype = "UNT"))
 
-dss_write(growth, f, growth_path)
+dss_write(growth, outfile, growth_path)
 ```
 
 It is good practice to close a DSS file once you are finished working
 with it. For the most part, `dssrip2` will call the file's `$done()`
 method at the completion of every operation to implicitly close the
-file, so you but you can also explicitly close a file:
+file, but you can also explicitly close a file:
 
 
 ```r
-dss_close(f)
+dss_close(outfile)
+
+# or close all open/implicitly closed files
+dss_close_all()
 ```
 
 That's it!
