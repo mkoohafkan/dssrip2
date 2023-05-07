@@ -20,3 +20,7 @@ NULL
 .onAttach = function(libname, pkgname) {
   packageStartupMessage("Run dss_connect() to initialize.")
 }
+
+.onDetach = function() {
+  dss_close_all()
+}
