@@ -15,21 +15,21 @@
 #'   delete the section as specified in the D Part of the path.
 #' @param squeeze If `TRUE`, squeeze the file after deleting records.
 #'
-#' @seealso [dss_open()] [dss_catalog()] [dss_squeeze()]
+#' @seealso [dss_catalog()] [dss_squeeze()]
 #'
 #' @importFrom rJava .jnew
 #' @export
-dss_delete = function(file, path, full = TRUE, squeeze = FALSE) {
+dss_delete = function(filename, path, full = TRUE, squeeze = FALSE) {
   assert_dss_connected()
-  assert_dss_file(file)
   assert_path_format(path)
+  file = dss_file(filename)
   on.exit(file$done(), add = TRUE)
   if (full) {
     path = dss_parts_replace(path, list(D = ".*"))
   }
   search_pattern = paste(sprintf("(%s)", path), collapse = "|")
   # cannot delete a condensed path; must provide full set of paths
-  delete_paths = dss_catalog(file, condensed = FALSE,
+  delete_paths = dss_catalog(filename, condensed = FALSE,
     pattern = search_pattern)
   if (length(delete_paths) < 1L) {
     stop("Could not find pathname ", path)
@@ -40,9 +40,9 @@ dss_delete = function(file, path, full = TRUE, squeeze = FALSE) {
   }
   file$getDataManager()$delete(path_vector)
   if (squeeze) {
-    dss_squeeze(file)
+    dss_squeeze(filename)
   }
-  dss_catalog(file, condensed = FALSE, rebuild = TRUE)
+  dss_catalog(filename, condensed = FALSE, rebuild = TRUE)
   invisible(TRUE)
 }
 
@@ -81,14 +81,14 @@ guess_dss_container = function(x) {
 #' @inheritParams dss_squeeze
 #' @param path The DSS path to write.
 #'
-#' @seealso [dss_open()] [dss_read()] [dss_catalog()] [dss_attributes()]
+#' @seealso [dss_read()] [dss_catalog()] [dss_attributes()]
 #'
 #' @export
-dss_write = function(x, file, path) {
-  on.exit(file$done(), add = TRUE)
+dss_write = function(x, filename, path) {
   assert_write_support(x)
-  assert_dss_file(file)
   assert_path_format(path)
+  file = dss_file(filename)
+  on.exit(file$done(), add = TRUE)
   class_name = guess_dss_container(x)
   dssObj = switch(class_name,
     "hec.io.GridContainer" = dss_to_grid(x),

@@ -15,20 +15,20 @@
 #'
 #' @inheritSection dss_connect Java Virtual Machine Parameters
 #'
-#' @seealso [dss_open()] [dss_catalog()] [dss_attributes()]
+#' @seealso [dss_catalog()] [dss_attributes()]
 #' @importFrom rJava .jclass
 #' @export
-dss_read = function(file, path, full = TRUE) {
+dss_read = function(filename, path, full = TRUE) {
   assert_dss_connected()
-  assert_dss_file(file)
   assert_path_format(path)
-  on.exit(file$done, add = TRUE)
   if (full) {
     if (length(unique(dss_parts_replace(path, list(D = "")))) > 1L) {
       stop("Multiple paths detected. Only single or ",
         "condensed paths are supported.")
     }
   }
+  file = dss_file(filename)
+  on.exit(file$done, add = TRUE)
   dssObj = file$get(path, full)
   assert_read_support(dssObj)
   jclass = .jclass(dssObj)
