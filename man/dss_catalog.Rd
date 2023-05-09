@@ -4,7 +4,7 @@
 \alias{dss_catalog}
 \title{Get DSS Paths}
 \usage{
-dss_catalog(filename, pattern = "*", condensed = TRUE, rebuild = FALSE)
+dss_catalog(filename, pattern = ".*", condensed = TRUE, rebuild = FALSE)
 }
 \arguments{
 \item{filename}{A DSS file path.}
