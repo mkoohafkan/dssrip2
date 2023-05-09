@@ -32,7 +32,7 @@
     
     <a class="navbar-brand me-2" href="index.html">dssrip2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6-0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7-0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -133,13 +133,16 @@
 <span><span class="fu"><a href="reference/dss_create.html">dss_create</a></span><span class="op">(</span><span class="va">tf1</span><span class="op">)</span></span>
 <span><span class="co"># create a DSS-6 file</span></span>
 <span><span class="fu"><a href="reference/dss_create.html">dss_create</a></span><span class="op">(</span><span class="va">tf2</span>, version <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></code></pre></div>
-<p><code>dssrip2</code> also provides methods to convert</p>
+<p><code>dssrip2</code> also provides methods to convert between DSS versions:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tf3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".dss"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/dss_convert.html">dss_convert</a></span><span class="op">(</span><span class="va">tf2</span>, <span class="va">tf3</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="reading-data">Reading data<a class="anchor" aria-label="anchor" href="#reading-data"></a>
 </h3>
 <p><code>dssrip2</code> automatically detects the data type being read, so the same function call can be used for reading time series and paired data.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exfile</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/example.dss"</span>, package <span class="op">=</span> <span class="st">"dssrip2"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># time series</span></span>
@@ -148,7 +151,7 @@
 <span><span class="co"># paired data</span></span>
 <span><span class="fu"><a href="reference/dss_read.html">dss_read</a></span><span class="op">(</span><span class="va">exfile</span>, <span class="st">"/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/"</span><span class="op">)</span></span></code></pre></div>
 <p>DSS files will usually close on their own after some period of inactivity, but it is best practice for users to explicitly close the file when they are finished:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/dss_close.html">dss_close</a></span><span class="op">(</span><span class="va">exfile</span><span class="op">)</span></span>
 <span><span class="co"># or close all files opened by dssrip2 with dss_close_all()</span></span></code></pre></div>
 </div>
@@ -156,7 +159,7 @@
 <h3 id="writing-data">Writing data<a class="anchor" aria-label="anchor" href="#writing-data"></a>
 </h3>
 <p><code>dssrip2</code> deduces the data type to write based on the supplied R object, so the same function call can be used for reading time series and paired data. However, writing DSS objects requires additional attributes that must be explicitly supplied by the user:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tf</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".dss"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/dss_create.html">dss_create</a></span><span class="op">(</span><span class="va">tf</span><span class="op">)</span></span>
 <span></span>
