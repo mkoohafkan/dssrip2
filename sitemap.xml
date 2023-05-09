@@ -34,6 +34,9 @@
     <loc>https://hydroecology.net/dssrip2/reference/asset_query_nexus.html</loc>
   </url>
   <url>
+    <loc>https://hydroecology.net/dssrip2/reference/dot-file_store.html</loc>
+  </url>
+  <url>
     <loc>https://hydroecology.net/dssrip2/reference/dss-assertions.html</loc>
   </url>
   <url>
@@ -58,6 +61,9 @@
     <loc>https://hydroecology.net/dssrip2/reference/dss_convert.html</loc>
   </url>
   <url>
+    <loc>https://hydroecology.net/dssrip2/reference/dss_create.html</loc>
+  </url>
+  <url>
     <loc>https://hydroecology.net/dssrip2/reference/dss_delete.html</loc>
   </url>
   <url>
@@ -68,9 +74,6 @@
   </url>
   <url>
     <loc>https://hydroecology.net/dssrip2/reference/dss_message_level.html</loc>
-  </url>
-  <url>
-    <loc>https://hydroecology.net/dssrip2/reference/dss_open.html</loc>
   </url>
   <url>
     <loc>https://hydroecology.net/dssrip2/reference/dss_parts_combine.html</loc>
@@ -152,5 +155,8 @@
   </url>
   <url>
     <loc>https://hydroecology.net/dssrip2/reference/na_fill.html</loc>
+  </url>
+  <url>
+    <loc>https://hydroecology.net/dssrip2/reference/normalize_path.html</loc>
   </url>
 </urlset>

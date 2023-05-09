@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Michael
 Koohafkan</h4>
             
-            <h4 data-toc-skip class="date">2023-03-03</h4>
+            <h4 data-toc-skip class="date">2023-05-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mkoohafkan/dssrip2/blob/HEAD/vignettes/quickstart.rmd" class="external-link"><code>vignettes/quickstart.rmd</code></a></small>
       <div class="d-none name"><code>quickstart.rmd</code></div>
@@ -113,9 +113,9 @@ configuration.</p>
 <div class="section level2">
 <h2 id="reading-dss-data">Reading DSS data<a class="anchor" aria-label="anchor" href="#reading-dss-data"></a>
 </h2>
-<p>Start by opening a DSS File:</p>
+<p><code>dssrip2</code> provides an example dataset:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">f</span> <span class="op">=</span> <span class="fu"><a href="../reference/dss_open.html">dss_open</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/example.dss"</span>, package <span class="op">=</span> <span class="st">"dssrip2"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">exfile</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/example.dss"</span>, package <span class="op">=</span> <span class="st">"dssrip2"</span><span class="op">)</span></span></code></pre></div>
 <p>This file contains five datasets:</p>
 <ol style="list-style-type: decimal">
 <li>A daily flow timeseries</li>
@@ -127,7 +127,7 @@ configuration.</p>
 <p>The DSS catalog can be read into R using
 <code><a href="../reference/dss_catalog.html">dss_catalog()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/dss_catalog.html">dss_catalog</a></span><span class="op">(</span><span class="va">f</span>, condensed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/dss_catalog.html">dss_catalog</a></span><span class="op">(</span><span class="va">exfile</span>, condensed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01Oct1946 - 30Sep2012/1DAY/USGS/"                   </span></span>
 <span><span class="co">#&gt; [2] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-ANNUAL PEAK/30Apr1947 - 30Oct2012/IR-CENTURY/USGS/" </span></span>
 <span><span class="co">#&gt; [3] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/"                      </span></span>
@@ -136,7 +136,7 @@ configuration.</p>
 <p><code><a href="../reference/dss_catalog.html">dss_catalog()</a></code> supports regex pattern matching to subset
 the path list:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/dss_catalog.html">dss_catalog</a></span><span class="op">(</span><span class="va">f</span>, <span class="st">"/.*/.*/FLOW.*/.*/.*/.*/"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/dss_catalog.html">dss_catalog</a></span><span class="op">(</span><span class="va">exfile</span>, <span class="st">"/.*/.*/FLOW.*/.*/.*/.*/"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01Oct1946 - 30Sep2012/1DAY/USGS/"                  </span></span>
 <span><span class="co">#&gt; [2] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-ANNUAL PEAK/30Apr1947 - 30Oct2012/IR-CENTURY/USGS/"</span></span>
 <span><span class="co">#&gt; [3] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/"</span></span></code></pre></div>
@@ -171,7 +171,7 @@ for more information).</li>
 </ul>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># read in a regular timeseries</span></span>
-<span><span class="fu"><a href="../reference/dss_read.html">dss_read</a></span><span class="op">(</span><span class="va">f</span>, <span class="st">"/BRANDYWINE CREEK/WILMINGTON, DE/FLOW//1DAY/USGS/"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/dss_read.html">dss_read</a></span><span class="op">(</span><span class="va">exfile</span>, <span class="st">"/BRANDYWINE CREEK/WILMINGTON, DE/FLOW//1DAY/USGS/"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     datetime flow</span></span>
 <span><span class="co">#&gt; 1 1946-10-02  235</span></span>
 <span><span class="co">#&gt; 2 1946-10-03  220</span></span>
@@ -181,7 +181,7 @@ for more information).</li>
 <span><span class="co">#&gt;  [ reached 'max' / getOption("max.print") -- omitted 24102 rows ]</span></span>
 <span></span>
 <span><span class="co"># read in a single chunk of a regular timeseries</span></span>
-<span><span class="fu"><a href="../reference/dss_read.html">dss_read</a></span><span class="op">(</span><span class="va">f</span>, <span class="st">"/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01JAN1948/1DAY/USGS/"</span>,</span>
+<span><span class="fu"><a href="../reference/dss_read.html">dss_read</a></span><span class="op">(</span><span class="va">exfile</span>, <span class="st">"/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01JAN1948/1DAY/USGS/"</span>,</span>
 <span>  full <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     datetime flow</span></span>
 <span><span class="co">#&gt; 1 1948-01-02  522</span></span>
@@ -192,7 +192,7 @@ for more information).</li>
 <span><span class="co">#&gt;  [ reached 'max' / getOption("max.print") -- omitted 361 rows ]</span></span>
 <span></span>
 <span><span class="co"># read in irregular timeseries</span></span>
-<span><span class="fu"><a href="../reference/dss_read.html">dss_read</a></span><span class="op">(</span><span class="va">f</span>, <span class="st">"/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-ANNUAL PEAK//IR-CENTURY/USGS/"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/dss_read.html">dss_read</a></span><span class="op">(</span><span class="va">exfile</span>, <span class="st">"/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-ANNUAL PEAK//IR-CENTURY/USGS/"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     datetime flow-annual peak</span></span>
 <span><span class="co">#&gt; 1 1947-05-01             4730</span></span>
 <span><span class="co">#&gt; 2 1948-09-11             5160</span></span>
@@ -202,7 +202,7 @@ for more information).</li>
 <span><span class="co">#&gt;  [ reached 'max' / getOption("max.print") -- omitted 62 rows ]</span></span>
 <span></span>
 <span><span class="co"># read in a paired dataset</span></span>
-<span><span class="fu"><a href="../reference/dss_read.html">dss_read</a></span><span class="op">(</span><span class="va">f</span>, <span class="st">"/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/dss_read.html">dss_read</a></span><span class="op">(</span><span class="va">exfile</span>, <span class="st">"/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   flow stage</span></span>
 <span><span class="co">#&gt; 1 2000  5.00</span></span>
 <span><span class="co">#&gt; 2 3260  6.24</span></span>
@@ -221,7 +221,7 @@ supplied input.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outfile</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".dss"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">f</span> <span class="op">=</span> <span class="fu"><a href="../reference/dss_open.html">dss_create</a></span><span class="op">(</span><span class="va">outfile</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/dss_create.html">dss_create</a></span><span class="op">(</span><span class="va">outfile</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># create a regular timeseries from the LakeHuron dataset</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">LakeHuron</span><span class="op">)</span></span>
@@ -233,7 +233,7 @@ supplied input.</p>
 <span><span class="va">lake_huron</span> <span class="op">=</span> <span class="fu"><a href="../reference/dss_attributes.html">dss_add_attributes</a></span><span class="op">(</span><span class="va">lake_huron</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"feet"</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"INST"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/dss_write.html">dss_write</a></span><span class="op">(</span><span class="va">lake_huron</span>, <span class="va">f</span>, <span class="va">lake_huron_path</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/dss_write.html">dss_write</a></span><span class="op">(</span><span class="va">lake_huron</span>, <span class="va">outfile</span>, <span class="va">lake_huron_path</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Converting supplied timestamps to 'POSIXct' class, using default</span></span>
 <span><span class="co">#&gt; timezone etc/GMT+0</span></span>
 <span></span>
@@ -250,7 +250,7 @@ supplied input.</p>
 <span><span class="va">temps</span> <span class="op">=</span> <span class="fu"><a href="../reference/dss_attributes.html">dss_add_attributes</a></span><span class="op">(</span><span class="va">temps</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>units <span class="op">=</span> <span class="st">"degrees F"</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"INST"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/dss_write.html">dss_write</a></span><span class="op">(</span><span class="va">temps</span>, <span class="va">f</span>, <span class="va">temps_path</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/dss_write.html">dss_write</a></span><span class="op">(</span><span class="va">temps</span>, <span class="va">outfile</span>, <span class="va">temps_path</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Converting supplied timestamps to 'POSIXct' class, using default</span></span>
 <span><span class="co">#&gt; timezone etc/GMT+0</span></span>
 <span></span>
@@ -264,14 +264,16 @@ supplied input.</p>
 <span><span class="va">growth</span> <span class="op">=</span> <span class="fu"><a href="../reference/dss_attributes.html">dss_add_attributes</a></span><span class="op">(</span><span class="va">growth</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>xunits <span class="op">=</span> <span class="st">"years"</span>,</span>
 <span>  yunits <span class="op">=</span> <span class="st">"feet"</span>, xtype <span class="op">=</span> <span class="st">"UNT"</span>, ytype <span class="op">=</span> <span class="st">"UNT"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/dss_write.html">dss_write</a></span><span class="op">(</span><span class="va">growth</span>, <span class="va">f</span>, <span class="va">growth_path</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/dss_write.html">dss_write</a></span><span class="op">(</span><span class="va">growth</span>, <span class="va">outfile</span>, <span class="va">growth_path</span><span class="op">)</span></span></code></pre></div>
 <p>It is good practice to close a DSS file once you are finished working
 with it. For the most part, <code>dssrip2</code> will call the file’s
 <code>$done()</code> method at the completion of every operation to
-implicitly close the file, so you but you can also explicitly close a
-file:</p>
+implicitly close the file, but you can also explicitly close a file:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/dss_close.html">dss_close</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/dss_close.html">dss_close</a></span><span class="op">(</span><span class="va">outfile</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># or close all open/implicitly closed files</span></span>
+<span><span class="fu"><a href="../reference/dss_close.html">dss_close_all</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>That’s it!</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
