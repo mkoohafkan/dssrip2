@@ -94,7 +94,12 @@ dss_create(tf1)
 dss_create(tf2, version = 6)
 ```
 
-`dssrip2` also provides methods to convert 
+`dssrip2` also provides methods to convert between DSS versions:
+
+```r
+tf3 = tempfile(fileext = ".dss")
+dss_convert(tf2, tf3)
+```
 
 
 ### Reading data
