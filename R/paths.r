@@ -10,16 +10,17 @@
 #' @return A vector of paths.
 #'
 #' @inheritSection dss_connect Java Virtual Machine Parameters
-#' 
-#' @seealso [dss_open()] [dss_read()] [dss_parts_split()]
+#'
+#' @seealso [dss_read()] [dss_parts_split()]
 #'   [dss_parts_combine()] [dss_parts_replace()]
 #'
 #' @importFrom rJava .jevalArray
 #' @export
-dss_catalog = function(file, pattern = "*", condensed = TRUE,
+dss_catalog = function(filename, pattern = ".*", condensed = TRUE,
   rebuild = FALSE) {
   assert_dss_connected()
-  assert_dss_file(file)
+  file = dss_file(filename)
+  on.exit(file$done(), add = TRUE)
   if (length(pattern) != 1L) {
     stop("Argument \"pattern\" must be length 1")
   }

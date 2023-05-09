@@ -4,10 +4,10 @@
 \alias{dss_delete}
 \title{Delete DSS Records}
 \usage{
-dss_delete(file, path, full = TRUE, squeeze = FALSE)
+dss_delete(filename, path, full = TRUE, squeeze = FALSE)
 }
 \arguments{
-\item{file}{A DSS file handle, e.g., output of \code{\link[=dss_open]{dss_open()}}.}
+\item{filename}{A DSS file path.}
 
 \item{path}{A vector of DSS paths.}
 
@@ -20,5 +20,5 @@ delete the section as specified in the D Part of the path.}
 Delete records from a DSS file.
 }
 \seealso{
-\code{\link[=dss_open]{dss_open()}} \code{\link[=dss_catalog]{dss_catalog()}} \code{\link[=dss_squeeze]{dss_squeeze()}}
+\code{\link[=dss_catalog]{dss_catalog()}} \code{\link[=dss_squeeze]{dss_squeeze()}}
 }

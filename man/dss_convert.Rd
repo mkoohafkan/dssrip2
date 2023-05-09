@@ -4,10 +4,10 @@
 \alias{dss_convert}
 \title{DSS File Conversion}
 \usage{
-dss_convert(file, to)
+dss_convert(filename, to)
 }
 \arguments{
-\item{file}{A DSS file handle, e.g., output of \code{\link[=dss_open]{dss_open()}}.}
+\item{filename}{A DSS file path.}
 
 \item{to}{The destination file path.}
 }

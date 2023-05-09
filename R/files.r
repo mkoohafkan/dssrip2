@@ -1,58 +1,121 @@
-#' Open DSS File
+#' DSS File Store
 #'
-#' Call the Java HecDss Open method.
+#' The `dssrip2` file store. manages the Java DSS File objects.
 #'
-#' @param filename A valid filepath.
-#' @return A DSS file handle Java object.
+#' @details The file store stores a list of `hec.heclib.dss.HecDss`
+#'   Java object references named according to the normalized file
+#'   path of the originating DSS file. The file store provides four
+#'   methods:
+#'   - `get()`: Retrieve a DSS file handle from the store.
+#'   - `set()`: Create a DSS file handle and add it to the store.
+#'   - `drop()`: Remove a DSS file handle from the store.
+#'   - `list()`: List the DSS file handle names in the store.
+#'  If the `set()` method fails with a message that `javaHeclib.dll`
+#'  cannot be found, this usually indicates that `dss.home` is not set
+#'  correctly.
 #'
 #' @importFrom rJava .jcall
 #' @keywords internal
-dss_file = function(filename, ...) {
-  file = .jcall("hec/heclib/dss/HecDss", "Lhec/heclib/dss/HecDss;",
-    method = "open", filename, ...)
-  on.exit(file$done(), add = TRUE)
-  file
+.file_store <- function() {
+  .file_list <- list()
+
+  list(
+    get = function(filepath) {
+      .file_list[[filepath]]
+    },
+    set = function(filepath, ...) {
+      if (is.null(.file_list[[filepath]])) {
+        .file_list[[filepath]] <<- .jcall("hec/heclib/dss/HecDss",
+          "Lhec/heclib/dss/HecDss;", method = "open", filepath, ...)
+      }
+    },
+    drop = function(filepath) {
+      .file_list[[filepath]]$close()
+      .file_list[[filepath]] <<- NULL
+    },
+    list = function() {
+      names(.file_list)
+    }
+  )
+}
+.store <- .file_store()
+
+
+#' Normalize DSS File Path
+#'
+#' Normalize a DSS file path. A wrapper for [base::normalizePath()]
+#'   with winslash set to `"/"`.
+#'
+#' @param filename A DSS file path.
+#' @param exists If `TRUE`, assert that the DSS file exists.
+#' @return A normalized file path.
+#'
+#' @details This function attempts to strictly resolve file paths
+#'   by traversing the file path back to the deepest existing
+#'   directory, in order to resolve potential issues with directory
+#'   names (e.g., differences in letter case).
+#'
+#' @keywords internal
+normalize_path = function(filename, exists) {
+  sep = "/"
+  if (exists || file.exists(filename)) {
+    normalizePath(filename, winslash = sep, mustWork = TRUE)
+  } else if (dirname(filename) == filename) {
+    file.path(filename)
+  } else {
+    normalizePath(file.path(Recall(dirname(filename), exists),
+      basename(filename), fsep = sep), winslash = sep,
+      mustWork = exists)
+  }
 }
 
 
 #' DSS File Handle
 #'
-#' Open or create a DSS file.
+#' Retrieve a DSS file handle.
 #'
-#' @param filename Location of DSS file to open.
+#' @inheritParams normalize_path
+#' @param ... Additional arguments passed to the
+#'   `hec.heclib.dss.HecDss` Java object `open` method. Typically,
+#'   this is an unnamed argument specifying the DSS file version.
 #' @return A `hec.heclib.dss.HecDss` Java object reference.
 #'
-#' @details Objects created by this function must be explicitly closed
-#'   using the `$close()` or `$done()` methods. If this function fails
-#'   with a message that `javaHeclib.dll` cannot be found, this usually
-#'   indicates that `dss.home` is not set correctly.
-#'
-#' @seealso [dss_close()] [dss_version()]
-#'
-#' @export
-dss_open = function(filename) {
-  assert_dss_connected()
-  filepath = normalizePath(filename, mustWork = TRUE)
-  dss_file(filepath)
+#' @keywords internal
+dss_file = function(filename, exists = TRUE, ...) {
+  filename = normalize_path(filename, exists)
+  if (!(filename %in% .store$list())) {
+    .store$set(filename, ...)
+  }
+  .store$get(filename)
 }
 
 
-#' @rdname dss_open
+#' Create Empty DSS File.
 #'
+#' Create an empty DSS file.
+#'
+#' @inheritParams dss_file
 #' @param version The DSS version of the created file (6 or 7).
+#'
+#' @seealso [dss_convert()]
 #'
 #' @export
 dss_create = function(filename, version = 7L) {
   assert_dss_connected()
+
   version = as.integer(version[1])
+
   if (!any(version == c(6L, 7L))) {
     stop("Only DSS version 6 or 7 is supported")
   }
-  filepath = normalizePath(filename, mustWork = FALSE)
-  if (file.exists(filepath)) {
-    stop("File ", filepath, " already exists.")
+  if (file.exists(filename)) {
+    stop("File ", filename, " already exists.")
+  } 
+  if (!dir.exists(dirname(filename))) {
+    stop("Directory ", dirname(filename), "does not exist.")
   }
-  dss_file(filepath, version)
+  dss_file(filename, FALSE, version)$done()
+  invisible(TRUE)
 }
 
 
@@ -61,14 +124,14 @@ dss_create = function(filename, version = 7L) {
 #' Calls the squeeze method on file to remove deleted or overwritten
 #' data.
 #'
-#' @param file A DSS file handle, e.g., output of [dss_open()].
+#' @inheritParams dss_file
 #'
 #' @seealso [dss_delete()]
 #'
 #' @export
-dss_squeeze = function(file) {
+dss_squeeze = function(filename) {
   assert_dss_connected()
-  assert_dss_file(file)
+  file = dss_file(filename)
   on.exit(file$done(), add = TRUE)
   file$getDataManager()$squeeze()
   invisible(TRUE)
@@ -79,15 +142,15 @@ dss_squeeze = function(file) {
 #'
 #' Get the DSS file version.
 #'
-#' @inheritParams dss_squeeze
+#' @inheritParams dss_file
 #' @return An integer
 #'
 #' @seealso [dss_convert()]
 #'
 #' @export
-dss_version = function(file) {
+dss_version = function(filename) {
   assert_dss_connected()
-  assert_dss_file(file)
+  file = dss_file(filename)
   on.exit(file$done(), add = TRUE)
   as.integer(file$getDataManager()$getDssFileVersion())
 }
@@ -97,15 +160,15 @@ dss_version = function(file) {
 #'
 #' Convert between DSS file versions.
 #'
-#' @inheritParams dss_squeeze
+#' @inheritParams dss_file
 #' @param to The destination file path.
 #'
 #' @seealso [dss_version()] [dss_create()]
 #'
 #' @export
-dss_convert = function(file, to) {
+dss_convert = function(filename, to) {
   assert_dss_connected()
-  assert_dss_file(file)
+  file = dss_file(filename)
   on.exit(file$done(), add = TRUE)
   file$getDataManager()$convertVersion(to)
   invisible(TRUE)
@@ -114,23 +177,29 @@ dss_convert = function(file, to) {
 
 #' Close DSS File
 #'
-#' Close a DSS file. This function is provided for completion of the
-#' interface but is not strictly required as these methods can be
-#' called directly from the file object (i.e., `file$done()`).
+#' Close a DSS file. This should only be used when the user has
+#' finished working with a DSS file, and is not strictly required
+#' as the package will implictly close a DSS file after every
+#' operation.
 #'
-#' @inheritParams dss_squeeze
-#' @param implicit If `TRUE`, use method `done()` instead of `close()`.
-#'
-#' @seealso [dss_open()]
+#' @inheritParams dss_file
 #'
 #' @export
-dss_close = function(file, implicit = FALSE) {
-  assert_dss_connected()
-  assert_dss_file(file)
-  if (implicit) {
-    file$done()
+dss_close = function(filename) {
+  filename = normalize_path(filename, exists = TRUE)
+  if ((filename %in% .store$list())) {
+    .store$drop(filename)
   } else {
-    file$close()
+    warning("File ", filename, " is already closed.")
   }
+  invisible(TRUE)
+}
+
+#' @rdname dss_close
+#'
+#' @export
+dss_close_all = function() {
+  all_files = .store$list()
+  lapply(all_files, .store$drop)
   invisible(TRUE)
 }

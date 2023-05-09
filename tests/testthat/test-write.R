@@ -1,9 +1,9 @@
 skip_if_no_dss()
 
 test_that("time series writing works", {
-  on.exit(dss_close(conn), add = TRUE)
+  on.exit(dss_close_all(), add = TRUE)
   tf = tempfile(fileext = ".dss")
-  conn = dss_create(tf)
+  dss_create(tf)
 
   d = data.frame(
     datetime = seq(as.POSIXct("2021-01-01", tz = "etc/GMT+0"),
@@ -13,31 +13,34 @@ test_that("time series writing works", {
   attr(d, "dss_attributes") = list(type = "PER-AVER", units = "cfs")
   path = "/Fake Creek/Fake Town/FLOW//1DAY/FAKE/"
 
-  dss_write(d, conn, path)
-  expect_identical(d, dss_read(conn, path))
+  # error when file does not exist
+  expect_error(dss_write(d, tempfile(fileext = ".dss"), path1))
+  
+  expect_true(dss_write(d, tf, path))
+  expect_identical(d, dss_read(tf, path))
 
   d2 = d
   attr(d2, "dss_attributes") = NULL
-  expect_error(dss_write(d2, conn, path))
+  expect_error(dss_write(d2, tf, path))
 
 })
 
 
 test_that("paired data writing works", {
-  on.exit(dss_close(conn), add = TRUE)
+  on.exit(dss_close_all(), add = TRUE)
   tf = tempfile(fileext = ".dss")
-  conn = dss_create(tf)
+  dss_create(tf)
 
   d = data.frame(flow = c(10, 12, 14, 13, 10) * 1000,
     stage = c(17.1, 17.3, 17.6, 17.4, 17.2))
   attr(d, "dss_attributes") = list(xtype = "UNT", ytype = "UNT",
     xunits = "cfs", yunits = "stage")
   path = "/Fake Creek/Fake Town/FLOW-STAGE///FAKE/"
-  dss_write(d, conn, path)
 
-  expect_equal(dss_read(conn, path), d, tolerance = 1e-5,
+  expect_true(dss_write(d, tf, path))
+  expect_equal(dss_read(tf, path), d, tolerance = 1e-5,
     ignore_attr = "dss_attributes")
-  expect_equal(attr(dss_read(conn, path), "dss_attributes")[-c(1, 2)],
+  expect_equal(attr(dss_read(tf, path), "dss_attributes")[-c(1, 2)],
     attr(d, "dss_attributes"))
 
 
@@ -49,14 +52,14 @@ test_that("paired data writing works", {
   attr(d2, "dss_attributes") = list(xunits = "cfs", yunits = "feet",
     xtype = "UNT", ytype = "UNT")
   path2 = "/Fake Creek/Fake Town/FLOW-STAGE///FAKE2/"
-  dss_write(d2, conn, path2)
 
-  expect_equal(dss_read(conn, path2), d2, tolerance = 1e-5,
+  expect_true(dss_write(d2, tf, path2))
+  expect_equal(dss_read(tf, path2), d2, tolerance = 1e-5,
     ignore_attr = "dss_attributes")
 
   d3 = d2
   attr(d3, "dss_attributes") = NULL
-  expect_error(dss_write(d3, conn, path2))
+  expect_error(dss_write(d3, tf, path2))
 
 })
 
@@ -67,7 +70,7 @@ test_that("grid data writing works", {
 
 
 test_that("deleting records works", {
-  on.exit(dss_close(conn), add = TRUE)
+  on.exit(dss_close_all(), add = TRUE)
   d = data.frame(
     datetime = seq(as.POSIXct("2021-01-01", tz = "etc/GMT+0"),
       as.POSIXct("2021-01-05", tz = "etc/GMT+0"), by = "1 day"),
@@ -76,23 +79,27 @@ test_that("deleting records works", {
   attr(d, "dss_attributes") = list("type" = "PER-AVER", units = "cfs")
 
   tf = tempfile(fileext = ".dss")
-  conn = dss_create(tf)
-  on.exit(conn$done(), add = TRUE)
+  dss_create(tf)
+
   path1 = "/Fake Creek/Fake Town/FLOW//1DAY/FAKE/"
   path2 = "/Another Fake Creek/Fake Town/FLOW//1DAY/FAKE/"
-  dss_write(d, conn, path1)
-  dss_write(d, conn, path2)
-  expect_error(dss_delete(conn, "/Fake Creek/Fake Town/FLOW//1DAY/NOT EXIST/",
-    full = TRUE))
-  delete_path2 = "/ANOTHER FAKE CREEK/FAKE TOWN/FLOW/01JAN2020/1DAY/FAKE/"
-  dss_delete(conn, path1, full = TRUE)
-  dss_delete(conn, delete_path2, full = FALSE)
 
-  expect_identical(dss_catalog(conn, path1, condensed = TRUE),
+  dss_write(d, tf, path1)
+  dss_write(d, tf, path2)
+
+  # error when supplied path does not exist
+  expect_error(dss_delete(tf, "/Fake Creek/Fake Town/FLOW//1DAY/NOT EXIST/",
+    full = TRUE))
+
+  delete_path2 = "/ANOTHER FAKE CREEK/FAKE TOWN/FLOW/01JAN2020/1DAY/FAKE/"
+  expect_true(dss_delete(tf, path1, full = TRUE))
+  expect_true(dss_delete(tf, delete_path2, full = FALSE))
+
+  expect_identical(dss_catalog(tf, path1, condensed = TRUE),
     character(0))
-  expect_identical(dss_catalog(conn, delete_path2, condensed = FALSE),
+  expect_identical(dss_catalog(tf, delete_path2, condensed = FALSE),
     character(0))
-  expect_identical(dss_catalog(conn, dss_parts_replace(path2,
+  expect_identical(dss_catalog(tf, dss_parts_replace(path2,
     list(D = ".*")), condensed = FALSE),
     "/ANOTHER FAKE CREEK/FAKE TOWN/FLOW/01JAN2021/1DAY/FAKE/")
 

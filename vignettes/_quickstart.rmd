@@ -58,10 +58,10 @@ more information on configuration.
 
 ## Reading DSS data
 
-Start by opening a DSS File:
+`dssrip2` provides an example dataset:
 
 ```{r}
-f = dss_open(system.file("extdata/example.dss", package = "dssrip2"))
+exfile = system.file("extdata/example.dss", package = "dssrip2")
 ```
 
 This file contains five datasets:
@@ -75,13 +75,13 @@ This file contains five datasets:
 The DSS catalog can be read into R using `dss_catalog()`:
 
 ```{r}
-dss_catalog(f, condensed = TRUE)
+dss_catalog(exfile, condensed = TRUE)
 ```
 
 `dss_catalog()` supports regex pattern matching to subset the path list:
 
 ```{r}
-dss_catalog(f, "/.*/.*/FLOW.*/.*/.*/.*/")
+dss_catalog(exfile, "/.*/.*/FLOW.*/.*/.*/.*/")
 ```
 
 `dssrip2` also provides a variety of functions are provided to assist
@@ -112,17 +112,17 @@ R. The output format is automatically deduced from the DSS data type:
 
 ```{r}
 # read in a regular timeseries
-dss_read(f, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW//1DAY/USGS/")
+dss_read(exfile, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW//1DAY/USGS/")
 
 # read in a single chunk of a regular timeseries
-dss_read(f, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01JAN1948/1DAY/USGS/",
+dss_read(exfile, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01JAN1948/1DAY/USGS/",
   full = FALSE)
 
 # read in irregular timeseries
-dss_read(f, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-ANNUAL PEAK//IR-CENTURY/USGS/")
+dss_read(exfile, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-ANNUAL PEAK//IR-CENTURY/USGS/")
 
 # read in a paired dataset
-dss_read(f, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/")
+dss_read(exfile, "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/")
 ```
 
 
@@ -135,7 +135,7 @@ DSS dataset type from the structure of the supplied input.
 ```{r}
 outfile = tempfile(fileext = ".dss")
 
-f = dss_create(outfile)
+dss_create(outfile)
 
 # create a regular timeseries from the LakeHuron dataset
 data(LakeHuron)
@@ -147,7 +147,7 @@ lake_huron_path = "/GREAT LAKES/LAKE HURON/ELEV//1YEAR/R DATASET/"
 lake_huron = dss_add_attributes(lake_huron, list(units = "feet",
   type = "INST"))
 
-dss_write(lake_huron, f, lake_huron_path)
+dss_write(lake_huron, outfile, lake_huron_path)
 
 # create an irregular timeseries from the airquality dataset
 data(airquality)
@@ -162,7 +162,7 @@ temps_path = "/NEW YORK/NEW YORK CITY/TEMPERATURE//IR-YEAR/R DATASET/"
 temps = dss_add_attributes(temps, list(units = "degrees F",
   type = "INST"))
 
-dss_write(temps, f, temps_path)
+dss_write(temps, outfile, temps_path)
 
 # create paired dataset from the Loblolly dataset
 data(Loblolly)
@@ -174,16 +174,19 @@ growth_path = "//LOBLOLLY PINES/AGE-HEIGHT///R DATASET/"
 growth = dss_add_attributes(growth, list(xunits = "years",
   yunits = "feet", xtype = "UNT", ytype = "UNT"))
 
-dss_write(growth, f, growth_path)
+dss_write(growth, outfile, growth_path)
 ```
 
 It is good practice to close a DSS file once you are finished working
 with it. For the most part, `dssrip2` will call the file's `$done()`
 method at the completion of every operation to implicitly close the
-file, so you but you can also explicitly close a file:
+file, but you can also explicitly close a file:
 
 ```{r}
-dss_close(f)
+dss_close(outfile)
+
+# or close all open/implicitly closed files
+dss_close_all()
 ```
 
 That's it!
