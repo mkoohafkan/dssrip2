@@ -1,7 +1,7 @@
 skip_if_no_dss()
 
 
-test_that("Path normalization works", {
+test_that("File path normalization works", {
 
   td = normalizePath(tempdir(), winslash = "/", mustWork = TRUE)
   cwd = normalizePath(getwd(), winslash = "/", mustWork = TRUE)
@@ -14,15 +14,16 @@ test_that("Path normalization works", {
 
   vf1 = file.path(td, "file.txt", fsep = "/")
   vf2 = file.path(cwd, "file.txt", fsep = "/")
-  vf3 = file.path(normalizePath("/", "/", mustWork = TRUE),
-    "file.txt", fsep = "/")
+  vf3 = normalizePath(file.path(normalizePath("/", mustWork = TRUE),
+    "file.txt"), winslash = "/", mustWork = FALSE)
 
   expect_error(normalize_path(tf1, TRUE))
 
   expect_identical(normalize_path(tf1, FALSE), vf1)
   expect_identical(normalize_path(tf2, FALSE), vf1)
   expect_identical(normalize_path(tf3, FALSE), vf2)
-  expect_identical(normalize_path(tf4, FALSE), vf3)
+  expect_identical(normalize_path(tf4, FALSE), vf2)
+  expect_identical(normalize_path(tf5, FALSE), vf3)
 
   file.create(tf2)
   on.exit(unlink(c(tf2)))
