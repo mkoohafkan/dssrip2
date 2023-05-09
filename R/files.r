@@ -60,9 +60,12 @@ normalize_path = function(filename, exists) {
   sep = "/"
   if (exists || file.exists(filename)) {
     normalizePath(filename, winslash = sep, mustWork = TRUE)
+  } else if (dirname(filename) == filename) {
+    file.path(filename)
   } else {
-    file.path(Recall(dirname(filename), exists), basename(filename),
-      fsep = sep)
+    normalizePath(file.path(Recall(dirname(filename), exists),
+      basename(filename), fsep = sep), winslash = sep,
+      mustWork = exists)
   }
 }
 
