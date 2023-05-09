@@ -18,4 +18,10 @@ A normalized file path.
 Normalize a DSS file path. A wrapper for \code{\link[base:normalizePath]{base::normalizePath()}}
 with winslash set to \code{"/"}.
 }
+\details{
+This function attempts to strictly resolve file paths
+by traversing the file path back to the deepest existing
+directory, in order to resolve potential issues with directory
+names (e.g., differences in letter case).
+}
 \keyword{internal}

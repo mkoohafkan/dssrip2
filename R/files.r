@@ -24,8 +24,10 @@
       .file_list[[filepath]]
     },
     set = function(filepath, ...) {
-      .file_list[[filepath]] <<- .jcall("hec/heclib/dss/HecDss",
-        "Lhec/heclib/dss/HecDss;", method = "open", filepath, ...)
+      if (is.null(.file_list[[filepath]])) {
+        .file_list[[filepath]] <<- .jcall("hec/heclib/dss/HecDss",
+          "Lhec/heclib/dss/HecDss;", method = "open", filepath, ...)
+      }
     },
     drop = function(filepath) {
       .file_list[[filepath]]$close()
@@ -48,10 +50,20 @@
 #' @param exists If `TRUE`, assert that the DSS file exists.
 #' @return A normalized file path.
 #'
+#' @details This function attempts to strictly resolve file paths
+#'   by traversing the file path back to the deepest existing
+#'   directory, in order to resolve potential issues with directory
+#'   names (e.g., differences in letter case).
+#'
 #' @keywords internal
 normalize_path = function(filename, exists) {
-  normalizePath(path.expand(filename), winslash = "/",
-    mustWork = exists)
+  sep = "/"
+  if (exists || file.exists(filename)) {
+    normalizePath(filename, winslash = sep, mustWork = TRUE)
+  } else {
+    file.path(Recall(dirname(filename), exists), basename(filename),
+      fsep = sep)
+  }
 }
 
 
@@ -87,19 +99,17 @@ dss_file = function(filename, exists = TRUE, ...) {
 #' @export
 dss_create = function(filename, version = 7L) {
   assert_dss_connected()
-  # check that target directory exists
-  target_dir = normalize_path(dirname(filename), TRUE)
 
   version = as.integer(version[1])
+
   if (!any(version == c(6L, 7L))) {
     stop("Only DSS version 6 or 7 is supported")
   }
-  # splicing targetdir back into filename is required in order for
-  # file path letter case to be consistent!
-  filename = normalize_path(file.path(target_dir, basename(filename)),
-    exists = FALSE)
   if (file.exists(filename)) {
     stop("File ", filename, " already exists.")
+  } 
+  if (!dir.exists(dirname(filename))) {
+    stop("Directory ", dirname(filename), "does not exist.")
   }
   dss_file(filename, FALSE, version)$done()
   invisible(TRUE)

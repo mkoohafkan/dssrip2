@@ -16,7 +16,7 @@
 #'
 #' @importFrom rJava .jevalArray
 #' @export
-dss_catalog = function(filename, pattern = "*", condensed = TRUE,
+dss_catalog = function(filename, pattern = ".*", condensed = TRUE,
   rebuild = FALSE) {
   assert_dss_connected()
   file = dss_file(filename)

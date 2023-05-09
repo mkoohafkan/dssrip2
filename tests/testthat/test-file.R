@@ -8,12 +8,20 @@ test_that("DSS file creation works", {
   on.exit(dss_close_all(), add = TRUE)
 
   expect_true(dss_create(tf1))
-  expect_true(dss_create(tf2, version = 6L))
-  expect_error(dss_create(tf3, version = 5L))
-  expect_true(dss_create(tf3, version = 7L))
+  expect_setequal(.store$list(), normalize_path(tf1, TRUE))
 
-  expect_setequal(normalizePath(c(tf1, tf2, tf3)),
-    normalizePath(.store$list()))
+  expect_true(dss_create(tf2, version = 6L))
+
+  expect_error(dss_create(tf3, version = 5L))
+  expect_setequal(.store$list(), normalize_path(c(tf1, tf2), TRUE))
+
+  expect_true(dss_create(tf3, version = 7L))
+  expect_setequal(.store$list(), normalize_path(c(tf1, tf2, tf3),
+    TRUE))
+
+  expect_s4_class(dss_file(tf1), "jobjRef")
+  expect_setequal(.store$list(), normalize_path(c(tf1, tf2, tf3),
+    TRUE))
 
 })
 
@@ -30,6 +38,8 @@ test_that("DSS file close works", {
   dss_create(tf3, version = 7L)
   dss_create(tf4, version = 7L)
 
+  expect_setequal(.store$list(), normalize_path(c(tf1, tf2, tf3, tf4),
+    TRUE))
   expect_true(dss_close(tf1))
   expect_setequal(.store$list(), normalize_path(c(tf2, tf3, tf4),
     TRUE))
