@@ -27,6 +27,7 @@
       if (is.null(.file_list[[filepath]])) {
         .file_list[[filepath]] <<- .jcall("hec/heclib/dss/HecDss",
           "Lhec/heclib/dss/HecDss;", method = "open", filepath, ...)
+        .file_list[[filepath]]$done()
       }
     },
     drop = function(filepath) {
@@ -188,6 +189,7 @@ dss_convert = function(filename, to) {
 dss_close = function(filename) {
   filename = normalize_path(filename, exists = TRUE)
   if ((filename %in% .store$list())) {
+    .catalog$drop(filename)
     .store$drop(filename)
   } else {
     warning("File ", filename, " is already closed.")
@@ -200,6 +202,7 @@ dss_close = function(filename) {
 #' @export
 dss_close_all = function() {
   all_files = .store$list()
+  lapply(all_files, .catalog$drop)
   lapply(all_files, .store$drop)
   invisible(TRUE)
 }
