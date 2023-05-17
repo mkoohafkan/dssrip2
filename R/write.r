@@ -210,7 +210,7 @@ as_hectime = function(x, granularity_seconds) {
 #' @importFrom rJava .jnew .jclass
 #' @keywords internal
 dss_to_timeseries = function(d, dss_interval) {
-  formatted_times = format_datetimes(d[, 1])
+  formatted_times = format_datetimes(d[[1]])
   # build time series object
   tsObj = .jnew("hec.io.TimeSeriesContainer")
   attributes = attr(d, "dss_attributes")
@@ -227,24 +227,9 @@ dss_to_timeseries = function(d, dss_interval) {
   # value properties
   tsObj$setUnits(attributes[["units"]])
   tsObj$setType(attributes[["type"]])
-  tsObj$setValues(na_to_java(as.numeric(d[, 2])))
+  tsObj$setValues(na_to_java(as.numeric(d[[2]])))
 
   tsObj
-
-#  tsObj$setParameter
-#
-#
-#      "fileName",
-#      "fullName",
-#      "startTime",
-#      "endTime",
-#      "timeZoneRawOffset",
-#      "timeZoneID",
-#      "parameter",
-#      "numberValues",
-#      "times",
-#      "values"
-#
 }
 
 
@@ -281,7 +266,7 @@ dss_to_paired = function(d, param_part) {
   for (n in seq_len(ncol(d))) {
     d[n] = na_to_java(d[[n]])
   }
-  pdObj$setXOrdinates(d[, 1])
+  pdObj$setXOrdinates(d[[1]])
   # need a double[][] array
   pdObj$setYOrdinates(.jarray(lapply(d[seq.int(2L, ncol(d))],
     .jarray, "[D"), "[D"))

@@ -23,6 +23,12 @@ test_that("time series writing works", {
   attr(d2, "dss_attributes") = NULL
   expect_error(dss_write(d2, tf, path))
 
+  # test that writing tibbles works
+  if (requireNamespace("tibble")) {
+    path2 = "/Fake Creek/Fake Town/FLOW//1DAY/FAKE2/"
+    expect_true(dss_write(tibble::as_tibble(d), tf, path2))
+    expect_identical(d, dss_read(tf, path2))
+  }
 })
 
 
@@ -60,6 +66,16 @@ test_that("paired data writing works", {
   d3 = d2
   attr(d3, "dss_attributes") = NULL
   expect_error(dss_write(d3, tf, path2))
+
+  # test that writing tibbles works
+  if (requireNamespace("tibble")) {
+    path3 = "/Fake Creek/Fake Town/FLOW-STAGE///FAKE3/"
+    expect_true(dss_write(tibble::as_tibble(d), tf, path))
+    expect_equal(dss_read(tf, path), d, tolerance = 1e-5,
+      ignore_attr = "dss_attributes")
+    expect_equal(attr(dss_read(tf, path), "dss_attributes")[-c(1, 2)],
+      attr(d, "dss_attributes"))
+  }
 
 })
 
