@@ -78,12 +78,12 @@ maven_path = function(id, extension) {
 
 
 #' @rdname maven-helpers
+#' @importFrom httr GET content
 maven_sha1 = function(id, extension,
   url = "https://repo.maven.apache.org/maven2") {
 
   sha_url = paste0(maven_download_url(id, extension, url), ".sha1")
-
-  readLines(sha_url, skipNul = TRUE, warn = FALSE)
+  content(GET(sha_url), "text", encoding = "UTF-8")
 }
 
 
