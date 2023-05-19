@@ -1,14 +1,51 @@
-#' Monolith Requirements
+#' Monolith Assets
 #'
-#' Read a list of required assets from a YAML file.
+#' Search for assets listed in a YAML file.
 #'
 #' @param requirements_file A YAML file listing required assets.
+#' @param stop_on_fail If `TRUE`, fail if any assets cannot be found.
 #' @return A data frame of required assets.
 #'
 #' @importFrom yaml read_yaml
 #' @keywords internal
-monolith_requirements = function(requirements_file) {
-  do.call(rbind, lapply(read_yaml(requirements_file), as.data.frame))
+monolith_assets = function(requirements_file, stop_on_fail = TRUE) {
+  requirements = do.call(rbind, lapply(read_yaml(requirements_file),
+    as.data.frame))
+  requirements_list = split(requirements, requirements[["artifactId"]])
+  all_assets = rbind.data.frame(
+    monolith_assets = do.call(asset_query_nexus,
+      requirements_list[["hec-monolith"]]),
+    compat_assets = do.call(asset_query_nexus,
+      requirements_list[["hec-monolith-compat"]]),
+    data_assets = do.call(asset_query_nexus,
+      requirements_list[["hec-nucleus-data"]]),
+    meta_assets = do.call(asset_query_nexus,
+      requirements_list[["hec-nucleus-metadata"]]),
+    hecnf_assets = do.call(asset_query_nexus,
+      requirements_list[["hecnf"]]),
+    heclib_assets = do.call(asset_query_nexus,
+      c(requirements_list[["javaHeclib"]],
+        maven.extension = "zip")),
+    flogger_assets = do.call(asset_query_maven,
+      requirements_list[["flogger"]]),
+    flogger_backend_assets = do.call(asset_query_maven,
+      requirements_list[["flogger-system-backend"]]),
+    make.row.names = FALSE
+  )
+  assets = merge(requirements, all_assets,
+    by = names(requirements), all.x = TRUE)
+  missing_assets = is.na(assets[["downloadURL"]])
+  if (any(missing_assets)) {
+    msg = paste0("Could not find the following assets:\n",
+      paste0("\t", paste(assets[["artifactId"]],
+        assets[["version"]])[missing_assets], collapse = "\n"))
+    if (stop_on_fail) {
+      stop(msg)
+    } else {
+      warning(msg)
+    }
+  }
+  assets
 }
 
 
@@ -41,12 +78,12 @@ maven_path = function(id, extension) {
 
 
 #' @rdname maven-helpers
+#' @importFrom httr GET content
 maven_sha1 = function(id, extension,
   url = "https://repo.maven.apache.org/maven2") {
 
   sha_url = paste0(maven_download_url(id, extension, url), ".sha1")
-
-  readLines(sha_url, skipNul = TRUE, warn = FALSE)
+  content(GET(sha_url), "text", encoding = "UTF-8")
 }
 
 
@@ -169,36 +206,7 @@ dss_install_monolith = function(install_path, overwrite = TRUE, requirements_fil
     requirements_file = system.file("requirements.yaml",
       package = packageName())
   }
-  requirements = monolith_requirements(requirements_file)
-  requirements_list = split(requirements, requirements[["artifactId"]])
-  all_assets = rbind.data.frame(
-    monolith_assets = do.call(asset_query_nexus,
-      requirements_list[["hec-monolith"]]),
-    compat_assets = do.call(asset_query_nexus,
-      requirements_list[["hec-monolith-compat"]]),
-    data_assets = do.call(asset_query_nexus,
-      requirements_list[["hec-nucleus-data"]]),
-    meta_assets = do.call(asset_query_nexus,
-      requirements_list[["hec-nucleus-metadata"]]),
-    hecnf_assets = do.call(asset_query_nexus,
-      requirements_list[["hecnf"]]),
-    heclib_assets = do.call(asset_query_nexus,
-      c(requirements_list[["javaHeclib"]],
-        maven.extension = "zip")),
-    flogger_assets = do.call(asset_query_maven,
-      requirements_list[["flogger"]]),
-    flogger_backend_assets = do.call(asset_query_maven,
-      requirements_list[["flogger-system-backend"]]),
-    make.row.names = FALSE
-  )
-  assets = merge(requirements, all_assets,
-    by = names(requirements), all.x = TRUE)
-  missing_assets = is.na(assets[["downloadURL"]])
-  if (any(missing_assets)) {
-    stop("Could not find the following assets:\n",
-      paste0("\t", paste(assets[["artifactId"]],
-        assets[["version"]])[missing_assets], collapse = "\n"))
-  }
+  assets = monolith_assets(requirements_file)
   if (.Platform$OS.type == "windows") {
     dss_install_monolith_win(assets, install_path, overwrite)
   } else {
