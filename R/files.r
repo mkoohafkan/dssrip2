@@ -28,14 +28,39 @@
         .file_list[[filepath]] <<- .jcall("hec/heclib/dss/HecDss",
           "Lhec/heclib/dss/HecDss;", method = "open", filepath, ...)
         .file_list[[filepath]]$done()
+        # initialize catalog
+        .catalog_list[[filepath]] <<- list()
       }
+      .file_list[[filepath]]
     },
     drop = function(filepath) {
       .file_list[[filepath]]$close()
       .file_list[[filepath]] <<- NULL
+      .catalog_list[[filepath]] <<- NULL
     },
     list = function() {
       names(.file_list)
+    },
+    catalog = function(filepath, condensed, rebuild) {
+      if (condensed) {
+        type = "condensed"
+      } else {
+        type = "full"
+      }
+      if (rebuild) {
+        .catalog_list[[c(filepath, type)]] <<- NULL
+      }
+      if (is.null(.catalog_list[[c(filepath, type)]])) {
+        if (type == "condensed") {
+            paths = .jevalArray(.file_list[[filepath]]$getCondensedCatalog()$toArray())
+        } else {
+            paths = .jevalArray(.file_list[[filepath]]$getCatalogedPathnames(rebuild)$toArray())
+        }
+        .file_list[[filepath]]$done()
+        .catalog_list[[c(filepath, type)]] <<- sapply(paths, .jcall,
+          returnSig = "S", "toString")
+      }
+      .catalog_list[[c(filepath, type)]]
     }
   )
 }

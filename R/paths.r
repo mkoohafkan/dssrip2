@@ -19,18 +19,12 @@
 dss_catalog = function(filename, pattern = ".*", condensed = TRUE,
   rebuild = FALSE) {
   assert_dss_connected()
-  file = dss_file(filename)
-  on.exit(file$done(), add = TRUE)
   if (length(pattern) != 1L) {
     stop("Argument \"pattern\" must be length 1")
   }
-  if (condensed) {
-    catalog = file$getCondensedCatalog()
-  } else {
-    catalog = file$getCatalogedPathnames(rebuild)
-  }
-  paths = sapply(.jevalArray(catalog$toArray()), function(x)
-    x$toString())
+  filename = normalize_path(filename, TRUE)
+  dss_file(filename)
+  paths = .store$catalog(filename, condensed, rebuild)
   as.character(paths)[grep(toupper(pattern), toupper(paths))]
 }
 
