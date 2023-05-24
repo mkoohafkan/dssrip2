@@ -18,13 +18,11 @@
 #' @keywords internal
 .file_store <- function() {
   .file_list <- list()
-
+  .catalog_list <- list()
   list(
-    get = function(filepath) {
-      .file_list[[filepath]]
-    },
-    set = function(filepath, ...) {
+    handle = function(filepath, ...) {
       if (is.null(.file_list[[filepath]])) {
+        # create file handle if it doesn't already exist
         .file_list[[filepath]] <<- .jcall("hec/heclib/dss/HecDss",
           "Lhec/heclib/dss/HecDss;", method = "open", filepath, ...)
         .file_list[[filepath]]$done()
@@ -109,10 +107,7 @@ normalize_path = function(filename, exists) {
 #' @keywords internal
 dss_file = function(filename, exists = TRUE, ...) {
   filename = normalize_path(filename, exists)
-  if (!(filename %in% .store$list())) {
-    .store$set(filename, ...)
-  }
-  .store$get(filename)
+  .store$handle(filename, ...)
 }
 
 
