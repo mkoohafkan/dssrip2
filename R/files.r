@@ -59,6 +59,14 @@
           returnSig = "S", "toString")
       }
       .catalog_list[[c(filepath, type)]]
+    },
+    list_catalog = function(condensed) {
+      if (condensed) {
+        type = "condensed"
+      } else {
+        type = "full"
+      }
+      names(.catalog_list)[vapply(.catalog_list, function(x) type %in% names(x), TRUE)]
     }
   )
 }

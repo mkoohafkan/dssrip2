@@ -1,3 +1,45 @@
+test_that("DSS catalog cache works", {
+
+  skip_if_no_dss()
+
+  tf1 = tempfile(fileext = ".dss")
+  tf2 = tempfile(fileext = ".dss")
+  tf3 = tempfile(fileext = ".dss")
+  tf4 = tempfile(fileext = ".dss")
+  on.exit(unlink(c(tf1, tf2, tf3, tf4)), add = TRUE)
+
+  exfile = system.file("extdata/example.dss", package = "dssrip2")
+  file.copy(exfile, c(tf1, tf2, tf3, tf4))
+
+
+  dss_catalog(tf1, condensed = FALSE)
+  dss_catalog(tf2)
+  dss_catalog(tf3, condensed = FALSE)
+  dss_catalog(tf3, condensed = TRUE)
+  dss_catalog(tf4, condensed = TRUE)
+
+  expect_setequal(.store$list_catalog(TRUE),
+    normalize_path(c(tf2, tf3, tf4), TRUE))
+  expect_setequal(.store$list_catalog(FALSE),
+    normalize_path(c(tf1, tf3), TRUE))
+  
+  dss_close(tf3)
+  expect_setequal(.store$list_catalog(TRUE),
+    normalize_path(c(tf2, tf4), TRUE))
+  expect_setequal(.store$list_catalog(FALSE),
+    normalize_path(c(tf1), TRUE))
+  dss_close(tf4)
+  expect_setequal(.store$list_catalog(TRUE),
+    normalize_path(c(tf2), TRUE))
+  expect_setequal(.store$list_catalog(FALSE),
+    normalize_path(c(tf1), TRUE))
+  dss_close_all()
+  expect_identical(.store$list_catalog(TRUE), character())
+  expect_identical(.store$list_catalog(FALSE), character())
+
+})
+
+
 test_that("path list works", {
   
   skip_if_no_dss()
