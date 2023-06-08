@@ -15,6 +15,7 @@
 #'  correctly.
 #'
 #' @importFrom rJava .jcall
+#' @importFrom lubridate now
 #' @keywords internal
 .file_store <- function() {
   .file_list <- list()
@@ -26,6 +27,7 @@
         .file_list[[filepath]] <<- .jcall("hec/heclib/dss/HecDss",
           "Lhec/heclib/dss/HecDss;", method = "open", filepath, ...)
         .file_list[[filepath]]$done()
+        attr(.file_list[[filepath]], "cachetime") <<- now("UTC")
         # initialize catalog
         .catalog_list[[filepath]] <<- list()
       }
@@ -57,6 +59,7 @@
         .file_list[[filepath]]$done()
         .catalog_list[[c(filepath, type)]] <<- sapply(paths, .jcall,
           returnSig = "S", "toString")
+        attr(.catalog_list[[c(filepath, type)]], "cachetime") <<- now("UTC")
       }
       .catalog_list[[c(filepath, type)]]
     },
@@ -67,6 +70,9 @@
         type = "full"
       }
       names(.catalog_list)[vapply(.catalog_list, function(x) type %in% names(x), TRUE)]
+    },
+    touch = function(filepath) {
+      attr(.file_list[[filepath]], "cachetime") <<- now("UTC")
     }
   )
 }

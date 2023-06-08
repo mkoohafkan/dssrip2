@@ -23,8 +23,11 @@ dss_catalog = function(filename, pattern = ".*", condensed = TRUE,
     stop("Argument \"pattern\" must be length 1")
   }
   filename = normalize_path(filename, TRUE)
-  dss_file(filename)
+  filetime = attr(dss_file(filename), "cachetime")
   paths = .store$catalog(filename, condensed, rebuild)
+  if (attr(paths, "cachetime") < filetime) {
+    warning("Catalog may be out of date.")
+  }
   as.character(paths)[grep(toupper(pattern), toupper(paths))]
 }
 
