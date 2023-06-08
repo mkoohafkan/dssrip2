@@ -104,3 +104,58 @@ test_that("path parts works", {
   expect_identical(path,  dss_parts_combine(parts))
 
 })
+
+test_that("path caching and rebuilding works", {
+
+  skip_if_no_dss()
+
+  on.exit(dss_close_all(), add = TRUE)
+  d = data.frame(
+    datetime = seq(as.POSIXct("2021-01-01", tz = "etc/GMT+0"),
+      as.POSIXct("2021-01-05", tz = "etc/GMT+0"), by = "1 day"),
+    flow = c(10, 12, NA, 13, 10) * 1000
+  )
+  attr(d, "dss_attributes") = list("type" = "PER-AVER", units = "cfs")
+
+  tf = tempfile(fileext = ".dss")
+  dss_create(tf)
+
+  path1 = "/Fake Creek/Fake Town/FLOW//1DAY/FAKE/"
+  path2 = "/Another Fake Creek/Fake Town/FLOW//1DAY/FAKE/"
+
+  dpaths = c(
+    "/Fake Creek/Fake Town/FLOW/31Dec2020 - 04Jan2021/1Day/FAKE/",
+    "/Another Fake Creek/Fake Town/FLOW/31Dec2020 - 04Jan2021/1Day/FAKE/"
+  )
+  dpathsf = c(
+    "/FAKE CREEK/FAKE TOWN/FLOW/01JAN2020/1DAY/FAKE/",
+    "/FAKE CREEK/FAKE TOWN/FLOW/01JAN2021/1DAY/FAKE/",
+    "/ANOTHER FAKE CREEK/FAKE TOWN/FLOW/01JAN2020/1DAY/FAKE/",
+    "/ANOTHER FAKE CREEK/FAKE TOWN/FLOW/01JAN2021/1DAY/FAKE/"
+  )
+
+  dss_write(d, tf, path1)
+  expect_setequal(dss_catalog(tf), dpaths[1])
+  expect_setequal(dss_catalog(tf, condensed = FALSE), dpathsf[1:2])
+
+  dss_write(d, tf, path2)
+  # use cached
+  expect_warning(expect_setequal(dss_catalog(tf), dpaths[1]))
+  expect_warning(expect_setequal(dss_catalog(tf, condensed = FALSE),
+    dpathsf[1:2]))
+  # rebuild
+  expect_setequal(dss_catalog(tf, rebuild = TRUE), dpaths)
+  expect_setequal(dss_catalog(tf, condensed = FALSE, rebuild = TRUE),
+    dpathsf)
+
+  dss_delete(tf, path1)
+  # use cached
+  expect_warning(expect_setequal(dss_catalog(tf), dpaths))
+  expect_warning(expect_setequal(dss_catalog(tf, condensed = FALSE),
+    dpathsf))
+  # rebuild
+  expect_setequal(dss_catalog(tf, rebuild = TRUE), dpaths[2])
+  expect_setequal(dss_catalog(tf, condensed = FALSE, rebuild = TRUE),
+    dpathsf[3:4])
+
+})
