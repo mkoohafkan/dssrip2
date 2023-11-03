@@ -61,6 +61,12 @@ dss_require = function(dss_home = getOption("dss.home"),
 dss_connect = function(dss_home = getOption("dss.home"),
   message_level = getOption("dss.messagelevel"),
   monolith = getOption("dss.monolith")) {
+  if (J("java.lang.Runtime")$getRuntime()$totalMemory()*1e-6 < 1000) {
+    warning("JVM was initialized with less than 1GB total memory ",
+      "which is likely not sufficient for DSS file operations. ",
+      "See 'vignette(\"java-parameters\", package = \"dssrip2\")' ",
+      "for more information.")
+  }
   if (.Platform$OS.type == "windows") {
     dss_connect_win(dss_home, message_level, isTRUE(monolith))
   } else {
