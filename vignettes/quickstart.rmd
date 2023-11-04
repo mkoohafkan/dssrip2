@@ -1,7 +1,5 @@
 ---
 title: "Quick Start with dssrip2"
-author: "Michael Koohafkan"
-date: "2023-05-06"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Quick Start}
@@ -14,6 +12,25 @@ vignette: >
 
 The R package `dssrip2` provides a simple interface to read and write
 HEC-DSS files.
+
+## Settings Java Options
+
+The `dssrip2` uses the `rJava` package, which provides a Java Virtual
+Machine (JVM) shared by all R packages in a session. The default JVM
+parameters are very modest and usually insufficient for working with
+larger DSS files. Before launching `dssrip2` (or any other R package
+that uses `rJava`, as the JVM is launched by the first package that
+requires it) you should at least set the JVM total memory
+parameter. For example, set the JVM total memory to 8000 MB:
+
+
+```r
+options(java.parameters = "-Xmx8000M")
+```
+
+For simplified startup, set the options in your `.Rprofile`.
+For more information on setting Java parameters, see the 
+*Java Parameters* vignette.
 
 ## Connecting to HEC-DSSVue
 

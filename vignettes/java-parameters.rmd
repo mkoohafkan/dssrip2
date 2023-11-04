@@ -1,7 +1,5 @@
 ---
 title: "Java Virtual Machine Parameters"
-author: "Michael Koohafkan"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Java Virtual Machine Parameters}
