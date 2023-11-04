@@ -32,20 +32,14 @@ For simplified startup, set the options in your `.Rprofile`.
 For more information on setting Java parameters, see the 
 *Java Parameters* vignette.
 
-## Connecting to HEC-DSSVue
+## Connecting to DSS
 
-If you have HEC-DSSVue installed on your machine, call `dss_connect()`
-and supply the path to the install folder:
+### Using HEC Monolith
 
-
-```r
-library(dssrip2)
-
-dss_connect("C:/Program Files/HEC/HEC-DSSVue")
-```
-
-Alternatively, you can download the HEC Monolith Jars (and associated
-dependencies) and connect to those instead:
+The recommended method of connecting to DSS is to download the HEC
+Monolith jar files, which provides standalone access to HEC DSS
+functionality without requiring the installation of the HEC-DSSVue
+application.
 
 
 ```r
@@ -58,15 +52,30 @@ you can add the following options to `.Rprofile`:
 
 
 ```r
-# for HEC-DSSVue
-options(dss.home = "C:/Program Files/HEC/HEC-DSSVue")
-
-# alternatively, for HEC Monolith in the default direcory
 options(dss.monolith = TRUE)
 ```
 
-Review the `dss_connect()` and `dss_install_monolith()` help files for
-more information on configuration.
+### Using an existing HEC-DSSVue install
+
+Alternatively, if you have HEC-DSSVue installed on your machine you
+can call `dss_connect()` and supply the path to the DSSVue install
+folder:
+
+
+```r
+library(dssrip2)
+
+dss_connect("C:/Program Files/HEC/HEC-DSSVue")
+```
+
+For simplified startup, you can add the following options
+to `.Rprofile`:
+
+
+```r
+options(dss.home = "C:/Program Files/HEC/HEC-DSSVue",
+  dss.monolith = FALSE)
+```
 
 
 ## Reading DSS data
