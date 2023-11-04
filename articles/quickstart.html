@@ -70,10 +70,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Quick Start with dssrip2</h1>
-                        <h4 data-toc-skip class="author">Michael
-Koohafkan</h4>
             
-            <h4 data-toc-skip class="date">2023-05-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mkoohafkan/dssrip2/blob/HEAD/vignettes/quickstart.rmd" class="external-link"><code>vignettes/quickstart.rmd</code></a></small>
       <div class="d-none name"><code>quickstart.rmd</code></div>
@@ -84,23 +81,40 @@ Koohafkan</h4>
 <p>The R package <code>dssrip2</code> provides a simple interface to
 read and write HEC-DSS files.</p>
 <div class="section level2">
+<h2 id="settings-java-options">Settings Java Options<a class="anchor" aria-label="anchor" href="#settings-java-options"></a>
+</h2>
+<p>The <code>dssrip2</code> uses the <code>rJava</code> package, which
+provides a Java Virtual Machine (JVM) shared by all R packages in a
+session. The default JVM parameters are very modest and usually
+insufficient for working with larger DSS files. Before launching
+<code>dssrip2</code> (or any other R package that uses
+<code>rJava</code>, as the JVM is launched by the first package that
+requires it) you should at least set the JVM total memory parameter. For
+example, set the JVM total memory to 8000 MB:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>java.parameters <span class="op">=</span> <span class="st">"-Xmx8000M"</span><span class="op">)</span></span></code></pre></div>
+<p>For simplified startup, set the options in your
+<code>.Rprofile</code>. For more information on setting Java parameters,
+see the <em>Java Parameters</em> vignette.</p>
+</div>
+<div class="section level2">
 <h2 id="connecting-to-hec-dssvue">Connecting to HEC-DSSVue<a class="anchor" aria-label="anchor" href="#connecting-to-hec-dssvue"></a>
 </h2>
 <p>If you have HEC-DSSVue installed on your machine, call
 <code><a href="../reference/dss_connect.html">dss_connect()</a></code> and supply the path to the install
 folder:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mkoohafkan/dssrip2" class="external-link">dssrip2</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/dss_connect.html">dss_connect</a></span><span class="op">(</span><span class="st">"C:/Program Files/HEC/HEC-DSSVue"</span><span class="op">)</span></span></code></pre></div>
 <p>Alternatively, you can download the HEC Monolith Jars (and associated
 dependencies) and connect to those instead:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/dss_install_monolith.html">dss_install_monolith</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/dss_connect.html">dss_connect</a></span><span class="op">(</span>monolith <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>By default, HEC Monolith installs to APPDATA. For simplified startup,
 you can add the following options to <code>.Rprofile</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># for HEC-DSSVue</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>dss.home <span class="op">=</span> <span class="st">"C:/Program Files/HEC/HEC-DSSVue"</span><span class="op">)</span></span>
 <span></span>
@@ -114,7 +128,7 @@ configuration.</p>
 <h2 id="reading-dss-data">Reading DSS data<a class="anchor" aria-label="anchor" href="#reading-dss-data"></a>
 </h2>
 <p><code>dssrip2</code> provides an example dataset:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exfile</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/example.dss"</span>, package <span class="op">=</span> <span class="st">"dssrip2"</span><span class="op">)</span></span></code></pre></div>
 <p>This file contains five datasets:</p>
 <ol style="list-style-type: decimal">
@@ -126,7 +140,7 @@ configuration.</p>
 </ol>
 <p>The DSS catalog can be read into R using
 <code><a href="../reference/dss_catalog.html">dss_catalog()</a></code>:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/dss_catalog.html">dss_catalog</a></span><span class="op">(</span><span class="va">exfile</span>, condensed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01Oct1946 - 30Sep2012/1DAY/USGS/"                   </span></span>
 <span><span class="co">#&gt; [2] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-ANNUAL PEAK/30Apr1947 - 30Oct2012/IR-CENTURY/USGS/" </span></span>
@@ -135,14 +149,14 @@ configuration.</p>
 <span><span class="co">#&gt; [5] "/BRANDYWINE CREEK/WILMINGTON, DE/STAGE-ANNUAL PEAK/01JAN1900 - 01JAN2000/IR-CENTURY/USGS/"</span></span></code></pre></div>
 <p><code><a href="../reference/dss_catalog.html">dss_catalog()</a></code> supports regex pattern matching to subset
 the path list:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/dss_catalog.html">dss_catalog</a></span><span class="op">(</span><span class="va">exfile</span>, <span class="st">"/.*/.*/FLOW.*/.*/.*/.*/"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01Oct1946 - 30Sep2012/1DAY/USGS/"                  </span></span>
 <span><span class="co">#&gt; [2] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-ANNUAL PEAK/30Apr1947 - 30Oct2012/IR-CENTURY/USGS/"</span></span>
 <span><span class="co">#&gt; [3] "/BRANDYWINE CREEK/WILMINGTON, DE/FLOW-STAGE///GENERATED DATA PAIRS/"</span></span></code></pre></div>
 <p><code>dssrip2</code> also provides a variety of functions are
 provided to assist with manipulating DSS paths:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">path</span> <span class="op">=</span> <span class="st">"/BRANDYWINE CREEK/WILMINGTON, DE/FLOW/01Oct1946 - 30Sep2012/1DAY/USGS/"</span></span>
 <span></span>
 <span><span class="co"># split path into parts</span></span>
@@ -169,7 +183,7 @@ frames.</li>
 <li>DSS grid data is converted into SpatRasters (see <a href="https://cran.r-project.org/package=terra" class="external-link"><code>package:terra</code></a>
 for more information).</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># read in a regular timeseries</span></span>
 <span><span class="fu"><a href="../reference/dss_read.html">dss_read</a></span><span class="op">(</span><span class="va">exfile</span>, <span class="st">"/BRANDYWINE CREEK/WILMINGTON, DE/FLOW//1DAY/USGS/"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     datetime flow</span></span>
@@ -218,7 +232,7 @@ for more information).</li>
 paired data containers. As with reading data, <code>dssrip2</code>
 determines the appropriate DSS dataset type from the structure of the
 supplied input.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outfile</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".dss"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/dss_create.html">dss_create</a></span><span class="op">(</span><span class="va">outfile</span><span class="op">)</span></span>
@@ -269,7 +283,7 @@ supplied input.</p>
 with it. For the most part, <code>dssrip2</code> will call the file’s
 <code>$done()</code> method at the completion of every operation to
 implicitly close the file, but you can also explicitly close a file:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/dss_close.html">dss_close</a></span><span class="op">(</span><span class="va">outfile</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># or close all open/implicitly closed files</span></span>
