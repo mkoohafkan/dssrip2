@@ -8,6 +8,22 @@ vignette: >
 ---
 
 
+## BLUF: Recommended JVM parameters for `dssrip2`
+
+Adding the following setting to your .Rprofile should resolve most
+JVM errors encountered when using `dssrip2`:
+
+```r
+options(java.parameters = "-Xmx8000M")
+```
+
+where `-Xmx` refers to the JVM maximum heap size. Here we set it to
+8000 MB, but depending on your requirements you can set it lower or
+higher. The general format is `-Xmx<Heap Size>[Unit]`, where `[unit]` 
+can be `k`/`K` for kilobytes, `m`/`M` for megabytes, or `g`/`G` for
+gigabytes.
+
+
 ## Introduction
 
 Like other Java-dependent packages, the performance of `dssrip2` is
@@ -26,25 +42,8 @@ options(java.parameters = "-<parameter> -<parameter> -<parameter>")
 ```
 
 Several resources describing JVM parameters are available. For a
-brief summary of the most common JVM parameters, see
-[this Java Dev Journal article](https://www.javadevjournal.com/java/jvm-parameters/).
-
-
-## BLUF: Recommended JVM parameters for `dssrip2`
-
-Adding the following setting to your .Rprofile should resolve most
-JVM errors encountered when using `dssrip2`:
-
-```r
-options(java.parameters = "-Xmx8000M")
-```
-
-where `-Xmx` refers to the JVM maximum heap size. Here we set it to
-8000 MB, but depending on your requirements you can set it lower or
-higher. The general format is `-Xmx<Heap Size>[Unit]`, where `[unit]` 
-can be `k`/`K` for kilobytes, `m`/`M` for megabytes, or `g`/`G` for
-gigabytes.
-
+complete list of JVM parameters see
+[this Overview of Java Options](https://docs.oracle.com/en/java/javase/20/docs/specs/man/java.html#overview-of-java-options).
 
 ## An abridged list of JVM parameters
 
@@ -71,5 +70,8 @@ performance of Java-dependent R packages:
   * Default value is 1, should be always >= 1.
 * Log File Rotation Size: `-XX:GCLogFileSize=<file size>[Unit]`
 
+
+For a brief summary of the most common JVM parameters, see 
+[this Java Dev Journal article](https://www.javadevjournal.com/java/jvm-parameters/).
 For more information on Java Garbage Collectors, see
-[this Java Dev Journal article](https://www.javadevjournal.com/java/java-garbage-collector/).
+[this other Java Dev Journal article](https://www.javadevjournal.com/java/java-garbage-collector/).
