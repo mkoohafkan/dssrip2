@@ -1,8 +1,12 @@
-- { artifactId: hec-monolith, version : 3.3.16 }
-- { artifactId: hec-monolith-compat, version : 3.3.16 }
-- { artifactId: hec-nucleus-data, version : 2.0.1 }
-- { artifactId: hec-nucleus-metadata, version : 2.0.1 }
-- { artifactId: hecnf, version : 6.0.00.100 }
-- { artifactId: javaHeclib, version : 7-IQ-11-win-x86_64 }
-- { artifactId: flogger, version : 0.7.4 }
-- { artifactId: flogger-system-backend, version : 0.7.4 }
+common:
+  - { artifactId: hec-monolith, version : 3.3.16 }
+  - { artifactId: hec-monolith-compat, version : 3.3.16 }
+  - { artifactId: hec-nucleus-data, version : 2.0.1 }
+  - { artifactId: hec-nucleus-metadata, version : 2.0.1 }
+  - { artifactId: hecnf, version : 6.0.00.100 }
+  - { artifactId: flogger, version : 0.7.4 }
+  - { artifactId: flogger-system-backend, version : 0.7.4 }
+windows:
+  - { artifactId: javaHeclib, version : 7-IQ-11-win-x86_64 }
+linux:
+  - { artifactId: javaHeclib, version : 7-IQ-11-linux-x86_64 }
