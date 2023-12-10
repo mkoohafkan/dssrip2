@@ -6,7 +6,7 @@
   <!-- badges: end -->
 
 A rewrite of [`dssrip`](https://github.com/eheisman/dssrip). Supports
-reading and writing time series and paired data to DSS. Linux support
+reading and writing time series and paired data to DSS. OSX support
 and read/write support for DSS grid data is planned.
 
 
