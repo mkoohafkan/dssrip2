@@ -25,7 +25,7 @@ dss_message_level = function(message_level) {
 #' @export
 dss_require = function(dss_home = getOption("dss.home"),
   message_level = getOption("dss.messagelevel"), monolith = TRUE) {
-  result = try(dss_connect(dss_home))
+  result = suppressWarnings(try(dss_connect(dss_home), silent = TRUE))
   if (inherits(result, "try-error")) {
     invisible(FALSE)
   } else {
