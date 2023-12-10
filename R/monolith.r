@@ -1,3 +1,26 @@
+#' HEC Monolith Default Directory
+#'
+#' Platform-dependent default install directory for HEC-Monolith.
+#'
+#' @keywords internal
+monolith_default_dir = function() {
+  if (.Platform$OS.type == "windows") {
+    normalizePath(file.path(Sys.getenv("LOCALAPPDATA"), "dssrip2",
+      "monolith"), mustWork = FALSE)
+  } else {
+    normalizePath(file.path("~", ".dssrip2",
+      "monolith"), mustWork = FALSE)
+  }
+}
+
+monolith_requirements = function(requirements_file) {
+  all_requirements = read_yaml(requirements_file)
+  os = tolower(Sys.info()[["sysname"]])
+  sys_requirements = do.call(c, all_requirements[c("common", os)])
+  do.call(rbind, lapply(sys_requirements, as.data.frame))
+}
+
+
 #' Monolith Assets
 #'
 #' Search for assets listed in a YAML file.
@@ -9,8 +32,7 @@
 #' @importFrom yaml read_yaml
 #' @keywords internal
 monolith_assets = function(requirements_file, stop_on_fail = TRUE) {
-  requirements = do.call(rbind, lapply(read_yaml(requirements_file),
-    as.data.frame))
+  requirements = monolith_requirements(requirements_file)
   requirements_list = split(requirements, requirements[["artifactId"]])
   all_assets = rbind.data.frame(
     monolith_assets = do.call(asset_query_nexus,
@@ -221,8 +243,7 @@ dss_install_monolith = function(install_path, overwrite = TRUE, requirements_fil
 #' @keywords internal
 dss_install_monolith_win = function(assets, install_path, overwrite) {
   if (missing(install_path)) {
-    install_path = normalizePath(file.path(Sys.getenv("LOCALAPPDATA"),
-      "dssrip2", "monolith"), mustWork = FALSE)
+    install_path = monolith_default_dir()
   }
   lib_path = normalizePath(file.path(install_path, "lib"),
     mustWork = FALSE)

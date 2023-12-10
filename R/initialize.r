@@ -56,79 +56,49 @@ dss_require = function(dss_home = getOption("dss.home"),
 #'
 #' @seealso [dss_message_level()] [dss_install_monolith()]
 #'
-#' @importFrom rJava .jnew J
+#' @importFrom rJava .jnew J javaImport .jaddLibrary .jaddClassPath
 #' @export
 dss_connect = function(dss_home = getOption("dss.home"),
   message_level = getOption("dss.messagelevel"),
   monolith = getOption("dss.monolith")) {
+
+  monolith = isTRUE(monolith)
+  if (is.null(dss_home) && monolith) {
+    dss_home = monolith_default_dir()
+  }
+
+  # get path to heclib
+  if (.Platform$OS.type == "windows") {
+    hec_lib_path = normalizePath(file.path(dss_home, "lib",
+      "javaHeclib.dll"), mustWork = TRUE)
+  } else if (.Platform$OS.type == "unix") {
+    hec_lib_path = normalizePath(file.path(dss_home, "lib",
+      "libjavaHeclib.so"), mustWork = TRUE)
+  } else {
+    stop(.Platform$OS.type, " platform not supported.")
+  }
+  # get jar paths
+  jar_paths = get_jars(dss_home, monolith)
+
+  # initialize JVM
+  javaImport(packages = "java.lang")
+  .jaddLibrary("javaHeclib", hec_lib_path)
+  .jaddClassPath(jar_paths)
+
+  # default is message level 2
+  dss_message_level(c(message_level, 2L)[1])
+  assign("DSS_CONNECTED", TRUE, hecJavaConnectionDB)
+
+  # check JVM memory
   if (J("java.lang.Runtime")$getRuntime()$totalMemory()*1e-6 < 1000) {
     warning("JVM was initialized with less than 1GB total memory ",
       "which is likely not sufficient for DSS file operations. ",
       "See 'vignette(\"java-parameters\", package = \"dssrip2\")' ",
       "for more information.")
   }
-  if (.Platform$OS.type == "windows") {
-    dss_connect_win(dss_home, message_level, isTRUE(monolith))
-  } else {
-    dss_connect_unix(dss_home, message_level, isTRUE(monolith))
-  }
-  # default is message level 2
-  dss_message_level(c(message_level, 2L)[1])
-  assign("DSS_CONNECTED", TRUE, hecJavaConnectionDB)
+
   invisible()
 }
-
-
-#' HEC Monolith Default Directory
-#'
-#' Platform-dependent default install directory for HEC-Monolith.
-#'
-#' @keywords internal
-monolith_default_dir = function() {
-  if (.Platform$OS.type == "windows") {
-    normalizePath(file.path(Sys.getenv("LOCALAPPDATA"), "dssrip2",
-      "monolith"), mustWork = FALSE)
-  } else {
-    stop("Linux/MacOS is not currently supported.")
-  }
-}
-
-
-#' Connect To DSS (Windows)
-#'
-#' Connect to DSS in a Windows environment.
-#'
-#' @inheritParams dss_connect
-#'
-#' @importFrom rJava javaImport .jaddLibrary .jaddClassPath
-#'   .jcall
-#' @keywords internal
-dss_connect_win = function(dss_home, message_level, monolith) {
-  if (is.null(dss_home) && monolith) {
-    dss_home = monolith_default_dir()
-  }
-  hec_lib_path = normalizePath(file.path(dss_home,
-    "lib/javaHeclib.dll"), mustWork = TRUE)
-
-  # initialize JVM
-  jar_paths = get_jars(dss_home, monolith)
-  javaImport(packages = "java.lang")
-  .jaddLibrary("javaHeclib", hec_lib_path)
-  .jaddClassPath(jar_paths)
-}
-
-
-#' Connect To DSS (Unix)
-#'
-#' Connect to DSS in a Unix environment.
-#'
-#' @inheritParams dss_connect
-#'
-#' @keywords internal
-dss_connect_unix = function(dss_home, message_level, monolith) {
-  stop("Linux/MacOS is not currently supported.")
-}
-
 
 #' Get DSS Jars
 #'
