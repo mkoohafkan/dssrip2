@@ -43,6 +43,9 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
+      
+      - name: Import data
+        run: Rscript -e 'library(rJava);.jinit()'
 
       - uses: r-lib/actions/check-r-package@v2
         with:
