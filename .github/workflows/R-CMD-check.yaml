@@ -43,48 +43,43 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
-      
-      - uses: nvoxland/jar-download-action@v1
+      - name: Download Java dependencies
+        uses: nvoxland/jar-download-action@v1
         with:
           groupId: com.google.flogger
           artifactId: flogger-system-backend
           version: 0.7.4
           repository: https://repo.maven.org/maven2/
           outputDirectory: ~/.dssrip2/monolith/jar
-
-      - uses: nvoxland/jar-download-action@v1
+        uses: nvoxland/jar-download-action@v1
         with:
           groupId: com.google.flogger
           artifactId: flogger
           version: 0.7.4
           repository: https://repo.maven.org/maven2/
           outputDirectory: ~/.dssrip2/monolith/jar
-
-      - uses: nvoxland/jar-download-action@v1
+        uses: nvoxland/jar-download-action@v1
         with:
           groupId: mil.army.usace.hec
           artifactId: hec-monolith-compat
           version: 3.3.16
           repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
           outputDirectory: ~/.dssrip2/monolith/jar
-
-      - uses: nvoxland/jar-download-action@v1
+        uses: nvoxland/jar-download-action@v1
         with:
           groupId: mil.army.usace.hec
           artifactId: hec-monolith
           version: 3.3.16
           repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
           outputDirectory: ~/.dssrip2/monolith/jar
-
-      - uses: nvoxland/jar-download-action@v1
+        uses: nvoxland/jar-download-action@v1
         with:
           groupId: mil.army.usace.hec
           artifactId: hec-nucleus-metadata
           version: 2.0.1
           repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
           outputDirectory: ~/.dssrip2/monolith/jar
-
-      - uses: nvoxland/jar-download-action@v1
+        uses: nvoxland/jar-download-action@v1
         with:
           groupId: mil.army.usace.hec
           artifactId: hecnf
