@@ -44,8 +44,20 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
       
-      - name: Import data
-        run: Rscript -e 'library(rJava);.jinit()'
+      - name: Download HEC Monolith
+        uses: nvoxland/jar-download-action@v1
+        with:
+          groupId: com.google.flogger
+          artifactId: flogger-system-backend
+          version: 0.74
+          outputDirectory: ~/.dssrip2/jar
+
+        uses: nvoxland/jar-download-action@v1
+        with:
+          groupId: com.google.flogger
+          artifactId: flogger
+          version: 0.74
+          outputDirectory: ~/.dssrip2/jar
 
       - uses: r-lib/actions/check-r-package@v2
         with:
