@@ -55,8 +55,12 @@ jobs:
           url: https://repo1.maven.org
       - uses: canastro/copy-file-action@master
         with:
-          source: steps.download-maven-artifact.outputs.file
+          source: ${{ steps.download-maven-artifact.outputs.file }}
           target: "home/.dssrip2/monolith/jar/flogger-system-backend-0.7.4.jar"
+
+      - name: Output file path in container
+        run: |
+          echo "File has been downloaded to ${{ steps.download-maven-artifact.outputs.file }}"
 
       - uses: clausnz/github-action-download-maven-artifact@master
         with:
