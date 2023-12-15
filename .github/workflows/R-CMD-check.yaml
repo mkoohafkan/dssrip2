@@ -45,6 +45,7 @@ jobs:
           needs: check
       
       - uses: clausnz/github-action-download-maven-artifact@master
+        id: download-maven-artifact
         with:
           groupId: com.google.flogger
           artifactId: flogger-system-backend
@@ -52,7 +53,10 @@ jobs:
           extension: jar
           repository: maven2
           url: https://repo.maven.org/maven2/
-          outputDirectory: home/.dssrip2/monolith/jar
+
+      - name: Output file path in container
+        run: |
+          echo "File has been downloaded to ${{ steps.download-maven-artifact.outputs.file }}"
 
       - uses: clausnz/github-action-download-maven-artifact@master
         with:
