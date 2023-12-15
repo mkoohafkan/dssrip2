@@ -53,10 +53,10 @@ jobs:
           extension: jar
           repository: maven2
           url: https://repo1.maven.org
-      
-      - name: Output file path in container
-        run: |
-          echo "File has been downloaded to ${{ steps.download-maven-artifact.outputs.file }}"
+      - uses: canastro/copy-file-action@master
+        with:
+          source: steps.download-maven-artifact.outputs.file
+          target: "home/.dssrip2/monolith/jar/flogger-system-backend-0.7.4.jar"
 
       - uses: clausnz/github-action-download-maven-artifact@master
         with:
