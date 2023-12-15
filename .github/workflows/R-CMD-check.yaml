@@ -44,66 +44,81 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
       
-      - uses: nvoxland/jar-download-action@v1
+      - uses: clausnz/github-action-download-maven-artifact@master
         with:
           groupId: com.google.flogger
           artifactId: flogger-system-backend
           version: 0.7.4
-          repository: https://repo.maven.org/maven2/
+          extension: jar
+          repository: maven2
+          url: https://repo.maven.org/maven2/
           outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: nvoxland/jar-download-action@v1
+      - uses: clausnz/github-action-download-maven-artifact@master
         with:
           groupId: com.google.flogger
           artifactId: flogger
           version: 0.7.4
-          repository: https://repo.maven.org/maven2/
+          extension: jar
+          repository: maven2
+          url: https://repo.maven.org/maven2/
           outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: nvoxland/jar-download-action@v1
+      - uses: clausnz/github-action-download-maven-artifact@master
         with:
           groupId: mil.army.usace.hec
           artifactId: hec-monolith-compat
           version: 3.3.16
-          repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
+          extension: jar
+          repository: nexus
+          url:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
           outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: nvoxland/jar-download-action@v1
+      - uses: clausnz/github-action-download-maven-artifact@master
         with:
           groupId: mil.army.usace.hec
           artifactId: hec-monolith
           version: 3.3.16
-          repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
+          extension: jar
+          repository: nexus
+          url:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
           outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: nvoxland/jar-download-action@v1
+      - uses: clausnz/github-action-download-maven-artifact@master
         with:
           groupId: mil.army.usace.hec
           artifactId: hec-nucleus-metadata
           version: 2.0.1
-          repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
+          extension: jar
+          repository: nexus
+          url:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
           outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: nvoxland/jar-download-action@v1
+      - uses: clausnz/github-action-download-maven-artifact@master
         with:
           groupId: mil.army.usace.hec
           artifactId: hecnf
           version: 6.0.00.100
-          repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
+          extension: jar
+          repository: nexus
+          url:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
           outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: nvoxland/jar-download-action@v1
+      - uses: clausnz/github-action-download-maven-artifact@master
         with:
           groupId: mil.army.usace.hec
           artifactId: javaHeclib
-          version: 7-IQ-11-win-x86_64
-          repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
+          version: 7-IQ-11-linux-x86_64
+          extension: zip
+          repository: nexus
+          url:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
           outputDirectory: home/.dssrip2/monolith/lib
 
       - uses: ihiroky/extract-action@v1
         with:
-          file_path: home/.dssrip2/monolith/lib/javaHeclib-7-IQ-11-win-x86_64.zip
+          file_path: home/.dssrip2/monolith/lib/javaHeclib-7-IQ-11-linux-x86_64.zip
           extract_dir: home/.dssrip2/monolith/lib
+
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
