@@ -52,7 +52,7 @@ jobs:
           version: 0.7.4
           extension: jar
           repository: maven2
-          url: https://repo.maven.org/maven2/
+          url: https://repo.maven.org
 
       - name: Output file path in container
         run: |
@@ -65,7 +65,7 @@ jobs:
           version: 0.7.4
           extension: jar
           repository: maven2
-          url: https://repo.maven.org/maven2/
+          url: https://repo.maven.org
           outputDirectory: home/.dssrip2/monolith/jar
 
       - uses: clausnz/github-action-download-maven-artifact@master
@@ -74,8 +74,8 @@ jobs:
           artifactId: hec-monolith-compat
           version: 3.3.16
           extension: jar
-          repository: nexus
-          url:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
+          repository: nexus/repository/maven-releases
+          url:  https://www.hec.usace.army.mil
           outputDirectory: home/.dssrip2/monolith/jar
 
       - uses: clausnz/github-action-download-maven-artifact@master
