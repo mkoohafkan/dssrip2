@@ -53,7 +53,7 @@ jobs:
           extension: jar
           repository: maven2
           url: https://repo1.maven.org
-
+      
       - name: Output file path in container
         run: |
           echo "File has been downloaded to ${{ steps.download-maven-artifact.outputs.file }}"
@@ -74,9 +74,8 @@ jobs:
           artifactId: hec-monolith-compat
           version: 3.3.16
           extension: jar
-          repository: nexus/repository/maven-releases
-          url:  https://www.hec.usace.army.mil
-          outputDirectory: home/.dssrip2/monolith/jar
+          repository: maven-releases
+          url:  https://www.hec.usace.army.mil/nexus/repository
 
       - uses: clausnz/github-action-download-maven-artifact@master
         with:
@@ -84,8 +83,8 @@ jobs:
           artifactId: hec-monolith
           version: 3.3.16
           extension: jar
-          repository: nexus
-          url:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
+          repository: maven-releases
+          url:  https://www.hec.usace.army.mil/nexus/repository
           outputDirectory: home/.dssrip2/monolith/jar
 
       - uses: clausnz/github-action-download-maven-artifact@master
@@ -94,8 +93,8 @@ jobs:
           artifactId: hec-nucleus-metadata
           version: 2.0.1
           extension: jar
-          repository: nexus
-          url:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
+          repository: maven-releases
+          url:  https://www.hec.usace.army.mil/nexus/repository
           outputDirectory: home/.dssrip2/monolith/jar
 
       - uses: clausnz/github-action-download-maven-artifact@master
@@ -104,8 +103,8 @@ jobs:
           artifactId: hecnf
           version: 6.0.00.100
           extension: jar
-          repository: nexus
-          url:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
+          repository: maven-releases
+          url:  https://www.hec.usace.army.mil/nexus/repository
           outputDirectory: home/.dssrip2/monolith/jar
 
       - uses: clausnz/github-action-download-maven-artifact@master
@@ -114,8 +113,8 @@ jobs:
           artifactId: javaHeclib
           version: 7-IQ-11-linux-x86_64
           extension: zip
-          repository: nexus
-          url:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
+          repository: maven-releases
+          url:  https://www.hec.usace.army.mil/nexus/repository
           outputDirectory: home/.dssrip2/monolith/lib
 
       - uses: ihiroky/extract-action@v1
