@@ -52,7 +52,7 @@ jobs:
           version: 0.7.4
           extension: jar
           repository: maven2
-          url: https://repo.maven.org
+          url: https://repo1.maven.org
 
       - name: Output file path in container
         run: |
@@ -65,7 +65,7 @@ jobs:
           version: 0.7.4
           extension: jar
           repository: maven2
-          url: https://repo.maven.org
+          url: https://repo1.maven.org
           outputDirectory: home/.dssrip2/monolith/jar
 
       - uses: clausnz/github-action-download-maven-artifact@master
