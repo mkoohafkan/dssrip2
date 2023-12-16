@@ -50,13 +50,24 @@ jobs:
 
       - name: download dependencies
         run: |
+          ::group::Download flogger
           mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='com.google.flogger:flogger-system-backend:0.7.4:jar'
           mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='com.google.flogger:flogger:0.7.4:jar'
+          ::endgroup::
+          ::group::Download HEC Monolith
           mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith-compat:3.3.16:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith:3.3.16:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          ::endgroup::
+          ::group::Download HEC Nucleus
           mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-nucleus-metadata:2.0.1:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          ::endgroup::
+          ::group::Download hecnf
           mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hecnf:6.0.00.100:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          ::endgroup::
+          ::group::Download javaHeclib
           mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-linux-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          ::endgroup::
+          ::group::Copy dependencies to directory
           mkdir -p ${{ runner.temp }}/.dssrip2/jar ${{ runner.temp }}/.dssrip2/lib
           cp \
             ${{ runner.temp }}/temp_repo/mil/army/usace/hec/hec-nucleus-metadata/2.0.1/hec-nucleus-metadata-2.0.1.jar \
@@ -68,13 +79,8 @@ jobs:
             ${{ runner.temp }}/.dssrip2/jar
           7z e ${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-linux-x86_64/javaHeclib-7-IQ-11-linux-x86_64.zip \
             -o${{ runner.temp }}/.dssrip2/lib
-          echo "DSS_HOME_CI=${{ runner.temp }}/.dssrip2/lib" >> $GITHUB_ENV
-
-      - name: test dir
-        run: |
-          echo $DSS_HOME_CI
-          echo $(pwd)
-        
+          echo "DSS_HOME_CI=${{ runner.temp }}/.dssrip2/lib" >> $GITHUB_ENV        
+          ::endgroup::
   
       - uses: r-lib/actions/check-r-package@v2
         with:
