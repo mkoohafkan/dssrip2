@@ -71,7 +71,17 @@ jobs:
 
       - name: check stuff
         run: find ./temp_repo -type f -printf "%f %h\n"
-#
+
+      - name: create destination jar directory
+        run: mkdir -p /home/.dssrip2/jar
+
+      - name: create destination lib directory
+        run: mkdir -p /home/.dssrip2/lib
+
+      - name: copy jars
+        run: cp ./temp_repo/mil/army/usace/hec/hec-nucleus-metadata/2.0.1/hec-nucleus-metadata-2.0.1.jar ./temp_repo/mil/army/usace/hec/hec-monolith-compat/3.3.16/hec-monolith-compat-3.3.16.jar /home/.dssrip2/jar
+
+
 #      - uses: mkoohafkan/jar-download-action@main
 #        with:
 #          groupId: mil.army.usace.hec
