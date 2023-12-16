@@ -75,9 +75,10 @@ jobs:
             ./temp_repo/com/google/flogger/flogger/0.7.4/flogger-0.7.4.jar \
             ./temp_repo/mil/army/usace/hec/hecnf/6.0.00.100/hecnf-6.0.00.100.jar \
             ./.dssrip2/jar
-          cp \
+          7z e \
             ./temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-linux-x86_64/javaHeclib-7-IQ-11-linux-x86_64.zip \
-            ./.dssrip2/lib/javaHeclib-7-IQ-11-linux-x86_64.zip
+            -o ./.dssrip2/lib
+          
 
       - name: check stuff
         run: | 
