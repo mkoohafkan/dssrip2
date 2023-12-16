@@ -44,7 +44,7 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
       
-      - uses: mkoohafkan/jar-download-action@vmaster
+      - uses: mkoohafkan/jar-download-action@master
         with:
           groupId: com.google.flogger
           artifactId: flogger-system-backend
@@ -52,7 +52,7 @@ jobs:
           repository: https://repo.maven.org/maven2/
           outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: mkoohafkan/jar-download-action@vmaster
+      - uses: mkoohafkan/jar-download-action@master
         with:
           groupId: com.google.flogger
           artifactId: flogger
@@ -60,7 +60,7 @@ jobs:
           repository: https://repo.maven.org/maven2/
           outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: mkoohafkan/jar-download-action@vmaster
+      - uses: mkoohafkan/jar-download-action@master
         with:
           groupId: mil.army.usace.hec
           artifactId: hec-monolith-compat
@@ -68,7 +68,7 @@ jobs:
           repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
           outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: mkoohafkan/jar-download-action@vmaster
+      - uses: mkoohafkan/jar-download-action@master
         with:
           groupId: mil.army.usace.hec
           artifactId: hec-monolith
@@ -76,7 +76,7 @@ jobs:
           repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
           outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: mkoohafkan/jar-download-action@vmaster
+      - uses: mkoohafkan/jar-download-action@master
         with:
           groupId: mil.army.usace.hec
           artifactId: hec-nucleus-metadata
@@ -84,7 +84,7 @@ jobs:
           repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
           outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: mkoohafkan/jar-download-action@vmaster
+      - uses: mkoohafkan/jar-download-action@master
         with:
           groupId: mil.army.usace.hec
           artifactId: hecnf
@@ -92,7 +92,7 @@ jobs:
           repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
           outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: mkoohafkan/jar-download-action@vmaster
+      - uses: mkoohafkan/jar-download-action@master
         with:
           groupId: mil.army.usace.hec
           artifactId: javaHeclib
