@@ -79,7 +79,7 @@ jobs:
             ${{ runner.temp }}/.dssrip2/jar
           7z e ${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-linux-x86_64/javaHeclib-7-IQ-11-linux-x86_64.zip \
             -o${{ runner.temp }}/.dssrip2/lib
-          echo "DSS_HOME_CI=${{ runner.temp }}/.dssrip2/lib" >> $GITHUB_ENV        
+          echo "DSS_HOME_CI=${{ runner.temp }}/.dssrip2" >> $GITHUB_ENV        
           echo ::endgroup::
   
       - name: check stuff
