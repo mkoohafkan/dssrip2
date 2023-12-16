@@ -57,8 +57,7 @@ jobs:
           mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-nucleus-metadata:2.0.1:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hecnf:6.0.00.100:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-linux-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
-          mkdir -p ${{ runner.temp }}/.dssrip2/jar
-          mkdir -p ${{ runner.temp }}/.dssrip2/lib
+          mkdir -p ${{ runner.temp }}/.dssrip2/jar ${{ runner.temp }}/.dssrip2/lib
           cp \
             ${{ runner.temp }}/temp_repo/mil/army/usace/hec/hec-nucleus-metadata/2.0.1/hec-nucleus-metadata-2.0.1.jar \
             ${{ runner.temp }}/temp_repo/mil/army/usace/hec/hec-monolith-compat/3.3.16/hec-monolith-compat-3.3.16.jar \
@@ -69,12 +68,12 @@ jobs:
             ${{ runner.temp }}/.dssrip2/jar
           7z e ${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-linux-x86_64/javaHeclib-7-IQ-11-linux-x86_64.zip \
             -o${{ runner.temp }}/.dssrip2/lib
-          echo "DSS_HOME_CI={{ runner.temp }}/.dssrip2/lib" >> $GITHUB_ENV
+          echo "DSS_HOME_CI=${{ runner.temp }}/.dssrip2/lib" >> $GITHUB_ENV
 
       - name: test dir
         run: |
           echo $DSS_HOME_CI
-          echo pwd
+          echo $(pwd)
         
   
       - uses: r-lib/actions/check-r-package@v2
