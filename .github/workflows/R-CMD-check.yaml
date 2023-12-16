@@ -65,7 +65,7 @@ jobs:
       - name: create destination lib directory
         run: mkdir -p ./.dssrip2/lib
 
-      - name: copy jars
+      - name: copy dependencies
         run: | 
           cp \
             ./temp_repo/mil/army/usace/hec/hec-nucleus-metadata/2.0.1/hec-nucleus-metadata-2.0.1.jar \
@@ -75,11 +75,8 @@ jobs:
             ./temp_repo/com/google/flogger/flogger/0.7.4/flogger-0.7.4.jar \
             ./temp_repo/mil/army/usace/hec/hecnf/6.0.00.100/hecnf-6.0.00.100.jar \
             ./.dssrip2/jar
-
-      - name: extract lib
-        run: |
-          7z e ./temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-linux-x86_64/javaHeclib-7-IQ-11-linux-x86_64.zip -o ./.dssrip2/lib
-          
+          7z e ./temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-linux-x86_64/javaHeclib-7-IQ-11-linux-x86_64.zip \
+            -o./.dssrip2/lib          
 
       - name: check stuff
         run: | 
