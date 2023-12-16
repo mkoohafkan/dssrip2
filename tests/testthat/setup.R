@@ -5,7 +5,7 @@ skip_if_no_dss = function() {
       # look for .dssrip2 folder in temp directory
       dss_home_ci = Sys.getenv("DSS_HOME_CI")
       if (nzchar(dss_home_ci)) {
-        if (dss_require(dss_home_ci, monolith = TRUE)) {
+        if (dss_connect(dss_home_ci, monolith = TRUE)) {
           return(invisible(TRUE))
         }
       }
