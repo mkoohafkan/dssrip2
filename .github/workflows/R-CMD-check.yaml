@@ -98,7 +98,7 @@ jobs:
           artifactId: javaHeclib
           version: 7-IQ-11-win-x86_64
           repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
-          packaging: zip
+          type: zip
           outputDirectory: home/.dssrip2/monolith/lib
 
       - uses: ihiroky/extract-action@v1
