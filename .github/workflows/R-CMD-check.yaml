@@ -44,88 +44,69 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
       
-      - uses: clausnz/github-action-download-maven-artifact@master
-        id: download-maven-artifact
+      - uses: mkoohafkan/jar-download-action@vmaster
         with:
           groupId: com.google.flogger
           artifactId: flogger-system-backend
           version: 0.7.4
-          extension: jar
-          repository: maven2
-          url: https://repo1.maven.org
-      - uses: canastro/copy-file-action@master
-        with:
-          source: ${{ steps.download-maven-artifact.outputs.file }}
-          target: "/home/.dssrip2/monolith/jar/flogger-system-backend-0.7.4.jar"
+          repository: https://repo.maven.org/maven2/
+          outputDirectory: home/.dssrip2/monolith/jar
 
-      - name: Output file path in container
-        run: |
-          echo "File has been downloaded to ${{ steps.download-maven-artifact.outputs.file }}"
-
-      - uses: clausnz/github-action-download-maven-artifact@master
+      - uses: mkoohafkan/jar-download-action@vmaster
         with:
           groupId: com.google.flogger
           artifactId: flogger
           version: 0.7.4
-          extension: jar
-          repository: maven2
-          url: https://repo1.maven.org
+          repository: https://repo.maven.org/maven2/
           outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: clausnz/github-action-download-maven-artifact@master
+      - uses: mkoohafkan/jar-download-action@vmaster
         with:
           groupId: mil.army.usace.hec
           artifactId: hec-monolith-compat
           version: 3.3.16
-          extension: jar
-          repository: maven-releases
-          url:  https://www.hec.usace.army.mil/nexus/repository
+          repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
+          outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: clausnz/github-action-download-maven-artifact@master
+      - uses: mkoohafkan/jar-download-action@vmaster
         with:
           groupId: mil.army.usace.hec
           artifactId: hec-monolith
           version: 3.3.16
-          extension: jar
-          repository: maven-releases
-          url:  https://www.hec.usace.army.mil/nexus/repository
+          repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
           outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: clausnz/github-action-download-maven-artifact@master
+      - uses: mkoohafkan/jar-download-action@vmaster
         with:
           groupId: mil.army.usace.hec
           artifactId: hec-nucleus-metadata
           version: 2.0.1
-          extension: jar
-          repository: maven-releases
-          url:  https://www.hec.usace.army.mil/nexus/repository
+          repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
           outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: clausnz/github-action-download-maven-artifact@master
+      - uses: mkoohafkan/jar-download-action@vmaster
         with:
           groupId: mil.army.usace.hec
           artifactId: hecnf
           version: 6.0.00.100
-          extension: jar
-          repository: maven-releases
-          url:  https://www.hec.usace.army.mil/nexus/repository
+          repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
           outputDirectory: home/.dssrip2/monolith/jar
 
-      - uses: clausnz/github-action-download-maven-artifact@master
+      - uses: mkoohafkan/jar-download-action@vmaster
         with:
           groupId: mil.army.usace.hec
           artifactId: javaHeclib
-          version: 7-IQ-11-linux-x86_64
-          extension: zip
-          repository: maven-releases
-          url:  https://www.hec.usace.army.mil/nexus/repository
+          version: 7-IQ-11-win-x86_64
+          repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
+          packaging: zip
           outputDirectory: home/.dssrip2/monolith/lib
 
       - uses: ihiroky/extract-action@v1
         with:
-          file_path: home/.dssrip2/monolith/lib/javaHeclib-7-IQ-11-linux-x86_64.zip
+          file_path: home/.dssrip2/monolith/lib/javaHeclib-7-IQ-11-win-x86_64.zip
           extract_dir: home/.dssrip2/monolith/lib
 
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
+  
