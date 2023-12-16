@@ -82,6 +82,11 @@ jobs:
           echo "DSS_HOME_CI=${{ runner.temp }}/.dssrip2/lib" >> $GITHUB_ENV        
           echo ::endgroup::
   
+      - name: check stuff
+        run: |
+          find ./.dssrip2/jar -type f -printf "%h/%f \n"
+          find ./.dssrip2/lib -type f -printf "%h/%f \n"
+
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
