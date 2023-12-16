@@ -68,8 +68,15 @@ jobs:
             ${{ runner.temp }}/temp_repo/mil/army/usace/hec/hecnf/6.0.00.100/hecnf-6.0.00.100.jar \
             ${{ runner.temp }}/.dssrip2/jar
           7z e ${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-linux-x86_64/javaHeclib-7-IQ-11-linux-x86_64.zip \
-            -o${{ runner.temp }}/.dssrip2/lib          
+            -o${{ runner.temp }}/.dssrip2/lib
+          echo "DSS_HOME_CI={{ runner.temp }}/.dssrip2/lib" >> $GITHUB_ENV
 
+      - name: test dir
+        run: |
+          echo $DSS_HOME_CI
+          echo pwd
+        
+  
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
