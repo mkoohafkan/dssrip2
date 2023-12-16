@@ -49,7 +49,10 @@ jobs:
       - uses: s4u/maven-settings-action@v2.8.0
 
       - name: download flogger backend
-        run: mvn dependency:get -Dartifact='com.google.flogger:flogger-system-backend:0.7.4' -DoutputDirectory='/home/.dssrip2/jar'
+        run: mvn -Dmaven.repo.local='/home/.dssrip2/jar' dependency:get -Dartifact='com.google.flogger:flogger-system-backend:0.7.4'
+
+#      - name: download flogger backend
+#        run: mvn -Dmaven.repo.local='/home/.dssrip2/jar' dependency:get -Dartifact='com.google.flogger:flogger-system-backend:0.7.4'
 
       - name: check stuff
         run: find /home/.dssrip2/jar -type f -printf "%f\n"
