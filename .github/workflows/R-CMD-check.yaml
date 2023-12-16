@@ -67,10 +67,10 @@ jobs:
         run: mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hecnf:6.0.00.100:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
 
       - name: download javaheclib
-        run: mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-win-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+        run: mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-linux-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
 
       - name: check stuff
-        run: find ./temp_repo -type f -printf "%f\n"
+        run: find ./temp_repo -type f -printf "%f %h\n"
 #
 #      - uses: mkoohafkan/jar-download-action@main
 #        with:
