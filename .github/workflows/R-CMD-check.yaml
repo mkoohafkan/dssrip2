@@ -59,6 +59,7 @@ jobs:
           mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith:3.3.16:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           echo ::endgroup::
           echo ::group::Download HEC Nucleus
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-nucleus-data:2.0.1:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-nucleus-metadata:2.0.1:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           echo ::endgroup::
           echo ::group::Download hecnf
@@ -70,6 +71,7 @@ jobs:
           echo ::group::Copy dependencies to directory
           mkdir -p ${{ runner.temp }}/.dssrip2/jar ${{ runner.temp }}/.dssrip2/lib
           cp \
+            ${{ runner.temp }}/temp_repo/mil/army/usace/hec/hec-nucleus-data/2.0.1/hec-nucleus-data-2.0.1.jar \
             ${{ runner.temp }}/temp_repo/mil/army/usace/hec/hec-nucleus-metadata/2.0.1/hec-nucleus-metadata-2.0.1.jar \
             ${{ runner.temp }}/temp_repo/mil/army/usace/hec/hec-monolith-compat/3.3.16/hec-monolith-compat-3.3.16.jar \
             ${{ runner.temp }}/temp_repo/mil/army/usace/hec/hec-monolith/3.3.16/hec-monolith-3.3.16.jar \
