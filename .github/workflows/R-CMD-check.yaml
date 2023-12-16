@@ -49,17 +49,17 @@ jobs:
       - uses: s4u/maven-settings-action@v2.8.0
 
       - name: download flogger backend
-        run: mvn -Dmaven.repo.local='./dssrip2/jar' dependency:get -Dartifact='com.google.flogger:flogger-system-backend:0.7.4'
+        run: mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='com.google.flogger:flogger-system-backend:0.7.4:jar'
 
-#      - name: download flogger backend
-#        run: mvn -Dmaven.repo.local='/home/.dssrip2/jar' dependency:get -Dartifact='com.google.flogger:flogger-system-backend:0.7.4'
+      - name: download flogger
+        run: mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='com.google.flogger:flogger:0.7.4:jar'
+
+      - name: download monolith compat
+        run: mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith-compat:3.3.16' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
 
       - name: check stuff
         run: find ./dssrip2/jar -type f -printf "%f\n"
-#      - name: download flogger
-#        run: mvn dependency:get -Dartifact='com.google.flogger:flogger:0.7.4' -Dtransitive=false
-#      - name: download monolith compat
-#        run: mvn dependency:get -Dartifact='mil.army.usace.hec:hec-monolith-compat:3.3.16' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases' -Dtransitive=false
+
 
 #      - uses: mkoohafkan/jar-download-action@main
 #        with:
