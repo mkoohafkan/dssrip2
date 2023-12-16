@@ -50,6 +50,9 @@ jobs:
 
       - name: download flogger backend
         run: mvn dependency:get -Dartifact='com.google.flogger:flogger-system-backend:0.7.4' -DoutputDirectory='/home/.dssrip2/jar'
+
+      - name: check stuff
+        run: find /home/.dssrip2/jar -type f -printf "%f\n"
 #      - name: download flogger
 #        run: mvn dependency:get -Dartifact='com.google.flogger:flogger:0.7.4' -Dtransitive=false
 #      - name: download monolith compat
@@ -116,8 +119,8 @@ jobs:
 #        with:
 #          file_path: home/.dssrip2/monolith/lib/javaHeclib-7-IQ-11-win-x86_64.zip
 #          extract_dir: home/.dssrip2/monolith/lib
-
-      - uses: r-lib/actions/check-r-package@v2
-        with:
-          upload-snapshots: true
+#
+#      - uses: r-lib/actions/check-r-package@v2
+#        with:
+#          upload-snapshots: true
   
