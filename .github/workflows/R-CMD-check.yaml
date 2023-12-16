@@ -70,7 +70,7 @@ jobs:
         run: mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-linux-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
 
       - name: check stuff
-        run: find ./temp_repo -type f -printf "%f %h\n"
+        run: find ./temp_repo -type f -printf "%h/%f \n"
 
       - name: create destination jar directory
         run: mkdir -p /home/.dssrip2/jar
