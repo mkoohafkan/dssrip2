@@ -50,25 +50,25 @@ jobs:
 
       - name: download dependencies
         run: |
-          mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='com.google.flogger:flogger-system-backend:0.7.4:jar'
-          mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='com.google.flogger:flogger:0.7.4:jar'
-          mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith-compat:3.3.16:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
-          mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith:3.3.16:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
-          mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-nucleus-metadata:2.0.1:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
-          mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hecnf:6.0.00.100:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
-          mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-linux-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
-          mkdir -p ./.dssrip2/jar
-          mkdir -p ./.dssrip2/lib
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='com.google.flogger:flogger-system-backend:0.7.4:jar'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='com.google.flogger:flogger:0.7.4:jar'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith-compat:3.3.16:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith:3.3.16:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-nucleus-metadata:2.0.1:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hecnf:6.0.00.100:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-linux-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mkdir -p ${{ runner.temp }}/.dssrip2/jar
+          mkdir -p ${{ runner.temp }}/.dssrip2/lib
           cp \
-            ./temp_repo/mil/army/usace/hec/hec-nucleus-metadata/2.0.1/hec-nucleus-metadata-2.0.1.jar \
-            ./temp_repo/mil/army/usace/hec/hec-monolith-compat/3.3.16/hec-monolith-compat-3.3.16.jar \
-            ./temp_repo/mil/army/usace/hec/hec-monolith/3.3.16/hec-monolith-3.3.16.jar \
-            ./temp_repo/com/google/flogger/flogger-system-backend/0.7.4/flogger-system-backend-0.7.4.jar \
-            ./temp_repo/com/google/flogger/flogger/0.7.4/flogger-0.7.4.jar \
-            ./temp_repo/mil/army/usace/hec/hecnf/6.0.00.100/hecnf-6.0.00.100.jar \
-            ./.dssrip2/jar
-          7z e ./temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-linux-x86_64/javaHeclib-7-IQ-11-linux-x86_64.zip \
-            -o./.dssrip2/lib          
+            ${{ runner.temp }}/temp_repo/mil/army/usace/hec/hec-nucleus-metadata/2.0.1/hec-nucleus-metadata-2.0.1.jar \
+            ${{ runner.temp }}/temp_repo/mil/army/usace/hec/hec-monolith-compat/3.3.16/hec-monolith-compat-3.3.16.jar \
+            ${{ runner.temp }}/temp_repo/mil/army/usace/hec/hec-monolith/3.3.16/hec-monolith-3.3.16.jar \
+            ${{ runner.temp }}/temp_repo/com/google/flogger/flogger-system-backend/0.7.4/flogger-system-backend-0.7.4.jar \
+            ${{ runner.temp }}/temp_repo/com/google/flogger/flogger/0.7.4/flogger-0.7.4.jar \
+            ${{ runner.temp }}/temp_repo/mil/army/usace/hec/hecnf/6.0.00.100/hecnf-6.0.00.100.jar \
+            ${{ runner.temp }}/.dssrip2/jar
+          7z e ${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-linux-x86_64/javaHeclib-7-IQ-11-linux-x86_64.zip \
+            -o${{ runner.temp }}/.dssrip2/lib          
 
       - uses: r-lib/actions/check-r-package@v2
         with:
