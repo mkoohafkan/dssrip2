@@ -58,8 +58,6 @@ jobs:
           mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hecnf:6.0.00.100:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-linux-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
 
-      - name: check stuff
-        run: find ./temp_repo -type f -printf "%h/%f \n"
 
       - name: create destination jar directory
         run: mkdir -p ./.dssrip2/jar
@@ -73,6 +71,9 @@ jobs:
             ./temp_repo/mil/army/usace/hec/hec-nucleus-metadata/2.0.1/hec-nucleus-metadata-2.0.1.jar \
             ./temp_repo/mil/army/usace/hec/hec-monolith-compat/3.3.16/hec-monolith-compat-3.3.16.jar \
             ./.dssrip2/jar
+
+      - name: check stuff
+        run: find ./.dssrip2/jar -type f -printf "%h/%f \n"
 
 #      - uses: ihiroky/extract-action@v1
 #        with:
