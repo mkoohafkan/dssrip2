@@ -54,60 +54,23 @@ jobs:
       - name: download flogger
         run: mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='com.google.flogger:flogger:0.7.4:jar'
 
-      - name: download monolith compat
-        run: mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith-compat:3.3.16' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+      - name: download hec monolith compat
+        run: mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith-compat:3.3.16:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+
+      - name: download hec monolith
+        run: mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith:3.3.16:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+
+      - name: download hec nucleus metadata
+        run: mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-nucleus-metadata:2.0.1:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+
+      - name: download hecnf
+        run: mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hecnf:6.0.00.100:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+
+      - name: download javaheclib
+        run: mvn -Dmaven.repo.local='./temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-win-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
 
       - name: check stuff
-        run: find ./dssrip2/jar -type f -printf "%f\n"
-
-
-#      - uses: mkoohafkan/jar-download-action@main
-#        with:
-#          groupId: com.google.flogger
-#          artifactId: flogger-system-backend
-#          version: 0.7.4
-#          repository: https://repo.maven.org/maven2/
-#          outputDirectory: home/.dssrip2/monolith/jar
-#
-#      - uses: mkoohafkan/jar-download-action@main
-#        with:
-#          groupId: com.google.flogger
-#          artifactId: flogger
-#          version: 0.7.4
-#          repository: https://repo.maven.org/maven2/
-#          outputDirectory: home/.dssrip2/monolith/jar
-#
-#      - uses: mkoohafkan/jar-download-action@main
-#        with:
-#          groupId: mil.army.usace.hec
-#          artifactId: hec-monolith-compat
-#          version: 3.3.16
-#          repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
-#          outputDirectory: home/.dssrip2/monolith/jar
-#
-#      - uses: mkoohafkan/jar-download-action@main
-#        with:
-#          groupId: mil.army.usace.hec
-#          artifactId: hec-monolith
-#          version: 3.3.16
-#          repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
-#          outputDirectory: home/.dssrip2/monolith/jar
-#
-#      - uses: mkoohafkan/jar-download-action@main
-#        with:
-#          groupId: mil.army.usace.hec
-#          artifactId: hec-nucleus-metadata
-#          version: 2.0.1
-#          repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
-#          outputDirectory: home/.dssrip2/monolith/jar
-#
-#      - uses: mkoohafkan/jar-download-action@main
-#        with:
-#          groupId: mil.army.usace.hec
-#          artifactId: hecnf
-#          version: 6.0.00.100
-#          repository:  https://www.hec.usace.army.mil/nexus/repository/maven-releases/
-#          outputDirectory: home/.dssrip2/monolith/jar
+        run: find ./temp_repo -type f -printf "%f\n"
 #
 #      - uses: mkoohafkan/jar-download-action@main
 #        with:
