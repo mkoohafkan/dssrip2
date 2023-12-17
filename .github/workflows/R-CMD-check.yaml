@@ -48,6 +48,10 @@ jobs:
 
       - uses: s4u/maven-settings-action@v2.8.0
 
+      - name: runner temp dir
+        run: |
+          echo ${{ runner.temp }}
+
       - name: download dependencies
         run: |
           echo ::group::Download flogger
@@ -101,7 +105,7 @@ jobs:
             echo "$RUNNER_OS not supported"
             exit 1
           fi
-          echo "DSS_HOME_CI=${{ runner.temp }}/.dssrip2" >> $GITHUB_ENV        
+          echo "DSS_HOME_CI=${{ runner.temp }}/.dssrip2" >> $GITHUB_ENV
           echo ::endgroup::
         shell: bash
   
