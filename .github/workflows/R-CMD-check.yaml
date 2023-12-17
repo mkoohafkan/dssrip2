@@ -96,10 +96,10 @@ jobs:
             7z e ${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-linux-x86_64/javaHeclib-7-IQ-11-linux-x86_64.zip \
               -o${{ runner.temp }}/.dssrip2/lib
           elif [ "$RUNNER_OS" == "Windows" ]; then
-            7z e ${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-linux-x86_64/javaHeclib-7-IQ-11-win-x86_64.zip \
+            7z e ${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-win-x86_64/javaHeclib-7-IQ-11-win-x86_64.zip \
               -o${{ runner.temp }}/.dssrip2/lib
           elif [ "$RUNNER_OS" == "macOS" ]; then
-            7z e ${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-linux-x86_64/javaHeclib-7-IQ-11-macOS-x86_64.zip \
+            7z e ${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-macOS-x86_64/javaHeclib-7-IQ-11-macOS-x86_64.zip \
               -o${{ runner.temp }}/.dssrip2/lib
           else
             echo "$RUNNER_OS not supported"
