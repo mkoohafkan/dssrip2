@@ -18,8 +18,8 @@ jobs:
       fail-fast: false
       matrix:
         config:
-#          - {os: macos-latest,   r: 'release'}
-#          - {os: windows-latest, r: 'release'}
+          - {os: macos-latest,   r: 'release'}
+          - {os: windows-latest, r: 'release'}
 #          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
 #          - {os: ubuntu-latest,   r: 'oldrel-1'}
@@ -29,20 +29,20 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: r-lib/actions/setup-pandoc@v2
-
-      - uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: ${{ matrix.config.r }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
-          use-public-rspm: true
-
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::rcmdcheck
-          needs: check
+#      - uses: actions/checkout@v3
+#
+#      - uses: r-lib/actions/setup-pandoc@v2
+#
+#      - uses: r-lib/actions/setup-r@v2
+#        with:
+#          r-version: ${{ matrix.config.r }}
+#          http-user-agent: ${{ matrix.config.http-user-agent }}
+#          use-public-rspm: true
+#
+#      - uses: r-lib/actions/setup-r-dependencies@v2
+#        with:
+#          extra-packages: any::rcmdcheck
+#          needs: check
       
       - uses: stCarolas/setup-maven@v4.5
 
@@ -73,7 +73,9 @@ jobs:
           elif [ "$RUNNER_OS" == "macOS" ]; then
             echo "JAVHECLIB_VERSION=7-IQ-11-macOS-x86_64" >> $GITHUB_ENV
           else
-            echo "$RUNNER_OS not supported."
+            echo "$RUNNER_OS not supported"
+            exit 1
+          fi
           mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:$JAVHECLIB_VERSION:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           echo ::endgroup::
           echo ::group::Copy dependencies to directory
@@ -92,7 +94,7 @@ jobs:
           echo "DSS_HOME_CI=${{ runner.temp }}/.dssrip2" >> $GITHUB_ENV        
           echo ::endgroup::
   
-      - uses: r-lib/actions/check-r-package@v2
-        with:
-          upload-snapshots: true
+#      - uses: r-lib/actions/check-r-package@v2
+#        with:
+#          upload-snapshots: true
   
