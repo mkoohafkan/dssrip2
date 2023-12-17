@@ -76,7 +76,7 @@ jobs:
             echo "$RUNNER_OS not supported"
             exit 1
           fi
-          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:$JAVHECLIB_VERSION:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:${JAVHECLIB_VERSION}:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           echo ::endgroup::
           echo ::group::Copy dependencies to directory
           mkdir -p ${{ runner.temp }}/.dssrip2/jar ${{ runner.temp }}/.dssrip2/lib
@@ -89,7 +89,7 @@ jobs:
             ${{ runner.temp }}/temp_repo/com/google/flogger/flogger/0.7.4/flogger-0.7.4.jar \
             ${{ runner.temp }}/temp_repo/mil/army/usace/hec/hecnf/6.0.00.100/hecnf-6.0.00.100.jar \
             ${{ runner.temp }}/.dssrip2/jar
-          7z e ${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/$JAVHECLIB_VERSION/javaHeclib-$JAVHECLIB_VERSION.zip \
+          7z e ${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/${JAVHECLIB_VERSION}/javaHeclib-${JAVHECLIB_VERSION}.zip \
             -o${{ runner.temp }}/.dssrip2/lib
           echo "DSS_HOME_CI=${{ runner.temp }}/.dssrip2" >> $GITHUB_ENV        
           echo ::endgroup::
