@@ -56,61 +56,58 @@ jobs:
 
       - name: download dependencies
         run: |
-          echo ::group::Set up directories
-          echo "MVN_TEMP_REPO='${{ runner.temp }}/mvn_temp'" >> $GITHUB_ENV
-          echo "DSS_HOME_CI='${{ runner.temp }}/.dssrip2'" >> $GITHUB_ENV
-          mkdir -p $DSS_HOME_CI/jar $DSS_HOME_CI/lib
-          echo ::endgroup::
           echo ::group::Download flogger
-          mvn -Dmaven.repo.local=$MVN_TEMP_REPO dependency:get -Dartifact='com.google.flogger:flogger-system-backend:0.7.4:jar'
-          mvn -Dmaven.repo.local=$MVN_TEMP_REPO dependency:get -Dartifact='com.google.flogger:flogger:0.7.4:jar'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='com.google.flogger:flogger-system-backend:0.7.4:jar'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='com.google.flogger:flogger:0.7.4:jar'
           echo ::endgroup::
           echo ::group::Download HEC Monolith
-          mvn -Dmaven.repo.local=$MVN_TEMP_REPO dependency:get -Dartifact='mil.army.usace.hec:hec-monolith-compat:3.3.16:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
-          mvn -Dmaven.repo.local=$MVN_TEMP_REPO dependency:get -Dartifact='mil.army.usace.hec:hec-monolith:3.3.16:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith-compat:3.3.16:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith:3.3.16:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           echo ::endgroup::
           echo ::group::Download HEC Nucleus
-          mvn -Dmaven.repo.local=$MVN_TEMP_REPO dependency:get -Dartifact='mil.army.usace.hec:hec-nucleus-data:2.0.1:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
-          mvn -Dmaven.repo.local=$MVN_TEMP_REPO dependency:get -Dartifact='mil.army.usace.hec:hec-nucleus-metadata:2.0.1:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-nucleus-data:2.0.1:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-nucleus-metadata:2.0.1:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           echo ::endgroup::
           echo ::group::Download hecnf
-          mvn -Dmaven.repo.local=$MVN_TEMP_REPO dependency:get -Dartifact='mil.army.usace.hec:hecnf:6.0.00.100:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hecnf:6.0.00.100:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           echo ::endgroup::
           echo ::group::Download javaHeclib
           if [ "$RUNNER_OS" == "Linux" ]; then
-            mvn -Dmaven.repo.local=$MVN_TEMP_REPO dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-linux-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+            mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-linux-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           elif [ "$RUNNER_OS" == "Windows" ]; then
-            mvn -Dmaven.repo.local=$MVN_TEMP_REPO dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-win-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+            mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-win-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           elif [ "$RUNNER_OS" == "macOS" ]; then
-            mvn -Dmaven.repo.local=$MVN_TEMP_REPO dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-macOS-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+            mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-macOS-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           else
             echo "$RUNNER_OS not supported"
             exit 1
           fi
           echo ::endgroup::
           echo ::group::Copy dependencies to directory
+          mkdir -p '${{ runner.temp }}/.dssrip2/jar' '${{ runner.temp }}/.dssrip2/lib'
           cp \
-            $MVN_TEMP_REPO/mil/army/usace/hec/hec-nucleus-data/2.0.1/hec-nucleus-data-2.0.1.jar \
-            $MVN_TEMP_REPO/mil/army/usace/hec/hec-nucleus-metadata/2.0.1/hec-nucleus-metadata-2.0.1.jar \
-            $MVN_TEMP_REPO/mil/army/usace/hec/hec-monolith-compat/3.3.16/hec-monolith-compat-3.3.16.jar \
-            $MVN_TEMP_REPO/mil/army/usace/hec/hec-monolith/3.3.16/hec-monolith-3.3.16.jar \
-            $MVN_TEMP_REPO/com/google/flogger/flogger-system-backend/0.7.4/flogger-system-backend-0.7.4.jar \
-            $MVN_TEMP_REPO/com/google/flogger/flogger/0.7.4/flogger-0.7.4.jar \
-            $MVN_TEMP_REPO/mil/army/usace/hec/hecnf/6.0.00.100/hecnf-6.0.00.100.jar \
-            $DSS_HOME_CI/jar
+            '${{ runner.temp }}/temp_repo/mil/army/usace/hec/hec-nucleus-data/2.0.1/hec-nucleus-data-2.0.1.jar' \
+            '${{ runner.temp }}/temp_repo/mil/army/usace/hec/hec-nucleus-metadata/2.0.1/hec-nucleus-metadata-2.0.1.jar' \
+            '${{ runner.temp }}/temp_repo/mil/army/usace/hec/hec-monolith-compat/3.3.16/hec-monolith-compat-3.3.16.jar' \
+            '${{ runner.temp }}/temp_repo/mil/army/usace/hec/hec-monolith/3.3.16/hec-monolith-3.3.16.jar' \
+            '${{ runner.temp }}/temp_repo/com/google/flogger/flogger-system-backend/0.7.4/flogger-system-backend-0.7.4.jar' \
+            '${{ runner.temp }}/temp_repo/com/google/flogger/flogger/0.7.4/flogger-0.7.4.jar' \
+            '${{ runner.temp }}/temp_repo/mil/army/usace/hec/hecnf/6.0.00.100/hecnf-6.0.00.100.jar' \
+            ${{ runner.temp }}/.dssrip2/jar
           if [ "$RUNNER_OS" == "Linux" ]; then
-            7z e $MVN_TEMP_REPO/mil/army/usace/hec/javaHeclib/7-IQ-11-linux-x86_64/javaHeclib-7-IQ-11-linux-x86_64.zip \
-              -o$DSS_HOME_CI/lib
+            7z e '${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-linux-x86_64/javaHeclib-7-IQ-11-linux-x86_64.zip' \
+              -o'${{ runner.temp }}/.dssrip2/lib'
           elif [ "$RUNNER_OS" == "Windows" ]; then
-            7z e $MVN_TEMP_REPO/mil/army/usace/hec/javaHeclib/7-IQ-11-win-x86_64/javaHeclib-7-IQ-11-win-x86_64.zip \
-              -o$DSS_HOME_CI/lib
+            7z e '${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-win-x86_64/javaHeclib-7-IQ-11-win-x86_64.zip' \
+              -o'${{ runner.temp }}/.dssrip2/lib'
           elif [ "$RUNNER_OS" == "macOS" ]; then
-            7z e $MVN_TEMP_REPO/mil/army/usace/hec/javaHeclib/7-IQ-11-macOS-x86_64/javaHeclib-7-IQ-11-macOS-x86_64.zip \
-              -o$DSS_HOME_CI/lib
+            7z e '${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-macOS-x86_64/javaHeclib-7-IQ-11-macOS-x86_64.zip' \
+              -o'${{ runner.temp }}/.dssrip2/lib'
           else
             echo "$RUNNER_OS not supported"
             exit 1
           fi
+          echo "DSS_HOME_CI='${{ runner.temp }}/.dssrip2'" >> $GITHUB_ENV
           echo ::endgroup::
         shell: bash
   
