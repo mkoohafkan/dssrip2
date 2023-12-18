@@ -101,7 +101,7 @@ jobs:
             echo "$RUNNER_OS not supported"
             exit 1
           fi
-          echo "DSS_HOME_CI='${{ runner.temp }}'/.dssrip2" >> $GITHUB_ENV
+          echo "DSS_HOME_CI=${{ runner.temp }}/.dssrip2" >> $GITHUB_ENV
           echo ::endgroup::
         shell: bash
   
