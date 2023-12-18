@@ -93,7 +93,7 @@ jobs:
             '${{ runner.temp }}/temp_repo/com/google/flogger/flogger-system-backend/0.7.4/flogger-system-backend-0.7.4.jar' \
             '${{ runner.temp }}/temp_repo/com/google/flogger/flogger/0.7.4/flogger-0.7.4.jar' \
             '${{ runner.temp }}/temp_repo/mil/army/usace/hec/hecnf/6.0.00.100/hecnf-6.0.00.100.jar' \
-           ' ${{ runner.temp }}/.dssrip2/jar'
+            '${{ runner.temp }}/.dssrip2/jar'
           if [ "$RUNNER_OS" == "Linux" ]; then
             7z e '${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/7-IQ-11-linux-x86_64/javaHeclib-7-IQ-11-linux-x86_64.zip' \
               -o'${{ runner.temp }}/.dssrip2/lib'
