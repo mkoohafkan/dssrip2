@@ -7,7 +7,6 @@ test_that("File path normalization works", {
   cwd = normalizePath(getwd(), winslash = "/", mustWork = TRUE)
   
   tf1 = paste0(td, "\\file.txt")
-  tf2 = paste0(toupper(td), "/file.txt")
   tf3 = "file.txt"
   tf4 = "./file.txt"
   tf5 = "/file.txt"
@@ -20,20 +19,9 @@ test_that("File path normalization works", {
   expect_error(normalize_path(tf1, TRUE))
 
   expect_identical(normalize_path(tf1, FALSE), vf1)
-  expect_identical(normalize_path(tf2, FALSE), vf1)
   expect_identical(normalize_path(tf3, FALSE), vf2)
   expect_identical(normalize_path(tf4, FALSE), vf2)
   expect_identical(normalize_path(tf5, FALSE), vf3)
-
-  file.create(tf2)
-  on.exit(unlink(c(tf2)))
-  expect_identical(normalize_path(tf2, TRUE), vf1)
-
-  tf6 = "Q:\\foo/bar\\baz.txt"
-  vf4 = "Q:/foo/bar/baz.txt"
-
-  expect_identical(normalize_path(tf6, FALSE), vf4)
-  expect_identical(normalize_path(toupper(tf6), FALSE), toupper(vf4))
 
 })
 

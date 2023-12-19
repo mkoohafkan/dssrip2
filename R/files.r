@@ -59,10 +59,11 @@
 #' @keywords internal
 normalize_path = function(filename, exists) {
   sep = "/"
+  filename = gsub("\\\\", sep, filename)
   if (exists || file.exists(filename)) {
     normalizePath(filename, winslash = sep, mustWork = TRUE)
   } else if (dirname(filename) == filename) {
-    file.path(filename)
+    file.path(dirname(filename), basename(filename), fsep = sep)
   } else {
     normalizePath(file.path(Recall(dirname(filename), exists),
       basename(filename), fsep = sep), winslash = sep,
