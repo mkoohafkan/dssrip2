@@ -24,7 +24,8 @@ dss_message_level = function(message_level) {
 #' @rdname dss_connect
 #' @export
 dss_require = function(dss_home = getOption("dss.home"),
-  message_level = getOption("dss.messagelevel"), monolith = TRUE,
+  message_level = getOption("dss.messagelevel"),
+  monolith = getOption("dss.monolith"),
   quietly = TRUE) {
   result = try(dss_connect(dss_home, message_level, monolith, quietly),
     silent = TRUE)
