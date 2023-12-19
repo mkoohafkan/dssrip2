@@ -14,12 +14,12 @@ test_that("NA fill works", {
 
 test_that("DSS timezone works", {
 
-  expect_equal(dss_timezone(""), "etc/GMT+0")
-  expect_equal(dss_timezone(NULL), "etc/GMT+0")
-  expect_equal(dss_timezone(0), "etc/GMT+0")
-  expect_warning(expect_equal(dss_timezone(3600), "etc/GMT+0"))
-  expect_equal(dss_timezone(3600e3), "etc/GMT-1")
-  expect_equal(dss_timezone(-3600e3), "etc/GMT+1")
+  expect_equal(dss_timezone(""), "Etc/GMT+0")
+  expect_equal(dss_timezone(NULL), "Etc/GMT+0")
+  expect_equal(dss_timezone(0), "Etc/GMT+0")
+  expect_warning(expect_equal(dss_timezone(3600), "Etc/GMT+0"))
+  expect_equal(dss_timezone(3600e3), "Etc/GMT-1")
+  expect_equal(dss_timezone(-3600e3), "Etc/GMT+1")
   expect_error(dss_timezone(Inf))
   expect_error(dss_timezone(NA))
 
@@ -28,12 +28,12 @@ test_that("DSS timezone works", {
 
 test_that("DSS timestamp extraction works", {
 
-  expect_equal(dss_timezone(""), "etc/GMT+0")
-  expect_equal(dss_timezone(NULL), "etc/GMT+0")
-  expect_equal(dss_timezone(0), "etc/GMT+0")
-  expect_warning(expect_equal(dss_timezone(3600), "etc/GMT+0"))
-  expect_equal(dss_timezone(3600e3), "etc/GMT-1")
-  expect_equal(dss_timezone(-3600e3), "etc/GMT+1")
+  expect_equal(dss_timezone(""), "Etc/GMT+0")
+  expect_equal(dss_timezone(NULL), "Etc/GMT+0")
+  expect_equal(dss_timezone(0), "Etc/GMT+0")
+  expect_warning(expect_equal(dss_timezone(3600), "Etc/GMT+0"))
+  expect_equal(dss_timezone(3600e3), "Etc/GMT-1")
+  expect_equal(dss_timezone(-3600e3), "Etc/GMT+1")
   expect_error(dss_timezone(Inf))
   expect_error(dss_timezone(NA))
 

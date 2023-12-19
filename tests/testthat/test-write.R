@@ -6,8 +6,8 @@ test_that("time series writing works", {
   dss_create(tf)
 
   d = data.frame(
-    datetime = seq(as.POSIXct("2021-01-01", tz = "etc/GMT+0"),
-      as.POSIXct("2021-01-05", tz = "etc/GMT+0"), by = "1 day"),
+    datetime = seq(as.POSIXct("2021-01-01", tz = "Etc/GMT+0"),
+      as.POSIXct("2021-01-05", tz = "Etc/GMT+0"), by = "1 day"),
     flow = c(10, 12, NA, 13, 10) * 1000
   )
   attr(d, "dss_attributes") = list(type = "PER-AVER", units = "cfs")
@@ -88,8 +88,8 @@ test_that("grid data writing works", {
 test_that("deleting records works", {
   on.exit(dss_close_all(), add = TRUE)
   d = data.frame(
-    datetime = seq(as.POSIXct("2021-01-01", tz = "etc/GMT+0"),
-      as.POSIXct("2021-01-05", tz = "etc/GMT+0"), by = "1 day"),
+    datetime = seq(as.POSIXct("2021-01-01", tz = "Etc/GMT+0"),
+      as.POSIXct("2021-01-05", tz = "Etc/GMT+0"), by = "1 day"),
     flow = c(10, 12, NA, 13, 10) * 1000
   )
   attr(d, "dss_attributes") = list("type" = "PER-AVER", units = "cfs")

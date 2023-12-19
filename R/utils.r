@@ -24,7 +24,7 @@ dss_times_to_posix = function(times, info) {
 #'
 #' @param tzoffset The DSS object's "timeZoneRawOffset" attribute
 #'   (time offset in milliseconds).
-#' @return An R timezone string in format "etc/GMT*".
+#' @return An R timezone string in format "Etc/GMT*".
 #'
 #' @keywords internal
 dss_timezone = function(tzoffset) {
@@ -37,7 +37,7 @@ dss_timezone = function(tzoffset) {
   }
   offset_hours = tzoffset %/% 3600000L
   tzsign = ifelse(offset_hours > 0L, "-", "+")
-  paste0("etc/GMT", tzsign, abs(offset_hours))
+  paste0("Etc/GMT", tzsign, abs(offset_hours))
 }
 
 

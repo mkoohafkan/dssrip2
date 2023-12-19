@@ -217,7 +217,7 @@ lake_huron = dss_add_attributes(lake_huron, list(units = "feet",
 
 dss_write(lake_huron, outfile, lake_huron_path)
 #> Warning: Converting supplied timestamps to 'POSIXct' class, using default
-#> timezone etc/GMT+0
+#> timezone Etc/GMT+0
 
 # create an irregular timeseries from the airquality dataset
 data(airquality)
@@ -234,7 +234,7 @@ temps = dss_add_attributes(temps, list(units = "degrees F",
 
 dss_write(temps, outfile, temps_path)
 #> Warning: Converting supplied timestamps to 'POSIXct' class, using default
-#> timezone etc/GMT+0
+#> timezone Etc/GMT+0
 
 # create paired dataset from the Loblolly dataset
 data(Loblolly)
