@@ -8,7 +8,7 @@
 dss_require(
   dss_home = getOption("dss.home"),
   message_level = getOption("dss.messagelevel"),
-  monolith = TRUE,
+  monolith = getOption("dss.monolith"),
   quietly = TRUE
 )
 
