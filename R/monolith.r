@@ -206,7 +206,7 @@ asset_query_nexus = function(artifactId,
       x[["downloadUrl"]]),
     checksum.sha1 = sapply(assets, function(x)
       x[[c("checksum", "sha1")]])
-    )
+  )
 }
 
 
@@ -215,36 +215,26 @@ asset_query_nexus = function(artifactId,
 #' Download the HEC Monolith Libraries.
 #'
 #' @param install_path The directory to download the monolith libraries to.
+#' @param requirements_file The list of required assets. For expert use only.
 #' @param overwrite If `TRUE`, delete any existing data in
 #'   `install_path` and recreate.
-#' @param requirements_file The list of required assets. For expert use only.
 #'
 #' @seealso [dss_connect()]
 #'
 #' @importFrom utils packageName
+#' @importFrom httr GET write_disk
+#' @importFrom utils unzip
+#' @importFrom digest digest
 #' @export
-dss_install_monolith = function(install_path, overwrite = TRUE, requirements_file) {
+dss_install_monolith = function(install_path, requirements_file, overwrite = TRUE) {
+  if (missing(install_path)) {
+    install_path = monolith_default_dir()
+  }
   if (missing(requirements_file)) {
     requirements_file = system.file("requirements.yaml",
       package = packageName())
   }
   assets = monolith_assets(requirements_file)
-  if (.Platform$OS.type == "windows") {
-    dss_install_monolith_win(assets, install_path, overwrite)
-  } else {
-    dss_install_monolith_unix(assets, install_path, overwrite)
-  }
-}
-
-#' @rdname dss_install_monolith
-#' @importFrom httr GET write_disk
-#' @importFrom utils unzip
-#' @importFrom digest digest
-#' @keywords internal
-dss_install_monolith_win = function(assets, install_path, overwrite) {
-  if (missing(install_path)) {
-    install_path = monolith_default_dir()
-  }
   lib_path = normalizePath(file.path(install_path, "lib"),
     mustWork = FALSE)
   jar_path = normalizePath(file.path(install_path, "jar"),
@@ -281,10 +271,4 @@ dss_install_monolith_win = function(assets, install_path, overwrite) {
     unlink(zf)
   }
   invisible()
-}
-
-#' @rdname dss_install_monolith
-#' @keywords internal
-dss_install_monolith_unix = function(assets, install_path, overwrite) {
-  stop("Linux/MacOS is not currently supported.")
 }

@@ -2,23 +2,17 @@
 % Please edit documentation in R/monolith.r
 \name{dss_install_monolith}
 \alias{dss_install_monolith}
-\alias{dss_install_monolith_win}
-\alias{dss_install_monolith_unix}
 \title{Install Monolith}
 \usage{
-dss_install_monolith(install_path, overwrite = TRUE, requirements_file)
-
-dss_install_monolith_win(assets, install_path, overwrite)
-
-dss_install_monolith_unix(assets, install_path, overwrite)
+dss_install_monolith(install_path, requirements_file, overwrite = TRUE)
 }
 \arguments{
 \item{install_path}{The directory to download the monolith libraries to.}
 
+\item{requirements_file}{The list of required assets. For expert use only.}
+
 \item{overwrite}{If \code{TRUE}, delete any existing data in
 \code{install_path} and recreate.}
-
-\item{requirements_file}{The list of required assets. For expert use only.}
 }
 \description{
 Download the HEC Monolith Libraries.
@@ -26,4 +20,3 @@ Download the HEC Monolith Libraries.
 \seealso{
 \code{\link[=dss_connect]{dss_connect()}}
 }
-\keyword{internal}

@@ -8,13 +8,15 @@
 dss_require(
   dss_home = getOption("dss.home"),
   message_level = getOption("dss.messagelevel"),
-  monolith = TRUE
+  monolith = TRUE,
+  quietly = TRUE
 )
 
 dss_connect(
   dss_home = getOption("dss.home"),
   message_level = getOption("dss.messagelevel"),
-  monolith = getOption("dss.monolith")
+  monolith = getOption("dss.monolith"),
+  quietly = FALSE
 )
 }
 \arguments{
@@ -24,6 +26,8 @@ dss_connect(
 Default is 2L. Use 1L to suppress all messages from DSS.}
 
 \item{monolith}{If \code{TRUE}, connect to HEC-Monolith libraries.}
+
+\item{quietly}{If \code{TRUE}, suppress warnings regarding the JVM.}
 }
 \description{
 Connect to DSS via the JVM.

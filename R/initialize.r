@@ -24,8 +24,10 @@ dss_message_level = function(message_level) {
 #' @rdname dss_connect
 #' @export
 dss_require = function(dss_home = getOption("dss.home"),
-  message_level = getOption("dss.messagelevel"), monolith = TRUE) {
-  result = suppressWarnings(try(dss_connect(dss_home), silent = TRUE))
+  message_level = getOption("dss.messagelevel"), monolith = TRUE,
+  quietly = TRUE) {
+  result = try(dss_connect(dss_home, message_level, monolith, quietly),
+    silent = TRUE)
   if (inherits(result, "try-error")) {
     invisible(FALSE)
   } else {
@@ -41,7 +43,7 @@ dss_require = function(dss_home = getOption("dss.home"),
 #' @param dss_home The path to the HEC-DSS install folder.
 #' @inheritParams dss_message_level
 #' @param monolith If `TRUE`, connect to HEC-Monolith libraries.
-#'
+#' @param quietly If `TRUE`, suppress warnings regarding the JVM.
 #' @details both [dss_connect()] and [dss_require()] configure the JVM
 #'   to use the HEC-DSS Java library. [dss_require()] is designed for
 #'   use inside other packages; it returns `FALSE` and gives a
@@ -60,7 +62,8 @@ dss_require = function(dss_home = getOption("dss.home"),
 #' @export
 dss_connect = function(dss_home = getOption("dss.home"),
   message_level = getOption("dss.messagelevel"),
-  monolith = getOption("dss.monolith")) {
+  monolith = getOption("dss.monolith"),
+  quietly = FALSE) {
 
   monolith = isTRUE(monolith)
   if (is.null(dss_home) && monolith) {
@@ -90,7 +93,8 @@ dss_connect = function(dss_home = getOption("dss.home"),
   assign("DSS_CONNECTED", TRUE, hecJavaConnectionDB)
 
   # check JVM memory
-  if (J("java.lang.Runtime")$getRuntime()$totalMemory()*1e-6 < 1000) {
+  java_mem = J("java.lang.Runtime")$getRuntime()$totalMemory()*1e-6
+  if (java_mem < 1000 && isFALSE(quietly)) {
     warning("JVM was initialized with less than 1GB total memory ",
       "which is likely not sufficient for DSS file operations. ",
       "See 'vignette(\"java-parameters\", package = \"dssrip2\")' ",
