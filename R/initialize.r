@@ -78,6 +78,9 @@ dss_connect = function(dss_home = getOption("dss.home"),
   } else if (.Platform$OS.type == "unix") {
     hec_lib_path = normalizePath(file.path(dss_home, "lib",
       "libjavaHeclib.so"), mustWork = TRUE)
+  } else if (.Platform$OS.type == "macOS") {
+    hec_lib_path = normalizePath(file.path(dss_home, "lib",
+      "libjavaHeclib.dylib"), mustWork = TRUE)
   } else {
     stop(.Platform$OS.type, " platform not supported.")
   }
