@@ -78,11 +78,11 @@ dss_connect = function(dss_home = getOption("dss.home"),
   } else if (Sys.info()[["sysname"]] == "Linux") {
     hec_lib_path = normalizePath(file.path(dss_home, "lib",
       "libjavaHeclib.so"), mustWork = TRUE)
-  } else if (Sys.info()[["sysname"]] == "macOS") {
+  } else if (Sys.info()[["sysname"]] == "Darwin") {
     hec_lib_path = normalizePath(file.path(dss_home, "lib",
       "libjavaHeclib.dylib"), mustWork = TRUE)
   } else {
-    stop(.Platform$OS.type, " platform not supported.")
+    stop(Sys.info()[["sysname"]], " platform not supported.")
   }
   # get jar paths
   jar_paths = get_jars(dss_home, monolith)
