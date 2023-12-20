@@ -72,14 +72,15 @@ dss_connect = function(dss_home = getOption("dss.home"),
   }
 
   # get path to heclib
-  if (.Platform$OS.type == "windows") {
+  if (Sys.info()[["sysname"]] == "Windows") {
     hec_lib_path = normalizePath(file.path(dss_home, "lib",
-        "javaHeclib.dll"),
-      mustWork = TRUE)
-  } else if (.Platform$OS.type == "unix") {
+      "javaHeclib.dll"), mustWork = TRUE)
+  } else if (Sys.info()[["sysname"]] == "Linux") {
     hec_lib_path = normalizePath(file.path(dss_home, "lib",
-        sprintf("libjavaHeclib%s", .Platform$dynlib.ext)),
-      mustWork = TRUE)
+      "libjavaHeclib.so"), mustWork = TRUE)
+  } else if (Sys.info()[["sysname"]] == "macOS") {
+    hec_lib_path = normalizePath(file.path(dss_home, "lib",
+      "libjavaHeclib.dylib"), mustWork = TRUE)
   } else {
     stop(.Platform$OS.type, " platform not supported.")
   }
