@@ -6,13 +6,21 @@
   <!-- badges: end -->
 
 A rewrite of [`dssrip`](https://github.com/eheisman/dssrip). Supports
-reading and writing time series and paired data to DSS. OSX support
-and read/write support for DSS grid data is planned.
+reading and writing time series and paired data to DSS.
+Read/write support for DSS grid data is planned.
+
+Supported Operating Systems:
+- Windows
+- Linux
+- MacOS
+
+Supported HEC-DSSVue versions:
+- HEC-DSSVue 2.0.1
 
 
 ## Setup
 
-You can install the `dssrip2` directly using
+You can install the `{dssrip2}` directly using
 
 ```r
 remotes::install_github("mkoohafkan/dssrip2")
@@ -20,12 +28,21 @@ remotes::install_github("mkoohafkan/dssrip2")
 
 ### Monolith
 
-`dssrip2` can connect to HEC-Monolith libraries using
+`{dssrip2}` can connect to HEC-Monolith libraries using
 
 ```r
 dss_install_monolith()
 dss_connect(monolith = TRUE)
 ```
+
+If the option `dss.monolith` is set to `TRUE`,
+`{dssrip2}` will interpret the
+`dss.home` option as the HEC-Monolith directory path.
+By default, `{dssrip2}` will install HEC-Monolith to
+`%LOCALAPPDATA%` (Windows) or `~/.dssrip2/monolith` (Unix),
+but this can be overridden.
+`dss_connect()` will retrieve the path using `getOption("dss.home")` 
+if no path is provided. 
 
 To use Monolith automatically, set the following
 options in your R profile:
@@ -34,14 +51,10 @@ options in your R profile:
 options(dss.monolith = TRUE)
 ```
 
-By default, `dssrip2` will install HEC-Monolith to your
-`%LOCALAPPDATA%` folder, but this can be overridden. If the option
-`dss.monolith` is set to `TRUE`, `dssrip2` will interpret the
-`dss.home` option as the HEC-Monolith directory path.
 
 ### Existing HEC-DSSVue install
 
-If you don't want to use the HEC-Monolith libraries, `dssrip2` can
+If you don't want to use the HEC-Monolith libraries, `{dssrip2}` can
 connect to an existing HEC-DSSVue program installation instead.
 To use this option, both a 64-bit install of HEC-DSSVue and a 64-bit
 JDK are required. To load DSS functionality, call
@@ -51,8 +64,21 @@ library(dssrip2)
 dss_connect("path/to/HEC-DSSVue")
 ```
 
-`dss_connect()` will retrieve the path using `getOption("dss.home")` 
-if no path is provided. 
+If the option `dss.monolith` is set to `FALSE` (the default),
+`{dssrip2}` will interpret the `dss.home` option as the 
+HEC-DSSVue application directory path.
+
+To use an HEC-DSSVue installation automatically,
+set the following option in your R profile:
+
+```r
+options(
+  # replace with the install path on your machine
+  dss.home = "C:/Program Files/HEC/HEC-DSSVue"
+)
+```
+
+## DSS Messaging
 
 To suppress messages from DSS, use
 
@@ -64,15 +90,11 @@ dss_message_level(1L)
 ```
 
 If no message level is provided, `dss_message_level()` will retrieve
-the level using `getOption("dss.messagelevel")`.
-
-You can set either or both of these options in your `.Rprofile`:
+the level using `getOption("dss.messagelevel")`. You can also set
+this option in your `.Rprofile`:
 
 ```r
-# paste this into .Rprofile
-# (replace with the install path on your machine)
 options(
-  dss.home = "C:/Program Files/HEC/HEC-DSSVue",
   dss.messagelevel = 1L
 )
 ```
@@ -82,7 +104,7 @@ options(
 
 ### Creating Files
 
-`dssrip2` can create DSS version 6 and 7 files:
+`{dssrip2}` can create DSS version 6 and 7 files:
 
 ```r
 tf1 = tempfile(fileext = ".dss")
@@ -94,7 +116,7 @@ dss_create(tf1)
 dss_create(tf2, version = 6)
 ```
 
-`dssrip2` also provides methods to convert between DSS versions:
+`{dssrip2}` also provides methods to convert between DSS versions:
 
 ```r
 tf3 = tempfile(fileext = ".dss")
@@ -104,7 +126,7 @@ dss_convert(tf2, tf3)
 
 ### Reading data
 
-`dssrip2` automatically detects the data type being read, so the same
+`{dssrip2}` automatically detects the data type being read, so the same
 function call can be used for reading time series and paired data.
 
 ```r
@@ -128,7 +150,7 @@ dss_close(exfile)
 
 ### Writing data
 
-`dssrip2` deduces the data type to write based on the supplied
+`{dssrip2}` deduces the data type to write based on the supplied
 R object, so the same function call can be used for reading time
 series and paired data. However, writing DSS objects requires
 additional attributes that must be explicitly supplied by the user:
