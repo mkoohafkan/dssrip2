@@ -1,9 +1,10 @@
 # DSS R Interface Project (2)
 
-  <!-- badges: start -->
-  ![CRAN Release](https://www.r-pkg.org/badges/version-last-release/dssrip2)
-  [![R-CMD-check](https://github.com/mkoohafkan/dssrip2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mkoohafkan/dssrip2/actions/workflows/R-CMD-check.yaml)
-  <!-- badges: end -->
+<!-- badges: start -->
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dssrip2)](http://cran.r-project.org/package=dssrip2)
+[![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![R-CMD-check](https://github.com/mkoohafkan/dssrip2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mkoohafkan/dssrip2/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 
 A rewrite of [`dssrip`](https://github.com/eheisman/dssrip). Supports
 reading and writing time series and paired data to DSS.
