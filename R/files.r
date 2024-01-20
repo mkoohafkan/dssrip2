@@ -15,27 +15,64 @@
 #'  correctly.
 #'
 #' @importFrom rJava .jcall
+#' @importFrom lubridate now
 #' @keywords internal
 .file_store <- function() {
   .file_list <- list()
-
+  .catalog_list <- list()
   list(
-    get = function(filepath) {
-      .file_list[[filepath]]
-    },
-    set = function(filepath, ...) {
+    handle = function(filepath, ...) {
       if (is.null(.file_list[[filepath]])) {
+        # create file handle if it doesn't already exist
         .file_list[[filepath]] <<- .jcall("hec/heclib/dss/HecDss",
           "Lhec/heclib/dss/HecDss;", method = "open", filepath, ...)
         .file_list[[filepath]]$done()
+        attr(.file_list[[filepath]], "cachetime") <<- now("UTC")
+        # initialize catalog
+        .catalog_list[[filepath]] <<- list()
       }
+      .file_list[[filepath]]
     },
     drop = function(filepath) {
       .file_list[[filepath]]$close()
       .file_list[[filepath]] <<- NULL
+      .catalog_list[[filepath]] <<- NULL
     },
     list = function() {
       names(.file_list)
+    },
+    catalog = function(filepath, condensed, rebuild) {
+      if (condensed) {
+        type = "condensed"
+      } else {
+        type = "full"
+      }
+      if (rebuild) {
+        .catalog_list[[c(filepath, type)]] <<- NULL
+      }
+      if (is.null(.catalog_list[[c(filepath, type)]])) {
+        if (type == "condensed") {
+            paths = .jevalArray(.file_list[[filepath]]$getCondensedCatalog()$toArray())
+        } else {
+            paths = .jevalArray(.file_list[[filepath]]$getCatalogedPathnames(rebuild)$toArray())
+        }
+        .file_list[[filepath]]$done()
+        .catalog_list[[c(filepath, type)]] <<- sapply(paths, .jcall,
+          returnSig = "S", "toString")
+        attr(.catalog_list[[c(filepath, type)]], "cachetime") <<- now("UTC")
+      }
+      .catalog_list[[c(filepath, type)]]
+    },
+    list_catalog = function(condensed) {
+      if (condensed) {
+        type = "condensed"
+      } else {
+        type = "full"
+      }
+      names(.catalog_list)[vapply(.catalog_list, function(x) type %in% names(x), TRUE)]
+    },
+    touch = function(filepath) {
+      attr(.file_list[[filepath]], "cachetime") <<- now("UTC")
     }
   )
 }
@@ -85,10 +122,7 @@ normalize_path = function(filename, exists) {
 #' @keywords internal
 dss_file = function(filename, exists = TRUE, ...) {
   filename = normalize_path(filename, exists)
-  if (!(filename %in% .store$list())) {
-    .store$set(filename, ...)
-  }
-  .store$get(filename)
+  .store$handle(filename, ...)
 }
 
 
