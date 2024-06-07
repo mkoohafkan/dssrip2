@@ -97,7 +97,7 @@ dss_connect = function(dss_home = getOption("dss.home"),
   assign("DSS_CONNECTED", TRUE, hecJavaConnectionDB)
 
   # check JVM memory
-  java_mem = J("java.lang.Runtime")$getRuntime()$totalMemory()*1e-6
+  java_mem = J("java.lang.Runtime")$getRuntime()$maxMemory() * 1e-6
   if (java_mem < 1000 && isFALSE(quietly)) {
     warning("JVM was initialized with less than 1GB total memory ",
       "which is likely not sufficient for DSS file operations. ",

@@ -27,6 +27,8 @@ You can install the `{dssrip2}` directly using
 remotes::install_github("mkoohafkan/dssrip2")
 ```
 
+To build the vignettes on install, use the argument `build_vignettes = TRUE`.
+
 ### Monolith
 
 `{dssrip2}` can connect to HEC-Monolith libraries using
