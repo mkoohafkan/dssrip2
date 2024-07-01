@@ -125,7 +125,7 @@ dss_times_from_posix = function(datetimes, dss_interval) {
   if (grepl("^[0-9]MIN$", dss_interval)) {
     base_interval = as.integer(gsub("MIN$", "", dss_interval)) * 60L
     expected_interval = base_interval
-  } else if(grepl("^[0-9]HOUR$", dss_interval)) {
+  } else if (grepl("^[0-9]HOUR$", dss_interval)) {
     base_interval = as.integer(gsub("HOUR$", "", dss_interval)) * 3600L
     expected_interval = base_interval
   } else if (grepl("^1DAY$", dss_interval)) {
@@ -211,6 +211,15 @@ as_hectime = function(x, granularity_seconds) {
 #' @keywords internal
 dss_to_timeseries = function(d, dss_interval) {
   formatted_times = format_datetimes(d[[1]])
+  if (any(diff(formatted_times) < 0)) {
+    first_sequence = which(diff(formatted_times) < 0)[1] + c(-1, 0, 1)
+    stop("Unordered timeseries detected. First unordered sequence: ",
+      paste(d[first_sequence, 1], collapse = ", "))
+  } else if (any(duplicated(formatted_times))) {
+    first_sequence = which(duplicated(formatted_times))[1] + c(-1, 0, 1)
+    stop("duplicate times detected. First duplicate: ",
+      paste(d[first_sequence, 1], collapse = ", "))
+  }
   # build time series object
   tsObj = .jnew("hec.io.TimeSeriesContainer")
   attributes = attr(d, "dss_attributes")
@@ -219,15 +228,12 @@ dss_to_timeseries = function(d, dss_interval) {
   # get time properties
   dsstimes = dss_times_from_posix(formatted_times, dss_interval)
   tsObj$setTimeGranularitySeconds(dsstimes$timeGranularitySeconds)
-  tsObj$setTimes(dsstimes$times)
-  tsObj$setStartTime(as_hectime(min(formatted_times),
-    dsstimes$timeGranularitySeconds))
-  tsObj$setEndTime(as_hectime(max(formatted_times),
-    dsstimes$timeGranularitySeconds))
-  # value properties
   tsObj$setUnits(attributes[["units"]])
   tsObj$setType(attributes[["type"]])
-  tsObj$setValues(na_to_java(as.numeric(d[[2]])))
+  tsObj$set(
+    na_to_java(as.numeric(d[[2]])),
+    dsstimes$times
+  )
 
   tsObj
 }

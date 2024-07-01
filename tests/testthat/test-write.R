@@ -17,7 +17,7 @@ test_that("time series writing works", {
   expect_error(dss_write(d, tempfile(fileext = ".dss"), path1))
   
   expect_true(dss_write(d, tf, path))
-  expect_identical(d, dss_read(tf, path))
+  expect_identical(dss_read(tf, path), d)
 
   d2 = d
   attr(d2, "dss_attributes") = NULL
@@ -27,8 +27,18 @@ test_that("time series writing works", {
   if (requireNamespace("tibble")) {
     path2 = "/Fake Creek/Fake Town/FLOW//1DAY/FAKE2/"
     expect_true(dss_write(tibble::as_tibble(d), tf, path2))
-    expect_identical(d, dss_read(tf, path2))
+    expect_identical(dss_read(tf, path2), d)
   }
+
+
+  # unit test: catch unordered timeseries (submitted by Rachael Marzion)
+  d3 = data.frame(datetime = as.POSIXct(c(1230811200, 1230813000,
+        1230771600, 1230773400, 1230775200, 1230777000), tz = "GMT"),
+    elev = c(106.9, 106.95, 107.05, 107.1, 107.15, 107.25))
+  attr(d3, "dss_attributes") = list(type = "INST-VAL", units = "ft")
+  path3 = "/DCR Ops Data/Boston, MA/ELEV//30MIN/Basin Elev (ft MDC)/"
+  expect_error(dss_write(d3, tf, path3))
+
 })
 
 
