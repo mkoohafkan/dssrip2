@@ -31,13 +31,23 @@ test_that("time series writing works", {
   }
 
 
-  # unit test: catch unordered timeseries (submitted by Rachael Marzion)
+  # catch unordered timeseries (submitted by Rachael Marzion)
   d3 = data.frame(datetime = as.POSIXct(c(1230811200, 1230813000,
         1230771600, 1230773400, 1230775200, 1230777000), tz = "GMT"),
     elev = c(106.9, 106.95, 107.05, 107.1, 107.15, 107.25))
   attr(d3, "dss_attributes") = list(type = "INST-VAL", units = "ft")
   path3 = "/DCR Ops Data/Boston, MA/ELEV//30MIN/Basin Elev (ft MDC)/"
   expect_error(dss_write(d3, tf, path3))
+
+  # catch duplicate timestamps
+  d4 = data.frame(datetime = as.POSIXct(c(1230811200, 1230813000,
+        1230814800, 1230814800, 1230816600, 1230818400), tz = "GMT"),
+    elev = c(106.9, 106.95, 107.05, 107.1, 107.15, 107.25))
+  attr(d4, "dss_attributes") = list(type = "INST-VAL", units = "ft")
+  path4 = "/DCR Ops Data/Boston, MA/ELEV//30MIN/Basin Elev (ft MDC)/"
+  expect_error(dss_write(d4, tf, path4))
+
+
 
 })
 
