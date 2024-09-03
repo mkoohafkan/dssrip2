@@ -1,7 +1,7 @@
 # DSS R Interface Project (2)
 
 <!-- badges: start -->
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/dssrip2)](http://cran.r-project.org/package=dssrip2)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/dssrip2)](http://cran.r-project.org/package=dssrip2)
 [![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![R-CMD-check](https://github.com/mkoohafkan/dssrip2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mkoohafkan/dssrip2/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
