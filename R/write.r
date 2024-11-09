@@ -22,6 +22,7 @@
 dss_delete = function(filename, path, full = TRUE, squeeze = FALSE) {
   assert_dss_connected()
   assert_path_format(path)
+  filename = normalize_path(filename, TRUE)
   file = dss_file(filename)
   on.exit(file$done(), add = TRUE)
   if (full) {
@@ -42,7 +43,7 @@ dss_delete = function(filename, path, full = TRUE, squeeze = FALSE) {
   if (squeeze) {
     dss_squeeze(filename)
   }
-  dss_catalog(filename, condensed = FALSE, rebuild = TRUE)
+  .store$touch(filename)
   invisible(TRUE)
 }
 
@@ -87,6 +88,7 @@ guess_dss_container = function(x) {
 dss_write = function(x, filename, path) {
   assert_write_support(x)
   assert_path_format(path)
+  filename = normalize_path(filename, TRUE)
   file = dss_file(filename)
   on.exit(file$done(), add = TRUE)
   class_name = guess_dss_container(x)
@@ -99,6 +101,7 @@ dss_write = function(x, filename, path) {
   )
   dssObj$setFullName(path)
   file$put(dssObj)
+  .store$touch(filename)
   invisible(TRUE)
 }
 
