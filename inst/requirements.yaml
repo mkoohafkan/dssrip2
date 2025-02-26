@@ -10,3 +10,5 @@ windows:
   - { artifactId: javaHeclib, version : 7-IQ-11-win-x86_64 }
 linux:
   - { artifactId: javaHeclib, version : 7-IQ-11-linux-x86_64 }
+darwin: # OSX
+  - { artifactId: javaHeclib, version : 7-IQ-11-macOS-x86_64 }
