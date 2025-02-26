@@ -5,14 +5,20 @@
 #' @keywords internal
 monolith_default_dir = function() {
   if (.Platform$OS.type == "windows") {
-    normalizePath(file.path(Sys.getenv("LOCALAPPDATA"), "dssrip2",
-      "monolith"), mustWork = FALSE)
+    normalizePath(
+      file.path(Sys.getenv("LOCALAPPDATA"), "dssrip2", "monolith"),
+      mustWork = FALSE
+    )
   } else {
-    normalizePath(file.path("~", ".dssrip2",
-      "monolith"), mustWork = FALSE)
+    normalizePath(
+      file.path("~", ".dssrip2", "monolith"),
+      mustWork = FALSE
+    )
   }
 }
 
+
+#' @rdname monolith_assets
 monolith_requirements = function(requirements_file) {
   all_requirements = read_yaml(requirements_file)
   os = tolower(Sys.info()[["sysname"]])
@@ -64,7 +70,7 @@ monolith_assets = function(requirements_file, stop_on_fail = TRUE) {
   if (any(missing_assets)) {
     msg = paste0("Could not find the following assets:\n",
       paste0("\t", paste(assets[["artifactId"]],
-        assets[["version"]])[missing_assets], collapse = "\n"))
+          assets[["version"]])[missing_assets], collapse = "\n"))
     if (stop_on_fail) {
       stop(msg)
     } else {
@@ -145,22 +151,29 @@ asset_query_maven = function(artifactId,
   results = GET(url, query = query_params)
   assets = content(results)$response$docs
 
-    data.frame(
-      groupId = sapply(assets, function(x)
-        x[["g"]]),
-      artifactId = sapply(assets, function(x)
-        x[["a"]]),
-      version = sapply(assets, function(x)
-        x[["v"]]),
-      id = sapply(assets, function(x)
-        x[["id"]]),
-      path = sapply(assets, function(x)
-        maven_path(x[["id"]], x[["p"]])),
-      downloadURL = sapply(assets, function(x)
-        maven_download_url(x[["id"]], x[["p"]])),
-      checksum.sha1 = sapply(assets, function(x)
-        maven_sha1(x[["id"]], x[["p"]]))
-    )
+  data.frame(
+    groupId = sapply(assets, function(x) {
+      x[["g"]]
+    }),
+    artifactId = sapply(assets, function(x) {
+      x[["a"]]
+    }),
+    version = sapply(assets, function(x) {
+      x[["v"]]
+    }),
+    id = sapply(assets, function(x) {
+      x[["id"]]
+    }),
+    path = sapply(assets, function(x) {
+      maven_path(x[["id"]], x[["p"]])
+    }),
+    downloadURL = sapply(assets, function(x) {
+      maven_download_url(x[["id"]], x[["p"]])
+    }),
+    checksum.sha1 = sapply(assets, function(x) {
+      maven_sha1(x[["id"]], x[["p"]])
+    })
+  )
 }
 
 
@@ -191,25 +204,33 @@ asset_query_nexus = function(artifactId,
   assets = content(results)$items
   continuation_token = content(results)$continuationToken
   while (!is.null(continuation_token)) {
-    results = GET(url, query = c(query_params, list(continuationToken = continuation_token)))
+    results = GET(url, query = c(query_params,
+        list(continuationToken = continuation_token)))
     assets = append(assets, content(results)$items)
     continuation_token = content(results)$continuationToken
   }
   data.frame(
-    groupId = sapply(assets, function(x)
-      x[[c("maven2", "groupId")]]),
-    artifactId = sapply(assets, function(x)
-      x[[c("maven2", "artifactId")]]),
-    version = sapply(assets, function(x)
-      x[[c("maven2", "version")]]),
-    id = sapply(assets, function(x)
-      x[["id"]]),
-    path = sapply(assets, function(x)
-      x[["path"]]),
-    downloadURL = sapply(assets, function(x)
-      x[["downloadUrl"]]),
-    checksum.sha1 = sapply(assets, function(x)
-      x[[c("checksum", "sha1")]])
+    groupId = sapply(assets, function(x) {
+      x[[c("maven2", "groupId")]]
+    }),
+    artifactId = sapply(assets, function(x) {
+      x[[c("maven2", "artifactId")]]
+    }),
+    version = sapply(assets, function(x) {
+      x[[c("maven2", "version")]]
+    }),
+    id = sapply(assets, function(x) {
+      x[["id"]]
+    }),
+    path = sapply(assets, function(x) {
+      x[["path"]]
+    }),
+    downloadURL = sapply(assets, function(x) {
+      x[["downloadUrl"]]
+    }),
+    checksum.sha1 = sapply(assets, function(x) {
+      x[[c("checksum", "sha1")]]
+    })
   )
 }
 
@@ -230,7 +251,8 @@ asset_query_nexus = function(artifactId,
 #' @importFrom utils unzip
 #' @importFrom digest digest
 #' @export
-dss_install_monolith = function(install_path, requirements_file, overwrite = TRUE) {
+dss_install_monolith = function(install_path, requirements_file,
+  overwrite = TRUE) {
   if (missing(install_path)) {
     install_path = monolith_default_dir()
   }
@@ -248,16 +270,19 @@ dss_install_monolith = function(install_path, requirements_file, overwrite = TRU
   } else {
     unlink(install_path, recursive = TRUE)
     if (!(dir.create(lib_path, recursive = TRUE) &&
-      dir.create(jar_path, recursive = TRUE))) {
+          dir.create(jar_path, recursive = TRUE))) {
       stop("Could not create directory ", install_path)
     }
   }
 
   # download assets
   assets["outputDirectory"] = normalizePath(
-    file.path(ifelse(grepl(".jar$", assets$downloadURL),
-      jar_path, lib_path),
-    basename(assets$downloadURL)), mustWork = FALSE)
+    file.path(
+      ifelse(grepl(".jar$", assets$downloadURL), jar_path, lib_path),
+      basename(assets$downloadURL)
+    ),
+    mustWork = FALSE
+  )
   for (i in seq_len(nrow(assets))) {
     GET(assets[["downloadURL"]][i],
       write_disk(assets[["outputDirectory"]][i], overwrite = FALSE))
@@ -265,7 +290,7 @@ dss_install_monolith = function(install_path, requirements_file, overwrite = TRU
     checksum = digest(assets[["outputDirectory"]][i], "sha1", file = TRUE)
     if (!identical(checksum, assets[["checksum.sha1"]][i])) {
       stop("Error downloading ", assets[["outputDirectory"]][i],
-      ": SHA1 checksums do not match.")
+        ": SHA1 checksums do not match.")
     }
   }
   # unzip zip files

@@ -1,9 +1,8 @@
 test_that("path list works", {
-  
   skip_if_no_dss()
 
   on.exit(dss_close_all(), add = TRUE)
-  
+
   exfile = system.file("extdata/example.dss", package = "dssrip2")
 
   all_paths = dss_catalog(exfile, pattern = "*", condensed = FALSE)
