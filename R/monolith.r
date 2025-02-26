@@ -16,6 +16,10 @@ monolith_default_dir = function() {
 monolith_requirements = function(requirements_file) {
   all_requirements = read_yaml(requirements_file)
   os = tolower(Sys.info()[["sysname"]])
+  if (!(os %in% names(all_requirements))) {
+    stop(sprintf("No assets listing for platform \"%s\" in %s.",
+        os, requirements_file))
+  }
   sys_requirements = do.call(c, all_requirements[c("common", os)])
   do.call(rbind, lapply(sys_requirements, as.data.frame))
 }
