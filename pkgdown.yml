@@ -1,10 +1,10 @@
 pandoc: 3.1.11
-pkgdown: 2.1.0
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   java-parameters: java-parameters.html
   quickstart: quickstart.html
-last_built: 2024-09-03T04:17Z
+last_built: 2025-02-26T16:25Z
 urls:
   reference: https://hydroecology.net/dssrip2/reference
   article: https://hydroecology.net/dssrip2/articles
