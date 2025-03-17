@@ -129,14 +129,14 @@ test_that("deleting records works", {
 
   delete_path2 = "/ANOTHER FAKE CREEK/FAKE TOWN/FLOW/01JAN2020/1DAY/FAKE/"
   expect_true(dss_delete(tf, path1, full = TRUE))
-  expect_true(dss_delete(tf, delete_path2, full = FALSE))
+  expect_warning(expect_true(dss_delete(tf, delete_path2, full = FALSE)))
 
-  expect_identical(dss_catalog(tf, path1, condensed = TRUE),
-    character(0))
-  expect_identical(dss_catalog(tf, delete_path2, condensed = FALSE),
-    character(0))
+  expect_identical(dss_catalog(tf, path1, condensed = TRUE,
+    rebuild = TRUE), character(0))
+  expect_identical(dss_catalog(tf, delete_path2, condensed = FALSE,
+    rebuild = TRUE), character(0))
   expect_identical(dss_catalog(tf, dss_parts_replace(path2,
-    list(D = ".*")), condensed = FALSE),
+    list(D = ".*")), condensed = FALSE, rebuild = TRUE),
     "/ANOTHER FAKE CREEK/FAKE TOWN/FLOW/01JAN2021/1DAY/FAKE/")
 
 })

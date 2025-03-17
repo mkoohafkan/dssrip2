@@ -1,3 +1,45 @@
+test_that("DSS catalog cache works", {
+
+  skip_if_no_dss()
+
+  tf1 = tempfile(fileext = ".dss")
+  tf2 = tempfile(fileext = ".dss")
+  tf3 = tempfile(fileext = ".dss")
+  tf4 = tempfile(fileext = ".dss")
+  on.exit(unlink(c(tf1, tf2, tf3, tf4)), add = TRUE)
+
+  exfile = system.file("extdata/example.dss", package = "dssrip2")
+  file.copy(exfile, c(tf1, tf2, tf3, tf4))
+
+
+  dss_catalog(tf1, condensed = FALSE)
+  dss_catalog(tf2)
+  dss_catalog(tf3, condensed = FALSE)
+  dss_catalog(tf3, condensed = TRUE)
+  dss_catalog(tf4, condensed = TRUE)
+
+  expect_setequal(.store$list_catalog(TRUE),
+    normalize_path(c(tf2, tf3, tf4), TRUE))
+  expect_setequal(.store$list_catalog(FALSE),
+    normalize_path(c(tf1, tf3), TRUE))
+  
+  dss_close(tf3)
+  expect_setequal(.store$list_catalog(TRUE),
+    normalize_path(c(tf2, tf4), TRUE))
+  expect_setequal(.store$list_catalog(FALSE),
+    normalize_path(c(tf1), TRUE))
+  dss_close(tf4)
+  expect_setequal(.store$list_catalog(TRUE),
+    normalize_path(c(tf2), TRUE))
+  expect_setequal(.store$list_catalog(FALSE),
+    normalize_path(c(tf1), TRUE))
+  dss_close_all()
+  expect_identical(.store$list_catalog(TRUE), character())
+  expect_identical(.store$list_catalog(FALSE), character())
+
+})
+
+
 test_that("path list works", {
   skip_if_no_dss()
 
@@ -59,5 +101,60 @@ test_that("path parts works", {
   expect_error(dss_parts_combine("/hg/d"))
 
   expect_identical(path,  dss_parts_combine(parts))
+
+})
+
+test_that("path caching and rebuilding works", {
+
+  skip_if_no_dss()
+
+  on.exit(dss_close_all(), add = TRUE)
+  d = data.frame(
+    datetime = seq(as.POSIXct("2021-01-01", tz = "etc/GMT+0"),
+      as.POSIXct("2021-01-05", tz = "etc/GMT+0"), by = "1 day"),
+    flow = c(10, 12, NA, 13, 10) * 1000
+  )
+  attr(d, "dss_attributes") = list("type" = "PER-AVER", units = "cfs")
+
+  tf = tempfile(fileext = ".dss")
+  dss_create(tf)
+
+  path1 = "/Fake Creek/Fake Town/FLOW//1DAY/FAKE/"
+  path2 = "/Another Fake Creek/Fake Town/FLOW//1DAY/FAKE/"
+
+  dpaths = c(
+    "/Fake Creek/Fake Town/FLOW/31Dec2020 - 04Jan2021/1Day/FAKE/",
+    "/Another Fake Creek/Fake Town/FLOW/31Dec2020 - 04Jan2021/1Day/FAKE/"
+  )
+  dpathsf = c(
+    "/FAKE CREEK/FAKE TOWN/FLOW/01JAN2020/1DAY/FAKE/",
+    "/FAKE CREEK/FAKE TOWN/FLOW/01JAN2021/1DAY/FAKE/",
+    "/ANOTHER FAKE CREEK/FAKE TOWN/FLOW/01JAN2020/1DAY/FAKE/",
+    "/ANOTHER FAKE CREEK/FAKE TOWN/FLOW/01JAN2021/1DAY/FAKE/"
+  )
+
+  dss_write(d, tf, path1)
+  expect_setequal(dss_catalog(tf), dpaths[1])
+  expect_setequal(dss_catalog(tf, condensed = FALSE), dpathsf[1:2])
+
+  dss_write(d, tf, path2)
+  # use cached
+  expect_warning(expect_setequal(dss_catalog(tf), dpaths[1]))
+  expect_warning(expect_setequal(dss_catalog(tf, condensed = FALSE),
+    dpathsf[1:2]))
+  # rebuild
+  expect_setequal(dss_catalog(tf, rebuild = TRUE), dpaths)
+  expect_setequal(dss_catalog(tf, condensed = FALSE, rebuild = TRUE),
+    dpathsf)
+
+  dss_delete(tf, path1)
+  # use cached
+  expect_warning(expect_setequal(dss_catalog(tf), dpaths))
+  expect_warning(expect_setequal(dss_catalog(tf, condensed = FALSE),
+    dpathsf))
+  # rebuild
+  expect_setequal(dss_catalog(tf, rebuild = TRUE), dpaths[2])
+  expect_setequal(dss_catalog(tf, condensed = FALSE, rebuild = TRUE),
+    dpathsf[3:4])
 
 })
