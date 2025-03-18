@@ -97,6 +97,17 @@ test_that("paired data writing works", {
       attr(d, "dss_attributes"))
   }
 
+  # test for duplicate x-ordinate
+  d4 = data.frame(flow = c(10, 12, 12, 13, 10) * 1000,
+    stage = c(17.1, 17.3, 17.6, 17.4, 17.2))
+  attr(d4, "dss_attributes") = list(xunits = "cfs", yunits = "feet",
+    xtype = "UNT", ytype = "UNT")
+  path4 = "/Fake Creek/Fake Town/FLOW-STAGE///FAKE4/"
+
+  expect_true(dss_write(d4, tf, path4))
+  expect_equal(dss_read(tf, path4), d4, tolerance = 1e-5,
+    ignore_attr = "dss_attributes")
+
 })
 
 
