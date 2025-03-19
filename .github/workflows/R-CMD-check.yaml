@@ -72,7 +72,7 @@ jobs:
           echo ::group::Download hecnf
           curl -O https://www.hec.usace.army.mil/nexus/repository/maven-public/mil/army/usace/hec/hecnf/hecnf/${{ env.HECNF_VERSION }}/hecnf-${{ env.HECNF_VERSION }}.jar          
           echo ::endgroup::
-        working-directory: ${{ DSS_HOME_CI }}/jar
+        working-directory: ${{ env.DSS_HOME_CI }}/jar
         shell: bash
 
       - name: download lib dependencies
@@ -91,7 +91,7 @@ jobs:
           7z e javaHeclib.zip .
           rm javaHeclib.zip
           echo ::endgroup::
-        working-directory: ${{ DSS_HOME_CI }}/lib
+        working-directory: ${{ env.DSS_HOME_CI }}/lib
         shell: bash
   
       - uses: r-lib/actions/check-r-package@v2
