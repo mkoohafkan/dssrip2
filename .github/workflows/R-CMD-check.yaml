@@ -27,11 +27,11 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
-      FLOGGER_VERSION: 0.7.4
-      MONOLITH_VERSION: 3.3.16
+      FLOGGER_VERSION: 0.5.1
+      MONOLITH_VERSION: 3.3.27
       NUCLEUS_VERSION: 2.0.1
-      HECNF_VERSION: 6.0.00.100
-      JAVAHECLIB_VERSION: 7-IQ-11
+      HECNF_VERSION: 7.2.0
+      JAVAHECLIB_VERSION: 7-IU-8
 
     steps:
       - uses: actions/checkout@v3
