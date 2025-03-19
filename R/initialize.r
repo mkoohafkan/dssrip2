@@ -15,7 +15,7 @@ hecJavaConnectionDB = new.env()
 dss_message_level = function(message_level) {
   # set message level
   tryCatch(.jcall("hec/heclib/util/Heclib", returnSig = "V",
-    method = "zset", "MLEVEL", " ", as.integer(message_level)),
+      method = "zset", "MLEVEL", " ", as.integer(message_level)),
     error = function(e) stop("Message level could not be set. ",
       "Check that DSS connection is working.", call. = FALSE))
 }
@@ -25,8 +25,7 @@ dss_message_level = function(message_level) {
 #' @export
 dss_check_connection = function() {
   tryCatch({
-    .jcall("hec/heclib/util/Heclib", returnSig = "V",
-      method = "zget", "MLEVEL")
+    J("hec/heclib/util/Heclib")
     invisible()
   }, error = function(e) {
     stop(conditionMessage(e), call. = FALSE)
@@ -87,13 +86,13 @@ dss_connect = function(dss_home = getOption("dss.home"),
   # get path to heclib
   if (Sys.info()[["sysname"]] == "Windows") {
     hec_lib_path = normalizePath(file.path(dss_home, "lib",
-      "javaHeclib.dll"), mustWork = TRUE)
+        "javaHeclib.dll"), mustWork = TRUE)
   } else if (Sys.info()[["sysname"]] == "Linux") {
     hec_lib_path = normalizePath(file.path(dss_home, "lib",
-      "libjavaHeclib.so"), mustWork = TRUE)
+        "libjavaHeclib.so"), mustWork = TRUE)
   } else if (Sys.info()[["sysname"]] == "Darwin") {
     hec_lib_path = normalizePath(file.path(dss_home, "lib",
-      "libjavaHeclib.dylib"), mustWork = TRUE)
+        "libjavaHeclib.dylib"), mustWork = TRUE)
   } else {
     stop(Sys.info()[["sysname"]], " platform not supported.")
   }
