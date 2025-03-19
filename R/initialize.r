@@ -23,6 +23,19 @@ dss_message_level = function(message_level) {
 
 #' @rdname dss_connect
 #' @export
+dss_check_connection = function() {
+  tryCatch({
+    .jcall("hec/heclib/util/Heclib", returnSig = "V",
+      method = "zget", "MLEVEL")
+    invisible()
+  }, error = function(e) {
+    stop(conditionMessage(e), call. = FALSE)
+  })
+}
+
+
+#' @rdname dss_connect
+#' @export
 dss_require = function(dss_home = getOption("dss.home"),
   message_level = getOption("dss.messagelevel"),
   monolith = getOption("dss.monolith"),
@@ -91,6 +104,9 @@ dss_connect = function(dss_home = getOption("dss.home"),
   javaImport(packages = "java.lang")
   .jaddLibrary("javaHeclib", hec_lib_path)
   .jaddClassPath(jar_paths)
+
+  # verify connection
+  dss_check_connection()
 
   # default is message level 2
   dss_message_level(c(message_level, 2L)[1])

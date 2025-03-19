@@ -3,6 +3,7 @@
 export(dss_add_attributes)
 export(dss_attributes)
 export(dss_catalog)
+export(dss_check_connection)
 export(dss_close)
 export(dss_close_all)
 export(dss_connect)
