@@ -68,7 +68,7 @@ jobs:
           mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-nucleus-metadata:${{ env.NUCLEUS_VERSION }}:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           echo ::endgroup::
           echo ::group::Download hecnf
-          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hecnf:${{ env.HECNF_VERSION }}:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec.hecnf:hecnf:${{ env.HECNF_VERSION }}:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           echo ::endgroup::
           echo ::group::Download javaHeclib
           if [ "$RUNNER_OS" == "Linux" ]; then
@@ -91,7 +91,7 @@ jobs:
             '${{ runner.temp }}/temp_repo/mil/army/usace/hec/hec-monolith/${{ env.MONOLITH_VERSION }}/hec-monolith-${{ env.MONOLITH_VERSION }}.jar' \
             '${{ runner.temp }}/temp_repo/com/google/flogger/flogger-system-backend/${{ env.FLOGGER_VERSION }}/flogger-system-backend-${{ env.FLOGGER_VERSION }}.jar' \
             '${{ runner.temp }}/temp_repo/com/google/flogger/flogger/${{ env.FLOGGER_VERSION }}/flogger-${{ env.FLOGGER_VERSION }}.jar' \
-            '${{ runner.temp }}/temp_repo/mil/army/usace/hec/hecnf/${{ env.HECNF_VERSION }}/hecnf-${{ env.HECNF_VERSION }}.jar' \
+            '${{ runner.temp }}/temp_repo/mil/army/usace/hec/hecnf/hecnf/${{ env.HECNF_VERSION }}/hecnf-${{ env.HECNF_VERSION }}.jar' \
             '${{ runner.temp }}/.dssrip2/jar'
           if [ "$RUNNER_OS" == "Linux" ]; then
             7z e '${{ runner.temp }}/temp_repo/mil/army/usace/hec/javaHeclib/${{ env.JAVAHECLIB_VERSION }}-linux-x86_64/javaHeclib-${{ env.JAVAHECLIB_VERSION }}-linux-x86_64.zip' \
