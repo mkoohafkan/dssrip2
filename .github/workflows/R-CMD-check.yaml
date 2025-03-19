@@ -51,7 +51,7 @@ jobs:
       
       - name: Set up monolith directory
         run: |
-          mkdir -p './.dssrip2/jar' './.dssrip2/lib'
+          mkdir -p ./.dssrip2/{jar,lib}
           echo "DSS_HOME_CI=${{ runner.temp }}/.dssrip2" >> $GITHUB_ENV
         working-directory: ${{ runner.temp }}
 
