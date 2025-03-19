@@ -56,27 +56,27 @@ jobs:
       - name: download dependencies
         run: |
           echo ::group::Download flogger
-          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='com.google.flogger:flogger-system-backend:0.7.4:jar'
-          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='com.google.flogger:flogger:0.7.4:jar'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='com.google.flogger:flogger-system-backend:${{ FLOGGER_VERSION }}:jar'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='com.google.flogger:flogger:${{ FLOGGER_VERSION }}:jar'
           echo ::endgroup::
           echo ::group::Download HEC Monolith
-          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith-compat:3.3.16:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
-          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith:3.3.16:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith-compat:${{ MONOLITH_VERSION }}:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-monolith:${{ MONOLITH_VERSION }}:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           echo ::endgroup::
           echo ::group::Download HEC Nucleus
-          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-nucleus-data:2.0.1:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
-          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-nucleus-metadata:2.0.1:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-nucleus-data:${{ NUCLEUS_VERSION }}:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hec-nucleus-metadata:${{ NUCLEUS_VERSION }}:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           echo ::endgroup::
           echo ::group::Download hecnf
-          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hecnf:6.0.00.100:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+          mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:hecnf:${{ HECNF_VERSION }}:jar' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           echo ::endgroup::
           echo ::group::Download javaHeclib
           if [ "$RUNNER_OS" == "Linux" ]; then
-            mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-linux-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+            mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:${{ JAVAHECLIB_VERSION }}-linux-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           elif [ "$RUNNER_OS" == "Windows" ]; then
-            mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-win-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+            mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:${{ JAVAHECLIB_VERSION }}-win-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           elif [ "$RUNNER_OS" == "macOS" ]; then
-            mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:7-IQ-11-macOS-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
+            mvn -Dmaven.repo.local='${{ runner.temp }}/temp_repo' dependency:get -Dartifact='mil.army.usace.hec:javaHeclib:${{ JAVAHECLIB_VERSION }}-macOS-x86_64:zip' -DremoteRepositories='https://www.hec.usace.army.mil/nexus/repository/maven-releases'
           else
             echo "$RUNNER_OS not supported"
             exit 1
