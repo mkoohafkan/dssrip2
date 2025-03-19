@@ -2,7 +2,7 @@ test_that("requirements file parsing works", {
 
   req_file = system.file("requirements.yaml", package = "dssrip2")
 
-  expect_s3_class(monolith_requirements(req_file), "data.frame")
+  expect_type(monolith_requirements(req_file), "list")
 
 })
 
@@ -28,7 +28,9 @@ test_that("asset download works", {
   on.exit(unlink(install_dir, recursive = TRUE), add = TRUE)
 
   req_file = system.file("requirements.yaml", package = "dssrip2")
-  req_artifacts = monolith_requirements(req_file)[["artifactId"]]
+  req_artifacts = sapply(monolith_requirements(req_file), function(x) {
+    x[["artifactId"]]
+  })
 
   expect_null(dss_install_monolith(install_dir, req_file))
   expect_setequal(list.files(install_dir), c("jar", "lib"))

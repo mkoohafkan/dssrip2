@@ -7,7 +7,7 @@
 asset_query_nexus(
   artifactId,
   repository = "maven-releases",
-  group = "mil.army.usace.hec",
+  group = "",
   version = "",
   maven.extension = "jar",
   maven.classifier = "",

@@ -27,7 +27,10 @@ monolith_requirements = function(requirements_file) {
         os, requirements_file))
   }
   sys_requirements = do.call(c, all_requirements[c("common", os)])
-  do.call(rbind, lapply(sys_requirements, as.data.frame))
+  names(sys_requirements) = lapply(sys_requirements, function(x) {
+    x[["artifactId"]]
+  })
+  sys_requirements
 }
 
 
@@ -42,35 +45,17 @@ monolith_requirements = function(requirements_file) {
 #' @importFrom yaml read_yaml
 #' @keywords internal
 monolith_assets = function(requirements_file, stop_on_fail = TRUE) {
-  requirements = monolith_requirements(requirements_file)
-  requirements_list = split(requirements, requirements[["artifactId"]])
-  all_assets = rbind.data.frame(
-    monolith_assets = do.call(asset_query_nexus,
-      requirements_list[["hec-monolith"]]),
-    compat_assets = do.call(asset_query_nexus,
-      requirements_list[["hec-monolith-compat"]]),
-    data_assets = do.call(asset_query_nexus,
-      requirements_list[["hec-nucleus-data"]]),
-    meta_assets = do.call(asset_query_nexus,
-      requirements_list[["hec-nucleus-metadata"]]),
-    hecnf_assets = do.call(asset_query_nexus,
-      requirements_list[["hecnf"]]),
-    heclib_assets = do.call(asset_query_nexus,
-      c(requirements_list[["javaHeclib"]],
-        maven.extension = "zip")),
-    flogger_assets = do.call(asset_query_maven,
-      requirements_list[["flogger"]]),
-    flogger_backend_assets = do.call(asset_query_maven,
-      requirements_list[["flogger-system-backend"]]),
-    make.row.names = FALSE
-  )
-  assets = merge(requirements, all_assets,
-    by = names(requirements), all.x = TRUE)
-  missing_assets = is.na(assets[["downloadURL"]])
-  if (any(missing_assets)) {
+  requirements_list = monolith_requirements(requirements_file)
+  assets = do.call(rbind.data.frame,
+    lapply(requirements_list, asset_query))
+  missing_assets = setdiff(names(requirements_list), assets[["artifactId"]])
+  if (length(missing_assets) > 0) {
+    missing_versions = lapply(requirements_list[missing_assets], function(x) {
+      x[["version"]]
+    })
     msg = paste0("Could not find the following assets:\n",
-      paste0("\t", paste(assets[["artifactId"]],
-          assets[["version"]])[missing_assets], collapse = "\n"))
+      paste0("\t", paste(names(missing_versions),
+          unname(missing_versions)), collapse = "\n"))
     if (stop_on_fail) {
       stop(msg)
     } else {
@@ -78,6 +63,17 @@ monolith_assets = function(requirements_file, stop_on_fail = TRUE) {
     }
   }
   assets
+}
+
+asset_query = function(requirements) {
+  source = requirements[["source"]]
+  requirements[["source"]] = NULL
+
+  switch(source,
+    "nexus" = do.call(asset_query_nexus, requirements),
+    "maven" = do.call(asset_query_maven, requirements),
+    stop("Unknown source: ", source)
+  )
 }
 
 
@@ -187,7 +183,7 @@ asset_query_maven = function(artifactId,
 #' @importFrom httr GET content
 #' @keywords internal
 asset_query_nexus = function(artifactId,
-  repository = "maven-releases", group = "mil.army.usace.hec",
+  repository = "maven-releases", group = "",
   version = "", maven.extension = "jar", maven.classifier = "",
   url = "https://www.hec.usace.army.mil/nexus/service/rest/v1/search/assets") {
 
