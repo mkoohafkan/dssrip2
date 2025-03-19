@@ -8,9 +8,6 @@ format_datetimes(x)
 }
 \arguments{
 \item{x}{A vector to be coerced to datetimes}
-
-\item{default_tx}{The default timezone to use for coercing
-objects without a specified timezone.}
 }
 \value{
 A vector of datetimes.

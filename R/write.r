@@ -178,10 +178,7 @@ dss_times_from_posix = function(datetimes, dss_interval) {
 #' Convert an R POSIXct datetime to Java HecTime.
 #'
 #' @param x A POSIXct timestamp.
-#' @param granularity The minimum time interval.
-#'   Can be "secs" or "mins".
-#' @param as_period If `TRUE`, adjust timestamp to represent a period,
-#'   with timestamp specifying period end time (0100 to 2400 hours).
+#' @param granularity_seconds The minimum time interval, in seconds.
 #' @return A Java `hec.heclib.util.HecTime` object.
 #'
 #' @importFrom rJava .jnew

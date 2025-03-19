@@ -18,7 +18,7 @@ maven_sha1(id, extension, url = "https://repo.maven.apache.org/maven2")
 
 \item{extension}{the Asset file extension.}
 
-\item{The}{base repository URL.}
+\item{url}{The base repository URL.}
 }
 \description{
 Helper functions for searching the Maven central repository.

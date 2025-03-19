@@ -46,8 +46,6 @@ dss_timezone = function(tzoffset) {
 #' Helper function to format datetimes.
 #'
 #' @param x A vector to be coerced to datetimes
-#' @param default_tx The default timezone to use for coercing
-#'   objects without a specified timezone.
 #' @return A vector of datetimes.
 #'
 #' @importFrom lubridate as_datetime tz force_tz

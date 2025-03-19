@@ -83,7 +83,7 @@ asset_query = function(requirements) {
 #'
 #' @param id The asset ID.
 #' @param extension the Asset file extension.
-#' @param The base repository URL.
+#' @param url The base repository URL.
 #'
 #' @name maven-helpers
 #' @keywords internal
