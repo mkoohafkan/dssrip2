@@ -136,7 +136,7 @@ test_that("deleting records works", {
 
   # error when supplied path does not exist
   expect_error(dss_delete(tf, "/Fake Creek/Fake Town/FLOW//1DAY/NOT EXIST/",
-    full = TRUE))
+      full = TRUE))
 
   delete_path2 = "/ANOTHER FAKE CREEK/FAKE TOWN/FLOW/01JAN2020/1DAY/FAKE/"
   expect_true(dss_delete(tf, path1, full = TRUE))
@@ -147,7 +147,7 @@ test_that("deleting records works", {
   expect_identical(dss_catalog(tf, delete_path2, condensed = FALSE),
     character(0))
   expect_identical(dss_catalog(tf, dss_parts_replace(path2,
-    list(D = ".*")), condensed = FALSE),
-    "/ANOTHER FAKE CREEK/FAKE TOWN/FLOW/01JAN2021/1DAY/FAKE/")
+        list(D = ".*")), condensed = FALSE),
+    "/Another Fake Creek/Fake Town/FLOW/01Jan2021/1Day/FAKE/")
 
 })
