@@ -54,6 +54,7 @@ jobs:
           mkdir -p ./.dssrip2/{jar,lib}
           echo "DSS_HOME_CI=${{ runner.temp }}/.dssrip2" >> $GITHUB_ENV
         working-directory: ${{ runner.temp }}
+        shell: bash
 
       - name: download jar dependencies
         run: |
