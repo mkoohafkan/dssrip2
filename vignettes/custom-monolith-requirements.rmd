@@ -1,0 +1,65 @@
+---
+title: "Specifying Custom Monolith Requirements"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Specifying Custom Monolith Requirements}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The `dssrip2` package provides a default configuration for installing
+HEC Monolith. This default configuration does not have a defined update
+cycle and is subject to limitations on Java versioning etc. on USACE
+work machines. Users wanting to take advantage of newer releases of
+HEC Monolith can customize their installation by supplying
+their own configuration file. This vignette describes how to
+create a custom configuration file for installing HEC Monolith.
+
+## The requirements file
+
+HEC Monolith requirements are specified in YAML format. The default
+configuration for `dssrip2` version 0.9 is shown below:
+
+```yaml
+common:
+  - { artifactId : hec-monolith, group: "mil.army.usace.hec",
+      version : 3.3.27, source : "nexus"}
+  - { artifactId : hec-monolith-compat, group: "mil.army.usace.hec",
+      version : 3.3.27, source : "nexus" }
+  - { artifactId : hec-nucleus-data, group: "mil.army.usace.hec",
+      version : 2.0.1, source : "nexus" }
+  - { artifactId : hec-nucleus-metadata, group: "mil.army.usace.hec",
+      version : 2.0.1, source : "nexus" }
+  - { artifactId : hecnf, group: "mil.army.usace.hec.hecnf",
+      version : 7.2.0, source : "nexus" }
+  - { artifactId : flogger, version : 0.5.1,
+      source : "maven" }
+  - { artifactId : flogger-system-backend, version : 0.5.1,
+      source : "maven" }
+windows:
+  - { artifactId : javaHeclib, group: "mil.army.usace.hec",
+      version : 7-IU-8-win-x86_64, maven.extension : "zip",
+      source : "nexus" }
+linux:
+  - { artifactId : javaHeclib, group: "mil.army.usace.hec",
+      version : 7-IU-8-linux-x86_64, maven.extension : "zip",
+      source : "nexus" }
+darwin: # OSX
+  - { artifactId : javaHeclib, group: "mil.army.usace.hec",
+      version : 7-IU-8-macOS-x86_64, maven.extension : "zip",
+      source : "nexus" }
+```
+
+The YAML file specifies *common* requirements, which are common to all
+operating systems; and *OS-specific requirements*, which are labeled
+to match the operating system name as returned by
+`Sys.info()["sysname"]`. For the most part only version numbers need
+to be changed, but it is possible that future releases of an asset
+will reflect changes to the group, or that future monolith releases
+will require additional assets or remove dependencies. 
+
+One you have created a custom requirements file, you can call
+```r
+dss_install_monolith(requirements_file = "path/to/requirements.yaml")
+```
+to install Monolith using your custom requirements.
