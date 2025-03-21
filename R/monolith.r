@@ -106,12 +106,12 @@ maven_path = function(id, extension) {
 
 
 #' @rdname maven-helpers
-#' @importFrom httr GET content
 maven_sha1 = function(id, extension,
   url = "https://repo.maven.apache.org/maven2") {
 
   sha_url = paste0(maven_download_url(id, extension, url), ".sha1")
-  content(GET(sha_url), "text", encoding = "UTF-8")
+  result = httr::GET(sha_url)
+  httr::content(result, "text", encoding = "UTF-8")
 }
 
 
@@ -127,7 +127,6 @@ maven_sha1 = function(id, extension,
 #' @param url The repository base URL.
 #' @return A data frame of asset information.
 #'
-#' @importFrom httr GET content
 #' @keywords internal
 asset_query_maven = function(artifactId,
   repository = "maven-releases", group = "",
@@ -144,8 +143,8 @@ asset_query_maven = function(artifactId,
   query = paste0(paste(names(arg_list), arg_list, sep = ":"),
     collapse = "+")
   query_params = list(q = I(query), wt = "json", rows = 1)
-  results = GET(url, query = query_params)
-  assets = content(results)$response$docs
+  results = httr::GET(url, query = query_params)
+  assets = httr::content(results)$response$docs
 
   data.frame(
     groupId = sapply(assets, function(x) {
@@ -180,7 +179,6 @@ asset_query_maven = function(artifactId,
 #' @inheritParams asset_query_maven
 #' @return A data frame of asset information.
 #'
-#' @importFrom httr GET content
 #' @keywords internal
 asset_query_nexus = function(artifactId,
   repository = "maven-releases", group = "",
@@ -196,14 +194,16 @@ asset_query_nexus = function(artifactId,
     "maven.classifier" = maven.classifier
   )
 
-  results = GET(url, query = query_params)
-  assets = content(results)$items
-  continuation_token = content(results)$continuationToken
+  results = httr::GET(url, query = query_params)
+  contents = httr::content(results)
+  assets = contents$items
+  continuation_token = contents$continuationToken
   while (!is.null(continuation_token)) {
-    results = GET(url, query = c(query_params,
+    results = httr::GET(url, query = c(query_params,
         list(continuationToken = continuation_token)))
-    assets = append(assets, content(results)$items)
-    continuation_token = content(results)$continuationToken
+    contents = httr::content(results)
+    assets = append(assets, contents$items)
+    continuation_token = contents$continuationToken
   }
   data.frame(
     groupId = sapply(assets, function(x) {
@@ -242,13 +242,17 @@ asset_query_nexus = function(artifactId,
 #'
 #' @seealso [dss_connect()]
 #'
-#' @importFrom utils packageName
-#' @importFrom httr GET write_disk
-#' @importFrom utils unzip
-#' @importFrom digest digest
+#' @importFrom utils packageName unzip
 #' @export
 dss_install_monolith = function(install_path, requirements_file,
   overwrite = TRUE) {
+
+  if (!(requireNamespace("httr", quietly = TRUE) &&
+        requireNamespace("digest", quietly = TRUE))) {
+    stop("Packages 'httr' and 'digest' must be installed ",
+      "in order to download Monolith assets.")
+  }
+
   if (missing(install_path)) {
     install_path = monolith_default_dir()
   }
@@ -280,10 +284,12 @@ dss_install_monolith = function(install_path, requirements_file,
     mustWork = FALSE
   )
   for (i in seq_len(nrow(assets))) {
-    GET(assets[["downloadURL"]][i],
-      write_disk(assets[["outputDirectory"]][i], overwrite = FALSE))
+    httr::GET(assets[["downloadURL"]][i],
+      httr::write_disk(assets[["outputDirectory"]][i],
+        overwrite = FALSE))
     # checksum
-    checksum = digest(assets[["outputDirectory"]][i], "sha1", file = TRUE)
+    checksum = digest::digest(assets[["outputDirectory"]][i], "sha1",
+      file = TRUE)
     if (!identical(checksum, assets[["checksum.sha1"]][i])) {
       stop("Error downloading ", assets[["outputDirectory"]][i],
         ": SHA1 checksums do not match.")
